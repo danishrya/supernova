@@ -58,12 +58,22 @@ export default function Footer() {
           </div>
 
           <div className="footer-nav-group">
-            <h5>Jaminan Kualitas</h5>
-            <div className="footer-tech-chips">
+            <h5>Hubungi Kami</h5>
+            <ul className="footer-contact-links">
+              <li>
+                <a href="https://wa.me/6285714521584" target="_blank" rel="noopener noreferrer">
+                  +62 857-1452-1584 (WhatsApp)
+                </a>
+              </li>
+              <li>
+                <a href="mailto:chasupernova.studio@gmail.com">
+                  chasupernova.studio@gmail.com
+                </a>
+              </li>
+            </ul>
+            <div className="footer-tech-chips" style={{ marginTop: '12px' }}>
               <span className="f-chip">Terima Jadi Siap Pakai</span>
               <span className="f-chip">Master File Editable (.PPTX / AI)</span>
-              <span className="f-chip">Integrasi Alur WhatsApp</span>
-              <span className="f-chip">Pendampingan Sampai Tuntas</span>
             </div>
           </div>
         </div>
