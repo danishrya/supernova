@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useSiteContent } from '../context/ContentContext';
 import {
   IconWhatsApp,
   IconMail,
@@ -26,6 +27,8 @@ export default function Contact({
   initialBrief = '',
   initialType = 'Slide Presentasi & Pitch Deck (PPT)',
 }) {
+  const { contactInfo } = useSiteContent();
+
   const [formData, setFormData] = useState({
     name: '',
     phone: '',
@@ -80,8 +83,9 @@ export default function Contact({
       `• Catatan Kebutuhan:\n"${formData.brief.trim() || 'Ingin konsultasi & diskusi kebutuhan terlebih dahulu'}"\n\n` +
       `Mohon informasi penawaran dan ketersediaan jadwal tim Supernova. Terima kasih.`;
 
+    const targetWa = contactInfo?.waNumber || '6285714521584';
     const encoded = encodeURIComponent(message);
-    window.open(`https://wa.me/6285714521584?text=${encoded}`, '_blank');
+    window.open(`https://wa.me/${targetWa}?text=${encoded}`, '_blank');
 
     setFeedback({
       type: 'success',
@@ -95,12 +99,13 @@ export default function Contact({
       return;
     }
 
+    const targetEmail = contactInfo?.email || 'chasupernova.studio@gmail.com';
     const subject = encodeURIComponent(`[Konsultasi Proyek] ${formData.type} — ${formData.name}`);
     const body = encodeURIComponent(
       `Nama / Bisnis: ${formData.name}\nWhatsApp: ${formData.phone}\nEmail: ${formData.email}\nLayanan: ${formData.type}\nTimeline: ${formData.urgency}\n\nKebutuhan Proyek:\n${formData.brief || 'Konsultasi awal'}`
     );
 
-    window.location.href = `mailto:chasupernova.studio@gmail.com?subject=${subject}&body=${body}`;
+    window.location.href = `mailto:${targetEmail}?subject=${subject}&body=${body}`;
 
     setFeedback({
       type: 'success',
@@ -127,7 +132,7 @@ export default function Contact({
 
               <div className="contact-channels">
                 <a
-                  href="https://wa.me/6285714521584"
+                  href={`https://wa.me/${contactInfo?.waNumber || '6285714521584'}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="channel-card"
@@ -143,13 +148,13 @@ export default function Contact({
                         <span>Respon Cepat</span>
                       </span>
                     </div>
-                    <strong className="ch-val">+62 857-1452-1584</strong>
-                    <span className="ch-sub">Senin – Sabtu (09:00 – 18:00 WIB)</span>
+                    <strong className="ch-val">{contactInfo?.phone || '+62 857-1452-1584'}</strong>
+                    <span className="ch-sub">{contactInfo?.hours || 'Senin – Sabtu (09:00 – 18:00 WIB)'}</span>
                   </div>
                 </a>
 
                 <a
-                  href="mailto:chasupernova.studio@gmail.com"
+                  href={`mailto:${contactInfo?.email || 'chasupernova.studio@gmail.com'}`}
                   className="channel-card"
                 >
                   <div className="ch-icon email">
@@ -157,7 +162,7 @@ export default function Contact({
                   </div>
                   <div className="ch-text">
                     <span className="ch-label">Email Proposal Resmi</span>
-                    <strong className="ch-val">chasupernova.studio@gmail.com</strong>
+                    <strong className="ch-val">{contactInfo?.email || 'chasupernova.studio@gmail.com'}</strong>
                     <span className="ch-sub">Untuk proposal tender, NDA, &amp; korporasi</span>
                   </div>
                 </a>
@@ -168,7 +173,7 @@ export default function Contact({
                   </div>
                   <div className="ch-text">
                     <span className="ch-label">Studio Base</span>
-                    <strong className="ch-val">Jakarta Selatan, DKI Jakarta</strong>
+                    <strong className="ch-val">{contactInfo?.location || 'Jakarta Selatan, DKI Jakarta'}</strong>
                     <span className="ch-sub">Melayani klien di seluruh Indonesia &amp; global</span>
                   </div>
                 </div>

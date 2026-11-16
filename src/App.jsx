@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { BrowserRouter, Routes, Route, useNavigate } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, useNavigate, useLocation } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import ScrollToTop from './components/ScrollToTop';
@@ -9,12 +9,17 @@ import AboutPage from './pages/AboutPage';
 import CatalogPage from './pages/CatalogPage';
 import ServicesPage from './pages/ServicesPage';
 import ContactPage from './pages/ContactPage';
+import AdminPage from './pages/AdminPage';
+import { ContentProvider } from './context/ContentContext';
 
 function AppContent() {
   const [selectedProject, setSelectedProject] = useState(null);
   const [contactBrief, setContactBrief] = useState('');
   const [contactType, setContactType] = useState('Desain Presentasi & Pitch Deck (PPT)');
   const navigate = useNavigate();
+  const location = useLocation();
+
+  const isAdminRoute = location.pathname.startsWith('/admin');
 
   const handleSelectPackage = (packageName) => {
     let type = 'Desain Presentasi & Pitch Deck (PPT)';
@@ -48,11 +53,11 @@ function AppContent() {
     <div className="supernova-app">
       <ScrollToTop />
 
-      {/* Header Navigation */}
-      <Navbar />
+      {/* Header Navigation - Hidden on /admin */}
+      {!isAdminRoute && <Navbar />}
 
       {/* Multi-Page Routes */}
-      <main className="main-content-flow">
+      <main className={isAdminRoute ? 'admin-content-flow' : 'main-content-flow'}>
         <Routes>
           <Route
             path="/"
@@ -84,11 +89,12 @@ function AppContent() {
               />
             }
           />
+          <Route path="/admin" element={<AdminPage />} />
         </Routes>
       </main>
 
-      {/* Footer */}
-      <Footer />
+      {/* Footer - Hidden on /admin */}
+      {!isAdminRoute && <Footer />}
 
       {/* Interactive Project Detail Modal */}
       <ProjectModal
@@ -103,7 +109,9 @@ function AppContent() {
 export default function App() {
   return (
     <BrowserRouter>
-      <AppContent />
+      <ContentProvider>
+        <AppContent />
+      </ContentProvider>
     </BrowserRouter>
   );
 }

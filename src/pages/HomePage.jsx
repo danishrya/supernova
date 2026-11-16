@@ -6,8 +6,11 @@ import VisualShowcaseGallery from '../components/VisualShowcaseGallery';
 import ThreeStepEasyFlow from '../components/ThreeStepEasyFlow';
 import Pricing from '../components/Pricing';
 import { IconArrowRight } from '../components/Icons';
+import { useSiteContent } from '../context/ContentContext';
 
 export default function HomePage({ onOpenProjectModal, onSelectPackage }) {
+  const { heroContent } = useSiteContent();
+
   return (
     <div className="page-home">
       {/* 1. HERO SECTION: VISUAL, CONFIDENT & MINIMAL */}
@@ -17,17 +20,16 @@ export default function HomePage({ onOpenProjectModal, onSelectPackage }) {
             <div className="hero-status-pill">
               <span className="status-indicator-dot" />
               <span className="status-pill-text">
-                Studio Desain &amp; Digital Independen
+                {heroContent.badge}
               </span>
             </div>
 
-            <h1 className="hero-title">
-              Desain Presentasi, <br />
-              Identitas Brand &amp; Web Modern.
+            <h1 className="hero-title" style={{ whiteSpace: 'pre-line' }}>
+              {heroContent.title}
             </h1>
 
             <p className="hero-description minimal-hero-desc">
-              Membantu founder dan korporasi tampil berwibawa melalui slide pitch deck investor, identitas visual berkarakter, dan website berkinerja tinggi.
+              {heroContent.desc}
             </p>
 
             <div className="hero-cta-group">
@@ -42,11 +44,11 @@ export default function HomePage({ onOpenProjectModal, onSelectPackage }) {
 
             {/* Clean Minimal Stat Strip */}
             <div className="hero-minimal-stats">
-              <span className="stat-pill-item"><strong>80+</strong> Proyek Selesai</span>
+              <span className="stat-pill-item">{heroContent.stat1}</span>
               <span className="stat-bullet">&bull;</span>
-              <span className="stat-pill-item"><strong>3–5 Hari</strong> Turnaround</span>
+              <span className="stat-pill-item">{heroContent.stat2}</span>
               <span className="stat-bullet">&bull;</span>
-              <span className="stat-pill-item"><strong>100%</strong> Hak Milik</span>
+              <span className="stat-pill-item">{heroContent.stat3}</span>
             </div>
           </div>
 

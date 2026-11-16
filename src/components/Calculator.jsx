@@ -1,5 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { IconCheck, IconClock, IconShield, IconArrowRight, IconWhatsApp } from './Icons';
+import { useSiteContent } from '../context/ContentContext';
 
 const SERVICES_CONFIG = {
   presentation: {
@@ -67,6 +68,7 @@ const SERVICES_CONFIG = {
 };
 
 export default function Calculator() {
+  const { contactInfo } = useSiteContent();
   const [selectedService, setSelectedService] = useState('presentation');
   const [selectedScale, setSelectedScale] = useState('standard');
   const [activeAddons, setActiveAddons] = useState({
@@ -140,8 +142,9 @@ export default function Calculator() {
       `• Target Pengerjaan: ${calculation.timelineDisplay} (${isExpress ? 'Prioritas / Express' : 'Jadwal Standar'})\n\n` +
       `Mohon informasi penawaran kustom (quotation) dan ketersediaan jadwal tim Supernova. Terima kasih!`;
 
+    const targetWa = contactInfo?.waNumber || '6285714521584';
     const encoded = encodeURIComponent(message);
-    window.open(`https://wa.me/6285714521584?text=${encoded}`, '_blank');
+    window.open(`https://wa.me/${targetWa}?text=${encoded}`, '_blank');
   };
 
   return (

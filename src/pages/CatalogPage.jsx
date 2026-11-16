@@ -1,9 +1,10 @@
 import React, { useState, useMemo } from 'react';
 import { useSearchParams, Link } from 'react-router-dom';
-import { PROJECTS_DATA } from '../data/projects';
+import { useSiteContent } from '../context/ContentContext';
 import { IconSearch, IconClose, IconArrowRight } from '../components/Icons';
 
 export default function CatalogPage({ onOpenProjectModal }) {
+  const { projects } = useSiteContent();
   const [searchParams, setSearchParams] = useSearchParams();
   const initialCategory = searchParams.get('filter') || 'all';
 
@@ -28,7 +29,7 @@ export default function CatalogPage({ onOpenProjectModal }) {
   };
 
   const filteredAndSortedProjects = useMemo(() => {
-    return PROJECTS_DATA.filter((project) => {
+    return projects.filter((project) => {
       const matchCategory =
         activeCategory === 'all' || project.category === activeCategory;
 
@@ -41,7 +42,7 @@ export default function CatalogPage({ onOpenProjectModal }) {
 
       return matchCategory && matchQuery;
     });
-  }, [activeCategory, searchQuery]);
+  }, [projects, activeCategory, searchQuery]);
 
   return (
     <div className="page-catalog">

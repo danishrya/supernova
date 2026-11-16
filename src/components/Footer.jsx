@@ -1,8 +1,11 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { IconCheck, IconShield } from './Icons';
+import { useSiteContent } from '../context/ContentContext';
 
 export default function Footer() {
+  const { contactInfo } = useSiteContent();
+
   return (
     <footer className="site-footer">
       <div className="container footer-container">
@@ -61,13 +64,17 @@ export default function Footer() {
             <h5>Hubungi Kami</h5>
             <ul className="footer-contact-links">
               <li>
-                <a href="https://wa.me/6285714521584" target="_blank" rel="noopener noreferrer">
-                  +62 857-1452-1584 (WhatsApp)
+                <a
+                  href={`https://wa.me/${contactInfo?.waNumber || '6285714521584'}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  {contactInfo?.phone || '+62 857-1452-1584'} (WhatsApp)
                 </a>
               </li>
               <li>
-                <a href="mailto:chasupernova.studio@gmail.com">
-                  chasupernova.studio@gmail.com
+                <a href={`mailto:${contactInfo?.email || 'chasupernova.studio@gmail.com'}`}>
+                  {contactInfo?.email || 'chasupernova.studio@gmail.com'}
                 </a>
               </li>
             </ul>

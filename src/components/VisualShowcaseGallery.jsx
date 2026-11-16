@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { PROJECTS_DATA } from '../data/projects';
+import { useSiteContent } from '../context/ContentContext';
 
 export default function VisualShowcaseGallery({ onOpenProjectModal }) {
+  const { projects } = useSiteContent();
   const [activeCategory, setActiveCategory] = useState('all');
 
   const categories = [
@@ -13,8 +14,8 @@ export default function VisualShowcaseGallery({ onOpenProjectModal }) {
 
   const filteredProjects =
     activeCategory === 'all'
-      ? PROJECTS_DATA
-      : PROJECTS_DATA.filter((p) => p.category === activeCategory);
+      ? projects
+      : projects.filter((p) => p.category === activeCategory);
 
   return (
     <section className="section visual-gallery-section" id="gallery">
