@@ -8,16 +8,30 @@ import {
   IconCheck,
 } from './Icons';
 
+const SERVICE_OPTIONS = [
+  { id: 'presentation', label: 'Slide Presentasi & Pitch Deck (PPT)' },
+  { id: 'web', label: 'Pembuatan Website Profesional' },
+  { id: 'branding', label: 'Desain Grafis & Brand Identity' },
+  { id: 'bundle', label: 'Bundling Studio Terpadu' },
+  { id: 'custom', label: 'Konsultasi Kustom / Lainnya' },
+];
+
+const TIMELINE_OPTIONS = [
+  'Fleksibel',
+  'Standar (1-2 Minggu)',
+  'Prioritas / Kilat',
+];
+
 export default function Contact({
   initialBrief = '',
-  initialType = 'Desain Presentasi & Pitch Deck (PPT)',
+  initialType = 'Slide Presentasi & Pitch Deck (PPT)',
 }) {
   const [formData, setFormData] = useState({
     name: '',
     phone: '',
     email: '',
     type: initialType,
-    urgency: 'Standar (Sesuai Alur Normal)',
+    urgency: 'Standar (1-2 Minggu)',
     brief: initialBrief,
   });
 
@@ -40,9 +54,17 @@ export default function Contact({
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
+  const handleSelectService = (label) => {
+    setFormData((prev) => ({ ...prev, type: label }));
+  };
+
+  const handleSelectTimeline = (timeline) => {
+    setFormData((prev) => ({ ...prev, urgency: timeline }));
+  };
+
   const handleSubmitWhatsApp = (e) => {
     e.preventDefault();
-    if (!formData.name || !formData.phone) {
+    if (!formData.name.trim() || !formData.phone.trim()) {
       alert('Mohon masukkan Nama dan No. WhatsApp aktif Anda.');
       return;
     }
@@ -50,12 +72,12 @@ export default function Contact({
     const message =
       `Halo Tim Supernova Studio,\n\n` +
       `Saya ingin berkonsultasi mengenai proyek kreatif untuk bisnis saya:\n\n` +
-      `• Nama / Usaha: ${formData.name}\n` +
-      `• No. WhatsApp: ${formData.phone}\n` +
-      `• Email: ${formData.email || '-'}\n` +
-      `• Kategori Layanan: ${formData.type}\n` +
-      `• Target Waktu: ${formData.urgency}\n` +
-      `• Ringkasan Kebutuhan:\n"${formData.brief || 'Ingin konsultasi & diskusi kebutuhan terlebih dahulu'}"\n\n` +
+      `• Nama / Bisnis: ${formData.name.trim()}\n` +
+      `• No. WhatsApp: ${formData.phone.trim()}\n` +
+      `• Email: ${formData.email.trim() || '-'}\n` +
+      `• Layanan: ${formData.type}\n` +
+      `• Timeline: ${formData.urgency}\n` +
+      `• Catatan Kebutuhan:\n"${formData.brief.trim() || 'Ingin konsultasi & diskusi kebutuhan terlebih dahulu'}"\n\n` +
       `Mohon informasi penawaran dan ketersediaan jadwal tim Supernova. Terima kasih.`;
 
     const encoded = encodeURIComponent(message);
@@ -63,26 +85,26 @@ export default function Contact({
 
     setFeedback({
       type: 'success',
-      text: 'Pesan telah disiapkan. Anda dialihkan ke WhatsApp resmi Supernova Studio.',
+      text: 'Pesan telah disiapkan. Menghubungkan Anda langsung ke WhatsApp resmi Supernova Studio...',
     });
   };
 
   const handleSendEmail = () => {
-    if (!formData.name || !formData.email) {
-      alert('Mohon isi minimal Nama dan Email Anda untuk pengiriman via email.');
+    if (!formData.name.trim() || !formData.email.trim()) {
+      alert('Mohon isi Nama dan Email Anda untuk pengiriman via email.');
       return;
     }
 
-    const subject = encodeURIComponent(`[Konsultasi Proyek Kreatif] ${formData.type} — ${formData.name}`);
+    const subject = encodeURIComponent(`[Konsultasi Proyek] ${formData.type} — ${formData.name}`);
     const body = encodeURIComponent(
-      `Nama: ${formData.name}\nWhatsApp: ${formData.phone}\nEmail: ${formData.email}\nLayanan: ${formData.type}\nTarget Waktu: ${formData.urgency}\n\nKebutuhan Proyek:\n${formData.brief}`
+      `Nama / Bisnis: ${formData.name}\nWhatsApp: ${formData.phone}\nEmail: ${formData.email}\nLayanan: ${formData.type}\nTimeline: ${formData.urgency}\n\nKebutuhan Proyek:\n${formData.brief || 'Konsultasi awal'}`
     );
 
     window.location.href = `mailto:chasupernova.studio@gmail.com?subject=${subject}&body=${body}`;
 
     setFeedback({
       type: 'success',
-      text: 'Aplikasi email Anda dibuka dengan draf konsultasi yang telah terisi rapi.',
+      text: 'Aplikasi email Anda dibuka dengan draf konsultasi yang siap dikirim.',
     });
   };
 
@@ -91,14 +113,17 @@ export default function Contact({
       <div className="container">
         <div className="contact-card-wrapper">
           <div className="contact-grid">
-            {/* Left Info */}
+            {/* Left Column: Studio Contacts */}
             <div className="contact-info">
-              <span className="section-tag">KONSULTASI AWAL GRATIS</span>
-              <h2 className="contact-title">Mari Realisasikan Solusi Desain &amp; Digital Terbaik Anda</h2>
-              <p className="contact-desc">
-                Bingung menentukan format atau spesifikasi yang tepat untuk bisnis Anda? Tim kami siap berdiskusi
-                dan merekomendasikan solusi yang paling efisien — baik Website, Slide Presentasi (PPT), maupun Desain Identitas Brand.
-              </p>
+              <div className="contact-header-block">
+                <span className="section-tag">KONSULTASI AWAL GRATIS</span>
+                <h2 className="contact-title">Mulai Diskusi Proyek Anda</h2>
+                <p className="contact-desc">
+                  Konsultasi awal 100% gratis dan transparan. Ceritakan visi proyek Anda —
+                  baik slide pitch deck investor, website siap pakai, maupun identitas visual brand,
+                  kami siap merumuskan solusi paling efisien.
+                </p>
+              </div>
 
               <div className="contact-channels">
                 <a
@@ -108,10 +133,16 @@ export default function Contact({
                   className="channel-card"
                 >
                   <div className="ch-icon wa">
-                    <IconWhatsApp size={22} color="#34d399" />
+                    <IconWhatsApp size={20} color="#059669" />
                   </div>
                   <div className="ch-text">
-                    <span className="ch-label">WhatsApp Resmi (Respon Cepat)</span>
+                    <div className="ch-header-row">
+                      <span className="ch-label">WhatsApp Studio</span>
+                      <span className="live-status-pill">
+                        <span className="live-status-dot"></span>
+                        <span>Respon Cepat</span>
+                      </span>
+                    </div>
                     <strong className="ch-val">+62 857-1452-1584</strong>
                     <span className="ch-sub">Senin – Sabtu (09:00 – 18:00 WIB)</span>
                   </div>
@@ -122,45 +153,49 @@ export default function Contact({
                   className="channel-card"
                 >
                   <div className="ch-icon email">
-                    <IconMail size={22} color="#b8933b" />
+                    <IconMail size={20} color="#0f172a" />
                   </div>
                   <div className="ch-text">
                     <span className="ch-label">Email Proposal Resmi</span>
                     <strong className="ch-val">chasupernova.studio@gmail.com</strong>
-                    <span className="ch-sub">Untuk proposal tender &amp; korporasi</span>
+                    <span className="ch-sub">Untuk proposal tender, NDA, &amp; korporasi</span>
                   </div>
                 </a>
 
-                <div className="channel-card">
+                <div className="channel-card location-card">
                   <div className="ch-icon location">
-                    <IconGlobe size={22} color="#2563eb" />
+                    <IconGlobe size={20} color="#475569" />
                   </div>
                   <div className="ch-text">
-                    <span className="ch-label">Creative &amp; Engineering Studio</span>
+                    <span className="ch-label">Studio Base</span>
                     <strong className="ch-val">Jakarta Selatan, DKI Jakarta</strong>
-                    <span className="ch-sub">Melayani klien di seluruh Indonesia &amp; mancanegara</span>
+                    <span className="ch-sub">Melayani klien di seluruh Indonesia &amp; global</span>
                   </div>
                 </div>
               </div>
 
-              <div className="guarantee-box">
-                <div className="g-icon-wrap">
-                  <IconShield size={20} color="#b8933b" />
+              <div className="studio-trust-box">
+                <div className="trust-icon-wrap">
+                  <IconShield size={18} color="#0f172a" />
                 </div>
-                <p>
-                  <strong>Jaminan Konsultasi Bebas Tekanan:</strong> Seluruh konsultasi awal bersifat gratis,
-                  tidak mengikat, dan transparan. Kami fokus membantu merumuskan solusi kreatif yang paling memberikan dampak nyata bagi bisnis Anda.
-                </p>
+                <div className="trust-content">
+                  <strong>Privasi &amp; Kualitas Terjamin</strong>
+                  <p>
+                    Data bisnis dan materi pitch deck dijaga kerahasiaannya. Setiap output disertai master file terbuka (.PPTX / source code) siap pakai.
+                  </p>
+                </div>
               </div>
             </div>
 
-            {/* Right Form */}
+            {/* Right Column: Modern Studio Form */}
             <div className="contact-form-panel">
               <form className="consultation-form" onSubmit={handleSubmitWhatsApp}>
-                <h3 className="form-heading">Formulir Diskusi Proyek</h3>
-                <p className="form-subheading">
-                  Isi informasi singkat di bawah untuk langsung tersambung ke WhatsApp tim Supernova:
-                </p>
+                <div className="form-header-area">
+                  <h3 className="form-heading">Detail Kebutuhan Proyek</h3>
+                  <p className="form-subheading">
+                    Pilih kategori dan isi data singkat untuk langsung terhubung dengan lead desainer kami:
+                  </p>
+                </div>
 
                 {feedback && (
                   <div className={`feedback-alert ${feedback.type}`}>
@@ -169,26 +204,54 @@ export default function Contact({
                   </div>
                 )}
 
+                {/* Service Selection via Modern Interactive Pills */}
+                <div className="form-field-group">
+                  <label className="field-label">Kategori Layanan Utama</label>
+                  <div className="service-pills-grid">
+                    {SERVICE_OPTIONS.map((srv) => {
+                      const isSelected = formData.type === srv.label;
+                      return (
+                        <button
+                          key={srv.id}
+                          type="button"
+                          className={`service-pill-btn ${isSelected ? 'active' : ''}`}
+                          onClick={() => handleSelectService(srv.label)}
+                        >
+                          <span className="pill-check">{isSelected ? '✓' : '+'}</span>
+                          <span>{srv.label}</span>
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                {/* Name & WhatsApp Row */}
                 <div className="form-row">
-                  <div className="form-group">
-                    <label htmlFor="clientName">Nama Lengkap / Nama Bisnis *</label>
+                  <div className="form-field-group">
+                    <label htmlFor="clientName" className="field-label">
+                      Nama / Nama Bisnis <span className="req-dot">*</span>
+                    </label>
                     <input
                       type="text"
                       id="clientName"
                       name="name"
-                      placeholder="Contoh: Hendra Kusuma"
+                      className="studio-input"
+                      placeholder="Nama Anda atau bisnis"
                       value={formData.name}
                       onChange={handleChange}
                       required
                     />
                   </div>
-                  <div className="form-group">
-                    <label htmlFor="clientPhone">No. WhatsApp Aktif *</label>
+                  <div className="form-field-group">
+                    <label htmlFor="clientPhone" className="field-label">
+                      No. WhatsApp Aktif <span className="req-dot">*</span>
+                    </label>
                     <input
                       type="tel"
                       id="clientPhone"
                       name="phone"
-                      placeholder="Contoh: 085714521584"
+                      className="studio-input"
+                      placeholder="08xxxxxxxxxx"
                       value={formData.phone}
                       onChange={handleChange}
                       required
@@ -196,79 +259,83 @@ export default function Contact({
                   </div>
                 </div>
 
-                <div className="form-row">
-                  <div className="form-group">
-                    <label htmlFor="clientEmail">Email (Opsional)</label>
-                    <input
-                      type="email"
-                      id="clientEmail"
-                      name="email"
-                      placeholder="nama@perusahaan.com"
-                      value={formData.email}
-                      onChange={handleChange}
-                    />
-                  </div>
-                  <div className="form-group">
-                    <label htmlFor="serviceType">Kategori Layanan Utama</label>
-                    <select
-                      id="serviceType"
-                      name="type"
-                      value={formData.type}
-                      onChange={handleChange}
-                    >
-                      <option value="Desain Presentasi & Pitch Deck (PPT)">Desain Presentasi &amp; Pitch Deck (PPT)</option>
-                      <option value="Pembuatan Website Profesional">Pembuatan Website Profesional</option>
-                      <option value="Desain Grafis & Brand Identity">Desain Grafis &amp; Brand Identity</option>
-                      <option value="Bundling Universal Terpadu (All-in-One)">Bundling Universal Terpadu (All-in-One)</option>
-                      <option value="Konsultasi Kustom / Kebutuhan Lainnya">Konsultasi Kustom / Kebutuhan Lainnya</option>
-                    </select>
-                  </div>
-                </div>
-
-                <div className="form-group">
-                  <label htmlFor="clientUrgency">Target Waktu Pengerjaan</label>
-                  <select
-                    id="clientUrgency"
-                    name="urgency"
-                    value={formData.urgency}
+                {/* Email (Optional) */}
+                <div className="form-field-group">
+                  <label htmlFor="clientEmail" className="field-label">
+                    Alamat Email <span className="opt-tag">(Opsional)</span>
+                  </label>
+                  <input
+                    type="email"
+                    id="clientEmail"
+                    name="email"
+                    className="studio-input"
+                    placeholder="nama@perusahaan.com"
+                    value={formData.email}
                     onChange={handleChange}
-                  >
-                    <option value="Standar (Sesuai Alur Normal)">Standar (Sesuai Alur Normal Proyek)</option>
-                    <option value="Prioritas / Kilat (Express Delivery)">Prioritas / Kilat (Express Delivery)</option>
-                    <option value="Fleksibel / Diskusi Terlebih Dahulu">Fleksibel / Diskusi Terlebih Dahulu</option>
-                  </select>
+                  />
                 </div>
 
-                <div className="form-group">
-                  <label htmlFor="projectBrief">Ceritakan Kebutuhan Proyek Anda</label>
+                {/* Timeline Selector Pills */}
+                <div className="form-field-group">
+                  <label className="field-label">Target Waktu Pengerjaan</label>
+                  <div className="timeline-pills-row">
+                    {TIMELINE_OPTIONS.map((t) => {
+                      const isSelected = formData.urgency === t;
+                      return (
+                        <button
+                          key={t}
+                          type="button"
+                          className={`timeline-pill ${isSelected ? 'active' : ''}`}
+                          onClick={() => handleSelectTimeline(t)}
+                        >
+                          {t}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                {/* Project Brief */}
+                <div className="form-field-group">
+                  <label htmlFor="projectBrief" className="field-label">
+                    Ceritakan Kebutuhan Proyek Anda
+                  </label>
                   <textarea
                     id="projectBrief"
                     name="brief"
-                    rows="4"
-                    placeholder="Contoh: Kami sedang persiapan fundraising ke investor dan butuh slide pitch deck 15 slide yang persuasif & elegan, sekaligus revisi logo perusahaan..."
+                    rows="3"
+                    className="studio-textarea"
+                    placeholder="Ceritakan gambaran singkat proyek, tujuan yang ingin dicapai, atau referensi desain yang diinginkan..."
                     value={formData.brief}
                     onChange={handleChange}
                   ></textarea>
                 </div>
 
-                <div className="form-actions-row">
-                  <button type="submit" className="btn btn-primary btn-block btn-lg" id="submitWaBtn">
-                    <IconWhatsApp size={18} />
-                    <span>Lanjutkan ke WhatsApp Resmi</span>
+                {/* Form Actions */}
+                <div className="form-actions-stack">
+                  <button type="submit" className="studio-btn-primary" id="submitWaBtn">
+                    <IconWhatsApp size={18} color="#25D366" />
+                    <span>Lanjutkan ke WhatsApp Studio</span>
+                    <IconArrowRight size={16} />
                   </button>
+
+                  <div className="form-divider-row">
+                    <span>atau lebih nyaman via email?</span>
+                  </div>
+
                   <button
                     type="button"
-                    className="btn btn-secondary btn-block"
+                    className="studio-btn-secondary"
                     onClick={handleSendEmail}
                     id="submitEmailBtn"
                   >
-                    <IconMail size={18} />
-                    <span>Kirim via Email Resmi</span>
+                    <IconMail size={16} />
+                    <span>Kirim Draf ke Email Resmi</span>
                   </button>
                 </div>
 
                 <p className="form-disclaimer">
-                  Kerahasiaan data dan materi bisnis Anda 100% terjaga dan aman.
+                  🔒 Data bisnis dan materi diskusi Anda 100% terjaga dan aman. Tidak ada spam.
                 </p>
               </form>
             </div>
