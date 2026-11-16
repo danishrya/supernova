@@ -59,7 +59,7 @@ export default function Contact({
       `Mohon informasi penawaran dan ketersediaan jadwal tim Supernova. Terima kasih.`;
 
     const encoded = encodeURIComponent(message);
-    window.open(`https://wa.me/6281234567890?text=${encoded}`, '_blank');
+    window.open(`https://wa.me/6285714521584?text=${encoded}`, '_blank');
 
     setFeedback({
       type: 'success',
@@ -78,7 +78,7 @@ export default function Contact({
       `Nama: ${formData.name}\nWhatsApp: ${formData.phone}\nEmail: ${formData.email}\nLayanan: ${formData.type}\nTarget Waktu: ${formData.urgency}\n\nKebutuhan Proyek:\n${formData.brief}`
     );
 
-    window.location.href = `mailto:partnership@supernova.studio?subject=${subject}&body=${body}`;
+    window.location.href = `mailto:chasupernova.studio@gmail.com?subject=${subject}&body=${body}`;
 
     setFeedback({
       type: 'success',
@@ -102,7 +102,7 @@ export default function Contact({
 
               <div className="contact-channels">
                 <a
-                  href="https://wa.me/6281234567890"
+                  href="https://wa.me/6285714521584"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="channel-card"
@@ -112,13 +112,13 @@ export default function Contact({
                   </div>
                   <div className="ch-text">
                     <span className="ch-label">WhatsApp Resmi (Respon Cepat)</span>
-                    <strong className="ch-val">+62 812-3456-7890</strong>
+                    <strong className="ch-val">+62 857-1452-1584</strong>
                     <span className="ch-sub">Senin – Sabtu (09:00 – 18:00 WIB)</span>
                   </div>
                 </a>
 
                 <a
-                  href="mailto:partnership@supernova.studio"
+                  href="mailto:chasupernova.studio@gmail.com"
                   className="channel-card"
                 >
                   <div className="ch-icon email">
@@ -126,7 +126,7 @@ export default function Contact({
                   </div>
                   <div className="ch-text">
                     <span className="ch-label">Email Proposal Resmi</span>
-                    <strong className="ch-val">partnership@supernova.studio</strong>
+                    <strong className="ch-val">chasupernova.studio@gmail.com</strong>
                     <span className="ch-sub">Untuk proposal tender &amp; korporasi</span>
                   </div>
                 </a>
@@ -188,7 +188,7 @@ export default function Contact({
                       type="tel"
                       id="clientPhone"
                       name="phone"
-                      placeholder="Contoh: 081234567890"
+                      placeholder="Contoh: 085714521584"
                       value={formData.phone}
                       onChange={handleChange}
                       required

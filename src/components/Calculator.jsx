@@ -141,7 +141,7 @@ export default function Calculator() {
       `Mohon informasi penawaran kustom (quotation) dan ketersediaan jadwal tim Supernova. Terima kasih!`;
 
     const encoded = encodeURIComponent(message);
-    window.open(`https://wa.me/6281234567890?text=${encoded}`, '_blank');
+    window.open(`https://wa.me/6285714521584?text=${encoded}`, '_blank');
   };
 
   return (
