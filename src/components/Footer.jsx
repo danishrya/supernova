@@ -86,7 +86,13 @@ export default function Footer() {
         </div>
 
         <div className="footer-bottom">
-          <p>&copy; 2026 SUPERNOVA Studio. Seluruh hak cipta dilindungi undang-undang.</p>
+          <p>
+            &copy; 2026 SUPERNOVA Studio. Seluruh hak cipta dilindungi undang-undang.
+            {' • '}
+            <Link to="/admin" style={{ color: 'var(--text-muted)', textDecoration: 'none', fontSize: '0.75rem' }}>
+              Portal CMS Studio
+            </Link>
+          </p>
           <p className="credit">
             Solusi desain presentasi, web berkelas, dan identitas visual berkinerja tinggi untuk brand &amp; korporasi modern.
           </p>

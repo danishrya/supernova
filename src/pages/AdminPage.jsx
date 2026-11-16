@@ -16,6 +16,9 @@ import {
   IconMail,
 } from '../components/Icons';
 
+// Default Master Passcode for instant built-in CMS access without Firebase
+const DEFAULT_PASSCODE = 'supernova';
+
 export default function AdminPage() {
   const {
     contactInfo,
@@ -23,13 +26,22 @@ export default function AdminPage() {
     projects,
     saveGeneralContent,
     saveProjects,
+    resetToDefaults,
+    isCloudSynced,
     defaultContact,
     defaultHero,
     defaultProjects,
   } = useSiteContent();
 
-  const [user, setUser] = useState(null);
-  const [authChecking, setAuthChecking] = useState(true);
+  const [user, setUser] = useState(() => {
+    const localSession = sessionStorage.getItem('supernova_admin_session');
+    if (localSession === 'true') {
+      return { email: 'admin@supernova.studio', isLocal: true };
+    }
+    return null;
+  });
+
+  const [authChecking, setAuthChecking] = useState(false);
 
   // Login form state
   const [loginEmail, setLoginEmail] = useState('');
@@ -38,7 +50,7 @@ export default function AdminPage() {
   const [isLoggingIn, setIsLoggingIn] = useState(false);
 
   // Active dashboard tab
-  const [activeTab, setActiveTab] = useState('contact'); // 'contact', 'hero', 'projects'
+  const [activeTab, setActiveTab] = useState('contact'); // 'contact', 'hero', 'projects', 'backup'
 
   // Editable drafts
   const [draftContact, setDraftContact] = useState(contactInfo);
@@ -53,19 +65,21 @@ export default function AdminPage() {
   const [editingProject, setEditingProject] = useState(null);
   const [isNewProject, setIsNewProject] = useState(false);
 
+  // Check Firebase Auth if configured
   useEffect(() => {
-    if (!auth) {
-      setAuthChecking(false);
-      return;
+    if (auth && isFirebaseConfigured) {
+      setAuthChecking(true);
+      const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+        if (currentUser) {
+          setUser(currentUser);
+        }
+        setAuthChecking(false);
+      });
+      return () => unsubscribe();
     }
-    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-      setUser(currentUser);
-      setAuthChecking(false);
-    });
-    return () => unsubscribe();
   }, []);
 
-  // Update local drafts when context data changes
+  // Sync drafts when context changes
   useEffect(() => {
     setDraftContact(contactInfo);
   }, [contactInfo]);
@@ -88,31 +102,49 @@ export default function AdminPage() {
     setLoginError('');
     setIsLoggingIn(true);
 
-    try {
-      if (!auth) {
-        throw new Error('Firebase Auth belum terhubung. Periksa konfigurasi di .env.local');
-      }
-      await signInWithEmailAndPassword(auth, loginEmail, loginPassword);
-      showToast('success', 'Selamat datang! Berhasil masuk ke CMS Supernova.');
-    } catch (err) {
-      console.error(err);
-      if (err.code === 'auth/invalid-credential' || err.code === 'auth/wrong-password') {
-        setLoginError('Email atau password salah. Pastikan sudah didaftarkan di Firebase Console.');
-      } else if (err.code === 'auth/user-not-found') {
-        setLoginError('Akun belum terdaftar. Daftarkan email di tab Authentication Firebase.');
-      } else {
-        setLoginError(err.message || 'Gagal masuk. Periksa koneksi internet Anda.');
-      }
-    } finally {
+    const inputPass = loginPassword.trim();
+    const storedPass = localStorage.getItem('supernova_admin_passcode') || DEFAULT_PASSCODE;
+
+    // 1. Check built-in Master Passcode (Works immediately without any backend/Firebase!)
+    if (inputPass === storedPass || inputPass === DEFAULT_PASSCODE) {
+      sessionStorage.setItem('supernova_admin_session', 'true');
+      setUser({ email: loginEmail || 'admin@supernova.studio', isLocal: true });
       setIsLoggingIn(false);
+      showToast('success', 'Selamat datang! Berhasil masuk ke CMS Studio Supernova.');
+      return;
     }
+
+    // 2. If Firebase Auth is configured, attempt Firebase sign in
+    if (auth && isFirebaseConfigured) {
+      try {
+        const userCred = await signInWithEmailAndPassword(auth, loginEmail, loginPassword);
+        setUser(userCred.user);
+        sessionStorage.setItem('supernova_admin_session', 'true');
+        showToast('success', 'Selamat datang! Berhasil masuk via Firebase Auth.');
+        setIsLoggingIn(false);
+        return;
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    setLoginError(
+      `Password salah. Gunakan passcode bawaan studio: "${DEFAULT_PASSCODE}" atau masukkan password yang sesuai.`
+    );
+    setIsLoggingIn(false);
   };
 
   const handleLogout = async () => {
-    if (auth) {
-      await signOut(auth);
-      showToast('info', 'Anda telah keluar dari CMS.');
+    sessionStorage.removeItem('supernova_admin_session');
+    if (auth && isFirebaseConfigured) {
+      try {
+        await signOut(auth);
+      } catch (e) {
+        console.warn(e);
+      }
     }
+    setUser(null);
+    showToast('info', 'Anda telah keluar dari CMS.');
   };
 
   const handleSaveGeneral = async (e) => {
@@ -120,7 +152,12 @@ export default function AdminPage() {
     setIsSaving(true);
     try {
       await saveGeneralContent(draftContact, draftHero);
-      showToast('success', 'Konten kontak & teks berhasil disimpan ke Firebase!');
+      showToast(
+        'success',
+        isCloudSynced
+          ? 'Konten berhasil disimpan ke Browser & tersinkronisasi ke Cloud!'
+          : 'Konten berhasil disimpan dan langsung aktif di seluruh website!'
+      );
     } catch (err) {
       console.error(err);
       showToast('error', `Gagal menyimpan: ${err.message}`);
@@ -148,25 +185,65 @@ export default function AdminPage() {
 
     setDraftProjects(updatedList);
     setEditingProject(null);
+    showToast('info', 'Proyek diperbarui di daftar draf. Jangan lupa klik "Simpan Semua Proyek".');
   };
 
   const handleDeleteProject = (id) => {
     if (window.confirm('Yakin ingin menghapus karya ini dari portofolio?')) {
       const filtered = draftProjects.filter((p) => p.id !== id);
       setDraftProjects(filtered);
+      showToast('info', 'Proyek dihapus dari draf. Klik "Simpan Semua Proyek" untuk memperbarui website.');
     }
   };
 
-  const handleSaveAllProjectsToFirebase = async () => {
+  const handleSaveAllProjects = async () => {
     setIsSaving(true);
     try {
       await saveProjects(draftProjects);
-      showToast('success', 'Seluruh data portofolio berhasil disimpan ke website!');
+      showToast(
+        'success',
+        isCloudSynced
+          ? 'Seluruh portofolio berhasil disimpan ke Website & Cloud!'
+          : 'Seluruh portofolio berhasil disimpan dan langsung tayang di Website!'
+      );
     } catch (err) {
       console.error(err);
       showToast('error', `Gagal menyimpan portofolio: ${err.message}`);
     } finally {
       setIsSaving(false);
+    }
+  };
+
+  // Export data as JSON file
+  const handleExportJSON = () => {
+    const exportData = {
+      exportedAt: new Date().toISOString(),
+      contact: draftContact,
+      hero: draftHero,
+      projects: draftProjects,
+    };
+    const jsonStr = 'data:text/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(exportData, null, 2));
+    const downloadAnchor = document.createElement('a');
+    downloadAnchor.setAttribute('href', jsonStr);
+    downloadAnchor.setAttribute('download', `supernova-content-${new Date().toISOString().slice(0, 10)}.json`);
+    document.body.appendChild(downloadAnchor);
+    downloadAnchor.click();
+    downloadAnchor.remove();
+    showToast('success', 'File backup data berhasil diunduh!');
+  };
+
+  // Copy projects data to clipboard
+  const handleCopyProjectsJS = () => {
+    const code = `export const PROJECTS_DATA = ${JSON.stringify(draftProjects, null, 2)};`;
+    navigator.clipboard.writeText(code);
+    showToast('success', 'Kode PROJECTS_DATA berhasil disalin ke clipboard!');
+  };
+
+  // Handle reset to default
+  const handleReset = () => {
+    if (window.confirm('Reset seluruh konten kembali ke data bawaan awal website?')) {
+      resetToDefaults();
+      showToast('info', 'Konten telah dikembalikan ke bawaan awal.');
     }
   };
 
@@ -179,7 +256,9 @@ export default function AdminPage() {
     );
   }
 
-  // LOGIN SCREEN
+  // ==========================================
+  // LOGIN SCREEN (BUILT-IN ZERO SETUP)
+  // ==========================================
   if (!user) {
     return (
       <div className="admin-login-wrapper">
@@ -195,11 +274,9 @@ export default function AdminPage() {
             <p>Pusat Pengelolaan Konten &amp; Portofolio Studio</p>
           </div>
 
-          {!isFirebaseConfigured && (
-            <div className="admin-alert warning">
-              ⚠️ Konfigurasi Firebase belum terpasang di file <code>.env.local</code>. Pastikan API key sudah dimasukkan.
-            </div>
-          )}
+          <div className="admin-alert info" style={{ background: 'rgba(59, 130, 246, 0.1)', border: '1px solid rgba(59, 130, 246, 0.25)', color: '#93c5fd' }}>
+            💡 <strong>CMS Langsung Siap Pakai:</strong> Masuk menggunakan password studio default: <code>{DEFAULT_PASSCODE}</code>
+          </div>
 
           {loginError && (
             <div className="admin-alert error">
@@ -209,26 +286,26 @@ export default function AdminPage() {
 
           <form onSubmit={handleLogin} className="admin-form">
             <div className="form-group">
-              <label>Email Administrator</label>
+              <label>Email Admin (Opsional)</label>
               <input
                 type="email"
-                placeholder="admin@supernova.com"
+                placeholder="admin@supernova.studio"
                 value={loginEmail}
                 onChange={(e) => setLoginEmail(e.target.value)}
-                required
                 className="studio-input"
               />
             </div>
 
             <div className="form-group">
-              <label>Password</label>
+              <label>Passcode / Password Studio</label>
               <input
                 type="password"
-                placeholder="••••••••"
+                placeholder={`Ketik: ${DEFAULT_PASSCODE}`}
                 value={loginPassword}
                 onChange={(e) => setLoginPassword(e.target.value)}
                 required
                 className="studio-input"
+                autoFocus
               />
             </div>
 
@@ -252,7 +329,9 @@ export default function AdminPage() {
     );
   }
 
+  // ==========================================
   // DASHBOARD SCREEN
+  // ==========================================
   return (
     <div className="admin-dashboard-layout">
       {/* Toast Notification */}
@@ -272,15 +351,24 @@ export default function AdminPage() {
           <span className="admin-brand-name">
             SUPERNOVA <strong>CMS STUDIO</strong>
           </span>
-          <span className="admin-user-pill">{user.email}</span>
+          <span className="admin-user-pill">
+            {user.email || 'Admin Studio'}
+          </span>
+          <span className={`status-pill ${isCloudSynced ? 'online' : 'local'}`}>
+            <span className="dot"></span>
+            {isCloudSynced ? 'Cloud Synced' : 'Live di Browser'}
+          </span>
         </div>
 
         <div className="admin-topbar-right">
+          <button onClick={handleExportJSON} className="btn-outline-admin" title="Unduh Backup JSON">
+            📥 Unduh Backup JSON
+          </button>
           <Link to="/" target="_blank" rel="noopener noreferrer" className="btn-outline-admin">
-            Buka Website Publik ↗
+            Lihat Website Publik ↗
           </Link>
           <button onClick={handleLogout} className="btn-logout-admin">
-            Keluar (Logout)
+            Keluar
           </button>
         </div>
       </header>
@@ -305,7 +393,13 @@ export default function AdminPage() {
             className={`admin-tab-btn ${activeTab === 'projects' ? 'active' : ''}`}
             onClick={() => setActiveTab('projects')}
           >
-            📁 Katalog Portofolio ({draftProjects.length})
+            📁 Portofolio ({draftProjects.length} Proyek)
+          </button>
+          <button
+            className={`admin-tab-btn ${activeTab === 'backup' ? 'active' : ''}`}
+            onClick={() => setActiveTab('backup')}
+          >
+            ⚙️ Backup &amp; Keamanan
           </button>
         </div>
 
@@ -314,7 +408,7 @@ export default function AdminPage() {
           <form onSubmit={handleSaveGeneral} className="admin-panel-card">
             <div className="panel-header">
               <h3>Kontak &amp; Komunikasi Studio</h3>
-              <p>Perubahan di sini langsung mengubah tombol WhatsApp, Email, dan teks kontak di seluruh halaman website.</p>
+              <p>Perubahan di sini langsung mengubah tombol WhatsApp, link email, dan teks kontak di seluruh halaman website secara otomatis.</p>
             </div>
 
             <div className="admin-form-grid">
@@ -502,7 +596,7 @@ export default function AdminPage() {
                 <button
                   type="button"
                   className="studio-btn-primary"
-                  onClick={handleSaveAllProjectsToFirebase}
+                  onClick={handleSaveAllProjects}
                   disabled={isSaving}
                 >
                   {isSaving ? 'Menyimpan...' : 'Simpan Semua Proyek ke Website'}
@@ -547,6 +641,53 @@ export default function AdminPage() {
                   </div>
                 </div>
               ))}
+            </div>
+          </div>
+        )}
+
+        {/* TAB 4: BACKUP & KEAMANAN */}
+        {activeTab === 'backup' && (
+          <div className="admin-panel-card">
+            <div className="panel-header">
+              <h3>Backup Data &amp; Pengaturan CMS</h3>
+              <p>Kelola pencadangan data, ekspor kode sumber, atau reset ke konten bawaan.</p>
+            </div>
+
+            <div className="backup-sections-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '20px', marginTop: '16px' }}>
+              <div className="backup-box" style={{ background: '#1e293b', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '14px', padding: '24px' }}>
+                <h4 style={{ color: '#ffffff', margin: '0 0 8px 0' }}>📥 Download Backup Data</h4>
+                <p style={{ color: '#94a3b8', fontSize: '0.85rem', lineHeight: '1.5', margin: '0 0 16px 0' }}>
+                  Unduh seluruh konfigurasi kontak, teks hero, dan daftar proyek portofolio dalam file <code>.json</code> aman.
+                </p>
+                <button type="button" onClick={handleExportJSON} className="studio-btn-primary" style={{ width: '100%' }}>
+                  Unduh File Backup JSON
+                </button>
+              </div>
+
+              <div className="backup-box" style={{ background: '#1e293b', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '14px', padding: '24px' }}>
+                <h4 style={{ color: '#ffffff', margin: '0 0 8px 0' }}>📋 Salin Data Projects ke Kode</h4>
+                <p style={{ color: '#94a3b8', fontSize: '0.85rem', lineHeight: '1.5', margin: '0 0 16px 0' }}>
+                  Salin array JavaScript <code>PROJECTS_DATA</code> jika Anda ingin menempelkannya langsung ke file <code>src/data/projects.js</code>.
+                </p>
+                <button type="button" onClick={handleCopyProjectsJS} className="studio-btn-secondary" style={{ width: '100%' }}>
+                  Salin Kode PROJECTS_DATA
+                </button>
+              </div>
+
+              <div className="backup-box" style={{ background: '#1e293b', border: '1px solid rgba(239, 68, 68, 0.2)', borderRadius: '14px', padding: '24px' }}>
+                <h4 style={{ color: '#fca5a5', margin: '0 0 8px 0' }}>⚠️ Reset Konten Bawaan</h4>
+                <p style={{ color: '#94a3b8', fontSize: '0.85rem', lineHeight: '1.5', margin: '0 0 16px 0' }}>
+                  Menghapus perubahan lokal dan mengembalikan teks kontak, hero, dan portofolio ke konfigurasi awal bawaan template.
+                </p>
+                <button
+                  type="button"
+                  onClick={handleReset}
+                  className="studio-btn-secondary"
+                  style={{ width: '100%', borderColor: 'rgba(239, 68, 68, 0.4)', color: '#fca5a5' }}
+                >
+                  Reset ke Data Awal
+                </button>
+              </div>
             </div>
           </div>
         )}
