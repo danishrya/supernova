@@ -1,13 +1,16 @@
 import React, { useState } from 'react';
-import { FAQ_DATA } from '../data/faq';
+import { useSiteContent } from '../context/ContentContext';
 import { IconChevronDown } from './Icons';
 
 export default function FAQ() {
+  const { faqList } = useSiteContent();
   const [openIndex, setOpenIndex] = useState(null);
 
   const toggleItem = (idx) => {
     setOpenIndex(openIndex === idx ? null : idx);
   };
+
+  const list = faqList || [];
 
   return (
     <section className="section faq-section" id="faq">
@@ -16,15 +19,15 @@ export default function FAQ() {
           <span className="section-tag">PERTANYAAN UMUM</span>
           <h2 className="section-title">Hal yang Sering Ditanyakan (FAQ)</h2>
           <p className="section-subtitle">
-            Transparansi adalah prioritas kami. Temukan jawaban seputar alur kerja, garansi, dan hak cipta website Anda.
+            Transparansi adalah prioritas kami. Temukan jawaban seputar alur kerja, garansi, dan hak cipta karya Anda.
           </p>
         </div>
 
         <div className="faq-accordion" id="faqAccordion">
-          {FAQ_DATA.map((item, idx) => {
+          {list.map((item, idx) => {
             const isOpen = openIndex === idx;
             return (
-              <div key={idx} className={`faq-item ${isOpen ? 'active' : ''}`}>
+              <div key={item.id || idx} className={`faq-item ${isOpen ? 'active' : ''}`}>
                 <button
                   className="faq-question"
                   onClick={() => toggleItem(idx)}

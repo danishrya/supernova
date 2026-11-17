@@ -9,7 +9,7 @@ import { IconArrowRight } from '../components/Icons';
 import { useSiteContent } from '../context/ContentContext';
 
 export default function HomePage({ onOpenProjectModal, onSelectPackage }) {
-  const { heroContent } = useSiteContent();
+  const { heroContent, testimonials, ctaContent } = useSiteContent();
 
   return (
     <div className="page-home">
@@ -38,34 +38,38 @@ export default function HomePage({ onOpenProjectModal, onSelectPackage }) {
                 <IconArrowRight size={16} />
               </Link>
               <Link to="/catalog" className="btn btn-secondary btn-lg" id="homeWorksBtn">
-                <span>Lihat Karya</span>
+                <span>Lihat Portofolio</span>
               </Link>
             </div>
 
-            {/* Clean Minimal Stat Strip */}
-            <div className="hero-minimal-stats">
-              <span className="stat-pill-item">{heroContent.stat1}</span>
-              <span className="stat-bullet">&bull;</span>
-              <span className="stat-pill-item">{heroContent.stat2}</span>
-              <span className="stat-bullet">&bull;</span>
-              <span className="stat-pill-item">{heroContent.stat3}</span>
+            <div className="hero-stats-row minimal-hero-stats">
+              <div className="stat-pill-item">
+                <span className="stat-pill-num">{heroContent.stat1}</span>
+              </div>
+              <div className="stat-pill-divider" />
+              <div className="stat-pill-item">
+                <span className="stat-pill-num">{heroContent.stat2}</span>
+              </div>
+              <div className="stat-pill-divider" />
+              <div className="stat-pill-item">
+                <span className="stat-pill-num">{heroContent.stat3}</span>
+              </div>
             </div>
           </div>
 
-          {/* Interactive Minimalist Hero Showcase Card */}
-          <div className="hero-preview-wrapper">
-            <ClientExperienceWidget />
+          <div className="hero-preview-wrapper minimal-hero-widget">
+            <ClientExperienceWidget onOpenProjectModal={onOpenProjectModal} />
           </div>
         </div>
       </section>
 
-      {/* Marquee Ticker */}
+      {/* TECH TICKER */}
       <TechRibbon />
 
-      {/* 2. SELECTED WORKS (IMAGE-LED SHOWCASE) */}
+      {/* 2. SELECTED WORKS */}
       <VisualShowcaseGallery onOpenProjectModal={onOpenProjectModal} />
 
-      {/* 3. CAPABILITIES & SCOPE */}
+      {/* 3. CAPABILITIES / SERVICES */}
       <Pricing onSelectPackage={onSelectPackage} />
 
       {/* 4. HOW WE WORK (3 CLEAN STEPS) */}
@@ -80,44 +84,23 @@ export default function HomePage({ onOpenProjectModal, onSelectPackage }) {
           </div>
 
           <div className="testimonials-grid editorial-grid">
-            <div className="testi-card editorial-testi">
-              <p className="testi-quote">
-                "Supernova merestrukturisasi narasi pitch deck kami dari awal. Alur ceritanya to-the-point dan kami sukses mengamankan seed funding sesuai target."
-              </p>
-              <div className="testi-author">
-                <div className="testi-avatar-pill">R</div>
-                <div>
-                  <strong className="testi-name">Reza Pratama</strong>
-                  <span className="testi-role">Co-Founder, Nexus Fintech</span>
+            {(testimonials || []).map((t, idx) => (
+              <div
+                key={t.id || idx}
+                className={`testi-card editorial-testi ${t.featured ? 'featured-testi' : ''}`}
+              >
+                <p className="testi-quote">"{t.quote}"</p>
+                <div className="testi-author">
+                  <div className="testi-avatar-pill">
+                    {t.avatar || (t.name ? t.name.charAt(0) : 'K')}
+                  </div>
+                  <div>
+                    <strong className="testi-name">{t.name}</strong>
+                    <span className="testi-role">{t.role}</span>
+                  </div>
                 </div>
               </div>
-            </div>
-
-            <div className="testi-card editorial-testi featured-testi">
-              <p className="testi-quote">
-                "Website dan company profile resmi kami sangat prestisius. Mitra korporat dan panitia tender B2B langsung menaruh rasa percaya tinggi."
-              </p>
-              <div className="testi-author">
-                <div className="testi-avatar-pill">H</div>
-                <div>
-                  <strong className="testi-name">Hendrawan Kusuma</strong>
-                  <span className="testi-role">Managing Director, Holding Bisnis</span>
-                </div>
-              </div>
-            </div>
-
-            <div className="testi-card editorial-testi">
-              <p className="testi-quote">
-                "Standar estetika visual mereka sangat tinggi. Master file yang diserahkan rapi, dan template Canva-nya mudah dipakai tim kami."
-              </p>
-              <div className="testi-author">
-                <div className="testi-avatar-pill">D</div>
-                <div>
-                  <strong className="testi-name">Diana Stephanie</strong>
-                  <span className="testi-role">Brand Lead, Amarta Luxe Bali</span>
-                </div>
-              </div>
-            </div>
+            ))}
           </div>
         </div>
       </section>
@@ -127,14 +110,14 @@ export default function HomePage({ onOpenProjectModal, onSelectPackage }) {
         <div className="container">
           <div className="cta-banner-card minimal-cta-card">
             <div className="cta-banner-content">
-              <span className="cta-banner-tag">LET'S TALK</span>
-              <h2>Punya Ide atau Proyek yang Ingin Diwujudkan?</h2>
+              <span className="cta-banner-tag">{ctaContent?.tag || "LET'S TALK"}</span>
+              <h2>{ctaContent?.title || 'Punya Ide atau Proyek yang Ingin Diwujudkan?'}</h2>
               <p>
-                Ceritakan kebutuhan Anda — baik slide presentasi (PPT), identitas brand, maupun website modern.
+                {ctaContent?.desc || 'Ceritakan kebutuhan Anda — baik slide presentasi (PPT), identitas brand, maupun website modern.'}
               </p>
               <div className="cta-banner-actions">
                 <Link to="/contact" className="btn btn-primary btn-lg">
-                  <span>Mulai Diskusi via WhatsApp</span>
+                  <span>{ctaContent?.btnText || 'Mulai Diskusi via WhatsApp'}</span>
                   <IconArrowRight size={16} />
                 </Link>
                 <Link to="/catalog" className="btn btn-secondary btn-lg">

@@ -14,23 +14,38 @@ import {
   IconArrowRight,
   IconWhatsApp,
   IconMail,
+  IconClose,
 } from '../components/Icons';
 
-// Default Master Passcode for instant built-in CMS access without Firebase
 const DEFAULT_PASSCODE = 'supernova';
+
+const IMAGE_PRESETS = [
+  { label: 'Corporate / Pitch Deck', url: '/assets/images/corporate.jpg' },
+  { label: 'CMS / Tablet Showcase', url: '/assets/images/cms-tablet.jpg' },
+  { label: 'E-Commerce / Fashion', url: '/assets/images/ecommerce.jpg' },
+  { label: 'Branding / Cafe & Retail', url: '/assets/images/resto-cafe.jpg' },
+  { label: 'Landing Page / Agency', url: '/assets/images/landing.jpg' },
+  { label: 'SaaS / Modern Platform', url: '/assets/images/saas.jpg' },
+  { label: 'Architecture / Luxury', url: '/assets/images/villa-resort.jpg' },
+  { label: 'Multi-Device Mockup', url: '/assets/images/devices-showcase.jpg' },
+];
 
 export default function AdminPage() {
   const {
     contactInfo,
     heroContent,
+    ctaContent,
     projects,
+    servicesList,
+    testimonials,
+    faqList,
     saveGeneralContent,
     saveProjects,
+    saveServices,
+    saveTestimonials,
+    saveFaq,
     resetToDefaults,
     isCloudSynced,
-    defaultContact,
-    defaultHero,
-    defaultProjects,
   } = useSiteContent();
 
   const [user, setUser] = useState(() => {
@@ -50,20 +65,40 @@ export default function AdminPage() {
   const [isLoggingIn, setIsLoggingIn] = useState(false);
 
   // Active dashboard tab
-  const [activeTab, setActiveTab] = useState('contact'); // 'contact', 'hero', 'projects', 'backup'
+  // 'contact', 'hero', 'projects', 'services', 'testimonials', 'faq', 'security'
+  const [activeTab, setActiveTab] = useState('contact');
 
   // Editable drafts
   const [draftContact, setDraftContact] = useState(contactInfo);
   const [draftHero, setDraftHero] = useState(heroContent);
+  const [draftCta, setDraftCta] = useState(ctaContent);
   const [draftProjects, setDraftProjects] = useState(projects);
+  const [draftServices, setDraftServices] = useState(servicesList);
+  const [draftTestimonials, setDraftTestimonials] = useState(testimonials);
+  const [draftFaq, setDraftFaq] = useState(faqList);
+
+  // Search filter for projects
+  const [projectSearch, setProjectSearch] = useState('');
+  const [projectCategoryFilter, setProjectCategoryFilter] = useState('all');
+
+  // Modals state
+  const [editingProject, setEditingProject] = useState(null);
+  const [isNewProject, setIsNewProject] = useState(false);
+
+  const [editingTesti, setEditingTesti] = useState(null);
+  const [isNewTesti, setIsNewTesti] = useState(false);
+
+  const [editingFaq, setEditingFaq] = useState(null);
+  const [isNewFaq, setIsNewFaq] = useState(false);
+
+  const [editingService, setEditingService] = useState(null);
+
+  // Security passcode change state
+  const [newPasscode, setNewPasscode] = useState('');
 
   // Saving indicator & toast
   const [isSaving, setIsSaving] = useState(false);
   const [toast, setToast] = useState(null);
-
-  // Project modal state (editing or adding)
-  const [editingProject, setEditingProject] = useState(null);
-  const [isNewProject, setIsNewProject] = useState(false);
 
   // Check Firebase Auth if configured
   useEffect(() => {
@@ -80,23 +115,20 @@ export default function AdminPage() {
   }, []);
 
   // Sync drafts when context changes
-  useEffect(() => {
-    setDraftContact(contactInfo);
-  }, [contactInfo]);
-
-  useEffect(() => {
-    setDraftHero(heroContent);
-  }, [heroContent]);
-
-  useEffect(() => {
-    setDraftProjects(projects);
-  }, [projects]);
+  useEffect(() => { setDraftContact(contactInfo); }, [contactInfo]);
+  useEffect(() => { setDraftHero(heroContent); }, [heroContent]);
+  useEffect(() => { setDraftCta(ctaContent); }, [ctaContent]);
+  useEffect(() => { setDraftProjects(projects); }, [projects]);
+  useEffect(() => { setDraftServices(servicesList); }, [servicesList]);
+  useEffect(() => { setDraftTestimonials(testimonials); }, [testimonials]);
+  useEffect(() => { setDraftFaq(faqList); }, [faqList]);
 
   const showToast = (type, message) => {
     setToast({ type, message });
     setTimeout(() => setToast(null), 4000);
   };
 
+  // Login handler
   const handleLogin = async (e) => {
     e.preventDefault();
     setLoginError('');
@@ -105,22 +137,22 @@ export default function AdminPage() {
     const inputPass = loginPassword.trim();
     const storedPass = localStorage.getItem('supernova_admin_passcode') || DEFAULT_PASSCODE;
 
-    // 1. Check built-in Master Passcode (Works immediately without any backend/Firebase!)
+    // 1. Built-in Passcode check (Zero-Setup)
     if (inputPass === storedPass || inputPass === DEFAULT_PASSCODE) {
       sessionStorage.setItem('supernova_admin_session', 'true');
       setUser({ email: loginEmail || 'admin@supernova.studio', isLocal: true });
       setIsLoggingIn(false);
-      showToast('success', 'Selamat datang! Berhasil masuk ke CMS Studio Supernova.');
+      showToast('success', 'Selamat datang di CMS Supernova Studio.');
       return;
     }
 
-    // 2. If Firebase Auth is configured, attempt Firebase sign in
+    // 2. Firebase Auth if configured
     if (auth && isFirebaseConfigured) {
       try {
         const userCred = await signInWithEmailAndPassword(auth, loginEmail, loginPassword);
         setUser(userCred.user);
         sessionStorage.setItem('supernova_admin_session', 'true');
-        showToast('success', 'Selamat datang! Berhasil masuk via Firebase Auth.');
+        showToast('success', 'Berhasil masuk via Firebase Auth.');
         setIsLoggingIn(false);
         return;
       } catch (err) {
@@ -128,38 +160,52 @@ export default function AdminPage() {
       }
     }
 
-    setLoginError(
-      `Password salah. Gunakan passcode bawaan studio: "${DEFAULT_PASSCODE}" atau masukkan password yang sesuai.`
-    );
+    setLoginError(`Password salah. Gunakan passcode studio: "${storedPass}"`);
     setIsLoggingIn(false);
   };
 
   const handleLogout = async () => {
     sessionStorage.removeItem('supernova_admin_session');
     if (auth && isFirebaseConfigured) {
-      try {
-        await signOut(auth);
-      } catch (e) {
-        console.warn(e);
-      }
+      try { await signOut(auth); } catch (e) { console.warn(e); }
     }
     setUser(null);
     showToast('info', 'Anda telah keluar dari CMS.');
   };
 
+  // Change Passcode
+  const handleChangePasscode = (e) => {
+    e.preventDefault();
+    if (newPasscode.trim().length < 4) {
+      alert('Password minimal 4 karakter.');
+      return;
+    }
+    localStorage.setItem('supernova_admin_passcode', newPasscode.trim());
+    setNewPasscode('');
+    showToast('success', 'Password CMS berhasil diperbarui!');
+  };
+
+  // Save General (Contact, Hero, CTA)
   const handleSaveGeneral = async (e) => {
     e.preventDefault();
     setIsSaving(true);
     try {
-      await saveGeneralContent(draftContact, draftHero);
-      showToast(
-        'success',
-        isCloudSynced
-          ? 'Konten berhasil disimpan ke Browser & tersinkronisasi ke Cloud!'
-          : 'Konten berhasil disimpan dan langsung aktif di seluruh website!'
-      );
+      await saveGeneralContent(draftContact, draftHero, draftCta);
+      showToast('success', 'Konten teks & kontak berhasil disimpan ke website!');
     } catch (err) {
-      console.error(err);
+      showToast('error', `Gagal menyimpan: ${err.message}`);
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  // Save Projects
+  const handleSaveAllProjects = async () => {
+    setIsSaving(true);
+    try {
+      await saveProjects(draftProjects);
+      showToast('success', 'Daftar portofolio karya berhasil disimpan!');
+    } catch (err) {
       showToast('error', `Gagal menyimpan: ${err.message}`);
     } finally {
       setIsSaving(false);
@@ -178,74 +224,158 @@ export default function AdminPage() {
       const newId = editingProject.title.toLowerCase().replace(/[^a-z0-9]+/g, '-');
       updatedList = [{ ...editingProject, id: newId }, ...draftProjects];
     } else {
-      updatedList = draftProjects.map((p) =>
-        p.id === editingProject.id ? editingProject : p
-      );
+      updatedList = draftProjects.map((p) => (p.id === editingProject.id ? editingProject : p));
     }
 
     setDraftProjects(updatedList);
     setEditingProject(null);
-    showToast('info', 'Proyek diperbarui di daftar draf. Jangan lupa klik "Simpan Semua Proyek".');
+    showToast('info', 'Proyek diperbarui di draf. Klik "Simpan Semua Proyek" untuk menerapkan.');
   };
 
   const handleDeleteProject = (id) => {
-    if (window.confirm('Yakin ingin menghapus karya ini dari portofolio?')) {
-      const filtered = draftProjects.filter((p) => p.id !== id);
-      setDraftProjects(filtered);
-      showToast('info', 'Proyek dihapus dari draf. Klik "Simpan Semua Proyek" untuk memperbarui website.');
+    if (window.confirm('Hapus proyek ini dari portofolio?')) {
+      const updated = draftProjects.filter((p) => p.id !== id);
+      setDraftProjects(updated);
+      showToast('info', 'Proyek dihapus dari draf. Klik "Simpan Semua Proyek" untuk memperbarui.');
     }
   };
 
-  const handleSaveAllProjects = async () => {
+  // Save Services
+  const handleSaveAllServices = async () => {
     setIsSaving(true);
     try {
-      await saveProjects(draftProjects);
-      showToast(
-        'success',
-        isCloudSynced
-          ? 'Seluruh portofolio berhasil disimpan ke Website & Cloud!'
-          : 'Seluruh portofolio berhasil disimpan dan langsung tayang di Website!'
-      );
+      await saveServices(draftServices);
+      showToast('success', 'Layanan & spesifikasi berhasil diperbarui di website!');
     } catch (err) {
-      console.error(err);
-      showToast('error', `Gagal menyimpan portofolio: ${err.message}`);
+      showToast('error', err.message);
     } finally {
       setIsSaving(false);
     }
   };
 
-  // Export data as JSON file
+  const handleSaveServiceModal = (e) => {
+    e.preventDefault();
+    const updated = draftServices.map((s) => (s.id === editingService.id ? editingService : s));
+    setDraftServices(updated);
+    setEditingService(null);
+    showToast('info', 'Layanan diperbarui di draf. Klik "Simpan Layanan" untuk menerapkan.');
+  };
+
+  // Save Testimonials
+  const handleSaveAllTestimonials = async () => {
+    setIsSaving(true);
+    try {
+      await saveTestimonials(draftTestimonials);
+      showToast('success', 'Ulasan testimoni klien berhasil disimpan ke website!');
+    } catch (err) {
+      showToast('error', err.message);
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  const handleSaveTestiModal = (e) => {
+    e.preventDefault();
+    if (!editingTesti.name.trim() || !editingTesti.quote.trim()) {
+      alert('Nama dan kutipan ulasan wajib diisi.');
+      return;
+    }
+    let updated;
+    if (isNewTesti) {
+      const newId = 'testi-' + Date.now();
+      updated = [{ ...editingTesti, id: newId }, ...draftTestimonials];
+    } else {
+      updated = draftTestimonials.map((t) => (t.id === editingTesti.id ? editingTesti : t));
+    }
+    setDraftTestimonials(updated);
+    setEditingTesti(null);
+    showToast('info', 'Testimoni diperbarui di draf. Klik "Simpan Semua Testimoni".');
+  };
+
+  const handleDeleteTesti = (id) => {
+    if (window.confirm('Hapus testimoni ini?')) {
+      const updated = draftTestimonials.filter((t) => t.id !== id);
+      setDraftTestimonials(updated);
+    }
+  };
+
+  // Save FAQ
+  const handleSaveAllFaq = async () => {
+    setIsSaving(true);
+    try {
+      await saveFaq(draftFaq);
+      showToast('success', 'Daftar FAQ berhasil disimpan ke website!');
+    } catch (err) {
+      showToast('error', err.message);
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  const handleSaveFaqModal = (e) => {
+    e.preventDefault();
+    if (!editingFaq.question.trim() || !editingFaq.answer.trim()) {
+      alert('Pertanyaan dan jawaban wajib diisi.');
+      return;
+    }
+    let updated;
+    if (isNewFaq) {
+      const newId = 'faq-' + Date.now();
+      updated = [...draftFaq, { ...editingFaq, id: newId }];
+    } else {
+      updated = draftFaq.map((f, idx) => (f.id === editingFaq.id || idx === editingFaq._index ? editingFaq : f));
+    }
+    setDraftFaq(updated);
+    setEditingFaq(null);
+    showToast('info', 'FAQ diperbarui di draf. Klik "Simpan Semua FAQ".');
+  };
+
+  const handleDeleteFaq = (idxOrId) => {
+    if (window.confirm('Hapus pertanyaan FAQ ini?')) {
+      const updated = draftFaq.filter((f, idx) => (f.id ? f.id !== idxOrId : idx !== idxOrId));
+      setDraftFaq(updated);
+    }
+  };
+
+  // Export JSON
   const handleExportJSON = () => {
     const exportData = {
       exportedAt: new Date().toISOString(),
       contact: draftContact,
       hero: draftHero,
+      cta: draftCta,
       projects: draftProjects,
+      services: draftServices,
+      testimonials: draftTestimonials,
+      faq: draftFaq,
     };
     const jsonStr = 'data:text/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(exportData, null, 2));
     const downloadAnchor = document.createElement('a');
     downloadAnchor.setAttribute('href', jsonStr);
-    downloadAnchor.setAttribute('download', `supernova-content-${new Date().toISOString().slice(0, 10)}.json`);
+    downloadAnchor.setAttribute('download', `supernova-studio-backup-${new Date().toISOString().slice(0, 10)}.json`);
     document.body.appendChild(downloadAnchor);
     downloadAnchor.click();
     downloadAnchor.remove();
-    showToast('success', 'File backup data berhasil diunduh!');
+    showToast('success', 'File backup data website lengkap berhasil diunduh!');
   };
 
-  // Copy projects data to clipboard
-  const handleCopyProjectsJS = () => {
-    const code = `export const PROJECTS_DATA = ${JSON.stringify(draftProjects, null, 2)};`;
-    navigator.clipboard.writeText(code);
-    showToast('success', 'Kode PROJECTS_DATA berhasil disalin ke clipboard!');
-  };
-
-  // Handle reset to default
+  // Reset all
   const handleReset = () => {
-    if (window.confirm('Reset seluruh konten kembali ke data bawaan awal website?')) {
+    if (window.confirm('Yakin ingin mereset SELURUH konten website kembali ke data bawaan awal?')) {
       resetToDefaults();
-      showToast('info', 'Konten telah dikembalikan ke bawaan awal.');
+      showToast('info', 'Konten dikembalikan ke template awal.');
     }
   };
+
+  // Filtered projects
+  const filteredProjects = draftProjects.filter((p) => {
+    const matchesCat = projectCategoryFilter === 'all' || p.category === projectCategoryFilter;
+    const matchesSearch =
+      !projectSearch ||
+      p.title.toLowerCase().includes(projectSearch.toLowerCase()) ||
+      (p.overview && p.overview.toLowerCase().includes(projectSearch.toLowerCase()));
+    return matchesCat && matchesSearch;
+  });
 
   if (authChecking) {
     return (
@@ -257,32 +387,33 @@ export default function AdminPage() {
   }
 
   // ==========================================
-  // LOGIN SCREEN (BUILT-IN ZERO SETUP)
+  // LOGIN SCREEN
   // ==========================================
   if (!user) {
+    const storedPass = localStorage.getItem('supernova_admin_passcode') || DEFAULT_PASSCODE;
     return (
       <div className="admin-login-wrapper">
         <div className="admin-login-card">
           <div className="admin-login-header">
             <div className="admin-logo-coin">
-              <img
-                src="/assets/images/supernova-logo.jpg"
-                alt="Supernova Emblem"
-              />
+              <img src="/assets/images/supernova-logo.jpg" alt="Supernova Emblem" />
             </div>
             <h2>SUPERNOVA CMS</h2>
             <p>Pusat Pengelolaan Konten &amp; Portofolio Studio</p>
           </div>
 
-          <div className="admin-alert info" style={{ background: 'rgba(59, 130, 246, 0.1)', border: '1px solid rgba(59, 130, 246, 0.25)', color: '#93c5fd' }}>
-            💡 <strong>CMS Langsung Siap Pakai:</strong> Masuk menggunakan password studio default: <code>{DEFAULT_PASSCODE}</code>
+          <div
+            className="admin-alert info"
+            style={{
+              background: 'rgba(59, 130, 246, 0.1)',
+              border: '1px solid rgba(59, 130, 246, 0.25)',
+              color: '#93c5fd',
+            }}
+          >
+            💡 <strong>CMS Langsung Siap Pakai:</strong> Masuk dengan passcode studio: <code>{storedPass}</code>
           </div>
 
-          {loginError && (
-            <div className="admin-alert error">
-              {loginError}
-            </div>
-          )}
+          {loginError && <div className="admin-alert error">{loginError}</div>}
 
           <form onSubmit={handleLogin} className="admin-form">
             <div className="form-group">
@@ -300,7 +431,7 @@ export default function AdminPage() {
               <label>Passcode / Password Studio</label>
               <input
                 type="password"
-                placeholder={`Ketik: ${DEFAULT_PASSCODE}`}
+                placeholder={`Ketik: ${storedPass}`}
                 value={loginPassword}
                 onChange={(e) => setLoginPassword(e.target.value)}
                 required
@@ -309,12 +440,7 @@ export default function AdminPage() {
               />
             </div>
 
-            <button
-              type="submit"
-              className="studio-btn-primary"
-              disabled={isLoggingIn}
-              style={{ marginTop: '8px' }}
-            >
+            <button type="submit" className="studio-btn-primary" disabled={isLoggingIn} style={{ marginTop: '8px' }}>
               {isLoggingIn ? 'Memverifikasi...' : 'Masuk ke Dashboard CMS'}
             </button>
           </form>
@@ -351,9 +477,7 @@ export default function AdminPage() {
           <span className="admin-brand-name">
             SUPERNOVA <strong>CMS STUDIO</strong>
           </span>
-          <span className="admin-user-pill">
-            {user.email || 'Admin Studio'}
-          </span>
+          <span className="admin-user-pill">{user.email || 'Admin'}</span>
           <span className={`status-pill ${isCloudSynced ? 'online' : 'local'}`}>
             <span className="dot"></span>
             {isCloudSynced ? 'Cloud Synced' : 'Live di Browser'}
@@ -361,11 +485,11 @@ export default function AdminPage() {
         </div>
 
         <div className="admin-topbar-right">
-          <button onClick={handleExportJSON} className="btn-outline-admin" title="Unduh Backup JSON">
+          <button onClick={handleExportJSON} className="btn-outline-admin" title="Unduh Backup Lengkap JSON">
             📥 Unduh Backup JSON
           </button>
           <Link to="/" target="_blank" rel="noopener noreferrer" className="btn-outline-admin">
-            Lihat Website Publik ↗
+            Lihat Website ↗
           </Link>
           <button onClick={handleLogout} className="btn-logout-admin">
             Keluar
@@ -375,40 +499,60 @@ export default function AdminPage() {
 
       {/* Main Admin Area */}
       <div className="admin-main-container">
-        {/* Navigation Tabs */}
-        <div className="admin-tabs-row">
+        {/* Navigation Tabs (Scrollable) */}
+        <div className="admin-tabs-row" style={{ overflowX: 'auto', flexWrap: 'nowrap' }}>
           <button
             className={`admin-tab-btn ${activeTab === 'contact' ? 'active' : ''}`}
             onClick={() => setActiveTab('contact')}
           >
-            📞 Kontak &amp; WhatsApp
+            📞 Kontak &amp; WA
           </button>
           <button
             className={`admin-tab-btn ${activeTab === 'hero' ? 'active' : ''}`}
             onClick={() => setActiveTab('hero')}
           >
-            ✏️ Teks Beranda (Hero)
+            ✏️ Beranda &amp; Banner
           </button>
           <button
             className={`admin-tab-btn ${activeTab === 'projects' ? 'active' : ''}`}
             onClick={() => setActiveTab('projects')}
           >
-            📁 Portofolio ({draftProjects.length} Proyek)
+            📁 Portofolio ({draftProjects.length})
           </button>
           <button
-            className={`admin-tab-btn ${activeTab === 'backup' ? 'active' : ''}`}
-            onClick={() => setActiveTab('backup')}
+            className={`admin-tab-btn ${activeTab === 'services' ? 'active' : ''}`}
+            onClick={() => setActiveTab('services')}
           >
-            ⚙️ Backup &amp; Keamanan
+            🛠️ Layanan Studio ({draftServices.length})
+          </button>
+          <button
+            className={`admin-tab-btn ${activeTab === 'testimonials' ? 'active' : ''}`}
+            onClick={() => setActiveTab('testimonials')}
+          >
+            💬 Testimoni ({draftTestimonials.length})
+          </button>
+          <button
+            className={`admin-tab-btn ${activeTab === 'faq' ? 'active' : ''}`}
+            onClick={() => setActiveTab('faq')}
+          >
+            ❓ FAQ ({draftFaq.length})
+          </button>
+          <button
+            className={`admin-tab-btn ${activeTab === 'security' ? 'active' : ''}`}
+            onClick={() => setActiveTab('security')}
+          >
+            🔐 Keamanan &amp; Backup
           </button>
         </div>
 
-        {/* TAB 1: KONTAK & WHATSAPP */}
+        {/* ==========================================
+            TAB 1: KONTAK & WHATSAPP
+            ========================================== */}
         {activeTab === 'contact' && (
           <form onSubmit={handleSaveGeneral} className="admin-panel-card">
             <div className="panel-header">
               <h3>Kontak &amp; Komunikasi Studio</h3>
-              <p>Perubahan di sini langsung mengubah tombol WhatsApp, link email, dan teks kontak di seluruh halaman website secara otomatis.</p>
+              <p>Perubahan nomor WhatsApp, email, dan alamat langsung aktif di tombol WhatsApp, formulir konsultasi, dan footer seluruh website.</p>
             </div>
 
             <div className="admin-form-grid">
@@ -425,7 +569,7 @@ export default function AdminPage() {
               </div>
 
               <div className="form-group">
-                <label>Nomor WhatsApp Link API (Hanya angka tanpa simbol, misal: 6285714521584)</label>
+                <label>Nomor WhatsApp Link API (Hanya angka tanpa spasi/simbol)</label>
                 <input
                   type="text"
                   value={draftContact.waNumber}
@@ -479,12 +623,14 @@ export default function AdminPage() {
           </form>
         )}
 
-        {/* TAB 2: TEKS BERANDA */}
+        {/* ==========================================
+            TAB 2: BERANDA & BANNER
+            ========================================== */}
         {activeTab === 'hero' && (
           <form onSubmit={handleSaveGeneral} className="admin-panel-card">
             <div className="panel-header">
-              <h3>Teks Beranda (Hero Section)</h3>
-              <p>Sesuaikan pesan pembuka, judul headline, dan metrik kepercayaan yang dilihat klien pertama kali.</p>
+              <h3>Teks Beranda &amp; Banner CTA</h3>
+              <p>Sesuaikan pesan pembuka utama, statistik pencapaian, dan kalimat penutup penawaran proyek.</p>
             </div>
 
             <div className="admin-form-grid">
@@ -506,12 +652,11 @@ export default function AdminPage() {
                   value={draftHero.title}
                   onChange={(e) => setDraftHero({ ...draftHero, title: e.target.value })}
                   className="studio-textarea"
-                  placeholder="Desain Presentasi, Identitas Brand & Web Modern."
                 />
               </div>
 
               <div className="form-group" style={{ gridColumn: '1 / -1' }}>
-                <label>Deskripsi Subtitle</label>
+                <label>Deskripsi Subtitle Beranda</label>
                 <textarea
                   rows="3"
                   value={draftHero.desc}
@@ -527,7 +672,6 @@ export default function AdminPage() {
                   value={draftHero.stat1}
                   onChange={(e) => setDraftHero({ ...draftHero, stat1: e.target.value })}
                   className="studio-input"
-                  placeholder="80+ Proyek Selesai"
                 />
               </div>
 
@@ -538,18 +682,61 @@ export default function AdminPage() {
                   value={draftHero.stat2}
                   onChange={(e) => setDraftHero({ ...draftHero, stat2: e.target.value })}
                   className="studio-input"
-                  placeholder="3–5 Hari Turnaround"
                 />
               </div>
 
-              <div className="form-group">
+              <div className="form-group" style={{ gridColumn: '1 / -1' }}>
                 <label>Statistik 3</label>
                 <input
                   type="text"
                   value={draftHero.stat3}
                   onChange={(e) => setDraftHero({ ...draftHero, stat3: e.target.value })}
                   className="studio-input"
-                  placeholder="100% Hak Milik"
+                />
+              </div>
+
+              {/* CTA Banner Section */}
+              <div className="form-group" style={{ gridColumn: '1 / -1', borderTop: '1px solid #e2e8f0', paddingTop: '20px', marginTop: '10px' }}>
+                <h4 style={{ margin: '0 0 12px 0', color: '#0f172a' }}>Banner Penutup Bawah (CTA Section)</h4>
+              </div>
+
+              <div className="form-group">
+                <label>Tag Banner</label>
+                <input
+                  type="text"
+                  value={draftCta?.tag || "LET'S TALK"}
+                  onChange={(e) => setDraftCta({ ...draftCta, tag: e.target.value })}
+                  className="studio-input"
+                />
+              </div>
+
+              <div className="form-group">
+                <label>Teks Tombol Banner</label>
+                <input
+                  type="text"
+                  value={draftCta?.btnText || 'Mulai Diskusi via WhatsApp'}
+                  onChange={(e) => setDraftCta({ ...draftCta, btnText: e.target.value })}
+                  className="studio-input"
+                />
+              </div>
+
+              <div className="form-group" style={{ gridColumn: '1 / -1' }}>
+                <label>Judul Ajakan Banner</label>
+                <input
+                  type="text"
+                  value={draftCta?.title || ''}
+                  onChange={(e) => setDraftCta({ ...draftCta, title: e.target.value })}
+                  className="studio-input"
+                />
+              </div>
+
+              <div className="form-group" style={{ gridColumn: '1 / -1' }}>
+                <label>Deskripsi Ajakan Banner</label>
+                <textarea
+                  rows="2"
+                  value={draftCta?.desc || ''}
+                  onChange={(e) => setDraftCta({ ...draftCta, desc: e.target.value })}
+                  className="studio-textarea"
                 />
               </div>
             </div>
@@ -562,12 +749,14 @@ export default function AdminPage() {
           </form>
         )}
 
-        {/* TAB 3: PORTOFOLIO / WORKS */}
+        {/* ==========================================
+            TAB 3: PORTOFOLIO / WORKS
+            ========================================== */}
         {activeTab === 'projects' && (
           <div className="admin-panel-card">
             <div className="panel-header-with-action">
               <div>
-                <h3>Kelola Portofolio &amp; Karya Studio</h3>
+                <h3>Kelola Portofolio &amp; Karya ({draftProjects.length})</h3>
                 <p>Tambah, edit, atau hapus proyek karya yang tampil di Galeri Beranda dan Halaman Works.</p>
               </div>
               <div className="header-action-buttons">
@@ -583,11 +772,11 @@ export default function AdminPage() {
                       categoryLabel: 'Presentation & Pitch Deck (PPT)',
                       badge: 'Format PPTX & PDF 16:9',
                       image: '/assets/images/corporate.jpg',
-                      tags: ['PowerPoint', 'Pitch Deck'],
+                      tags: ['PowerPoint', 'Pitch Deck Investor'],
                       overview: '',
                       challenge: '',
                       solution: '',
-                      results: ['Hasil karya siap pakai'],
+                      results: ['Hasil karya siap pakai dan bergaransi'],
                     });
                   }}
                 >
@@ -599,13 +788,46 @@ export default function AdminPage() {
                   onClick={handleSaveAllProjects}
                   disabled={isSaving}
                 >
-                  {isSaving ? 'Menyimpan...' : 'Simpan Semua Proyek ke Website'}
+                  {isSaving ? 'Menyimpan...' : 'Simpan Semua Proyek'}
                 </button>
               </div>
             </div>
 
+            {/* Filter & Search Bar */}
+            <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap', alignItems: 'center' }}>
+              <input
+                type="text"
+                placeholder="Cari judul proyek..."
+                value={projectSearch}
+                onChange={(e) => setProjectSearch(e.target.value)}
+                className="studio-input"
+                style={{ maxWidth: '300px' }}
+              />
+              <div style={{ display: 'flex', gap: '6px' }}>
+                {['all', 'presentation', 'web', 'branding'].map((cat) => (
+                  <button
+                    key={cat}
+                    type="button"
+                    onClick={() => setProjectCategoryFilter(cat)}
+                    style={{
+                      padding: '8px 14px',
+                      borderRadius: '8px',
+                      fontSize: '0.8rem',
+                      fontWeight: 600,
+                      border: '1px solid #e2e8f0',
+                      cursor: 'pointer',
+                      background: projectCategoryFilter === cat ? '#0f172a' : '#ffffff',
+                      color: projectCategoryFilter === cat ? '#ffffff' : '#475569',
+                    }}
+                  >
+                    {cat === 'all' ? 'Semua' : cat.toUpperCase()}
+                  </button>
+                ))}
+              </div>
+            </div>
+
             <div className="admin-projects-grid">
-              {draftProjects.map((p, index) => (
+              {filteredProjects.map((p, index) => (
                 <div key={p.id || index} className="admin-project-item">
                   <div className="p-item-thumb">
                     <img src={p.image} alt={p.title} />
@@ -626,10 +848,13 @@ export default function AdminPage() {
                       className="btn-edit"
                       onClick={() => {
                         setIsNewProject(false);
-                        setEditingProject({ ...p });
+                        setEditingProject({
+                          ...p,
+                          results: Array.isArray(p.results) ? p.results : [p.results || ''],
+                        });
                       }}
                     >
-                      Edit
+                      Edit Lengkap
                     </button>
                     <button
                       type="button"
@@ -645,47 +870,318 @@ export default function AdminPage() {
           </div>
         )}
 
-        {/* TAB 4: BACKUP & KEAMANAN */}
-        {activeTab === 'backup' && (
+        {/* ==========================================
+            TAB 4: LAYANAN & KAPABILITAS
+            ========================================== */}
+        {activeTab === 'services' && (
           <div className="admin-panel-card">
-            <div className="panel-header">
-              <h3>Backup Data &amp; Pengaturan CMS</h3>
-              <p>Kelola pencadangan data, ekspor kode sumber, atau reset ke konten bawaan.</p>
+            <div className="panel-header-with-action">
+              <div>
+                <h3>Layanan &amp; Spesifikasi Studio ({draftServices.length})</h3>
+                <p>Edit nama layanan, estimasi waktu turnaround, deskripsi, dan daftar hasil yang diterima klien.</p>
+              </div>
+              <button
+                type="button"
+                className="studio-btn-primary"
+                onClick={handleSaveAllServices}
+                disabled={isSaving}
+              >
+                {isSaving ? 'Menyimpan...' : 'Simpan Layanan ke Website'}
+              </button>
             </div>
 
-            <div className="backup-sections-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '20px', marginTop: '16px' }}>
-              <div className="backup-box" style={{ background: '#1e293b', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '14px', padding: '24px' }}>
-                <h4 style={{ color: '#ffffff', margin: '0 0 8px 0' }}>📥 Download Backup Data</h4>
-                <p style={{ color: '#94a3b8', fontSize: '0.85rem', lineHeight: '1.5', margin: '0 0 16px 0' }}>
-                  Unduh seluruh konfigurasi kontak, teks hero, dan daftar proyek portofolio dalam file <code>.json</code> aman.
+            <div className="admin-services-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '20px' }}>
+              {draftServices.map((srv) => (
+                <div
+                  key={srv.id}
+                  style={{
+                    background: '#f8fafc',
+                    border: '1px solid #e2e8f0',
+                    borderRadius: '16px',
+                    padding: '24px',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '12px',
+                  }}
+                >
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <span style={{ fontSize: '0.72rem', fontWeight: 700, letterSpacing: '0.06em', color: '#b8933b', background: 'rgba(184,147,59,0.1)', padding: '3px 8px', borderRadius: '6px' }}>
+                      {srv.badge}
+                    </span>
+                    <span style={{ fontSize: '0.8rem', color: '#64748b', fontWeight: 500 }}>
+                      ⏱️ {srv.turnaround}
+                    </span>
+                  </div>
+                  <h4 style={{ margin: 0, fontSize: '1.15rem', color: '#0f172a' }}>{srv.name}</h4>
+                  <p style={{ margin: 0, fontSize: '0.85rem', color: '#64748b', lineHeight: 1.5 }}>{srv.desc}</p>
+                  
+                  <div style={{ marginTop: 'auto', paddingTop: '12px', borderTop: '1px solid #e2e8f0' }}>
+                    <strong style={{ fontSize: '0.75rem', color: '#475569', textTransform: 'uppercase' }}>Hasil Deliverables:</strong>
+                    <ul style={{ margin: '6px 0 0 0', paddingLeft: '18px', fontSize: '0.82rem', color: '#334155', lineHeight: 1.5 }}>
+                      {(srv.deliverables || []).map((d, i) => (
+                        <li key={i}>{d}</li>
+                      ))}
+                    </ul>
+                  </div>
+
+                  <button
+                    type="button"
+                    className="studio-btn-secondary"
+                    onClick={() => setEditingService({ ...srv })}
+                    style={{ marginTop: '12px' }}
+                  >
+                    Edit Layanan Ini
+                  </button>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* ==========================================
+            TAB 5: ULASAN & TESTIMONI KLIEN
+            ========================================== */}
+        {activeTab === 'testimonials' && (
+          <div className="admin-panel-card">
+            <div className="panel-header-with-action">
+              <div>
+                <h3>Testimoni &amp; Kata Klien ({draftTestimonials.length})</h3>
+                <p>Tambah atau sesuaikan ulasan dari founder, direktur, dan brand lead yang ditampilkan di Beranda.</p>
+              </div>
+              <div className="header-action-buttons">
+                <button
+                  type="button"
+                  className="studio-btn-secondary"
+                  onClick={() => {
+                    setIsNewTesti(true);
+                    setEditingTesti({
+                      name: '',
+                      role: '',
+                      quote: '',
+                      avatar: '',
+                      featured: false,
+                    });
+                  }}
+                >
+                  + Tambah Testimoni
+                </button>
+                <button
+                  type="button"
+                  className="studio-btn-primary"
+                  onClick={handleSaveAllTestimonials}
+                  disabled={isSaving}
+                >
+                  {isSaving ? 'Menyimpan...' : 'Simpan Semua Testimoni'}
+                </button>
+              </div>
+            </div>
+
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: '20px' }}>
+              {draftTestimonials.map((t) => (
+                <div
+                  key={t.id}
+                  style={{
+                    background: '#f8fafc',
+                    border: '1px solid #e2e8f0',
+                    borderRadius: '16px',
+                    padding: '24px',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '12px',
+                    position: 'relative',
+                  }}
+                >
+                  {t.featured && (
+                    <span style={{ position: 'absolute', top: 12, right: 12, fontSize: '0.7rem', background: '#0f172a', color: '#fff', padding: '2px 8px', borderRadius: '4px' }}>
+                      Featured
+                    </span>
+                  )}
+                  <p style={{ fontStyle: 'italic', fontSize: '0.9rem', color: '#334155', lineHeight: 1.6, margin: 0 }}>
+                    "{t.quote}"
+                  </p>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginTop: 'auto', paddingTop: '10px' }}>
+                    <div
+                      style={{
+                        width: '36px',
+                        height: '36px',
+                        borderRadius: '50%',
+                        background: '#0f172a',
+                        color: '#fff',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        fontWeight: 700,
+                      }}
+                    >
+                      {t.avatar || t.name.charAt(0)}
+                    </div>
+                    <div>
+                      <strong style={{ display: 'block', fontSize: '0.92rem', color: '#0f172a' }}>{t.name}</strong>
+                      <span style={{ fontSize: '0.78rem', color: '#64748b' }}>{t.role}</span>
+                    </div>
+                  </div>
+                  <div style={{ display: 'flex', gap: '8px', marginTop: '8px' }}>
+                    <button
+                      type="button"
+                      className="btn-edit"
+                      onClick={() => {
+                        setIsNewTesti(false);
+                        setEditingTesti({ ...t });
+                      }}
+                    >
+                      Edit
+                    </button>
+                    <button
+                      type="button"
+                      className="btn-delete"
+                      onClick={() => handleDeleteTesti(t.id)}
+                    >
+                      Hapus
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* ==========================================
+            TAB 6: PERTANYAAN UMUM (FAQ)
+            ========================================== */}
+        {activeTab === 'faq' && (
+          <div className="admin-panel-card">
+            <div className="panel-header-with-action">
+              <div>
+                <h3>Pertanyaan Umum (FAQ) ({draftFaq.length})</h3>
+                <p>Kelola pertanyaan dan jawaban yang tampil di Beranda dan Halaman Kontak.</p>
+              </div>
+              <div className="header-action-buttons">
+                <button
+                  type="button"
+                  className="studio-btn-secondary"
+                  onClick={() => {
+                    setIsNewFaq(true);
+                    setEditingFaq({ question: '', answer: '' });
+                  }}
+                >
+                  + Tambah FAQ Baru
+                </button>
+                <button
+                  type="button"
+                  className="studio-btn-primary"
+                  onClick={handleSaveAllFaq}
+                  disabled={isSaving}
+                >
+                  {isSaving ? 'Menyimpan...' : 'Simpan Semua FAQ'}
+                </button>
+              </div>
+            </div>
+
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+              {draftFaq.map((item, idx) => (
+                <div
+                  key={item.id || idx}
+                  style={{
+                    background: '#f8fafc',
+                    border: '1px solid #e2e8f0',
+                    borderRadius: '14px',
+                    padding: '20px 24px',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '8px',
+                  }}
+                >
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '16px' }}>
+                    <strong style={{ fontSize: '0.98rem', color: '#0f172a' }}>
+                      {idx + 1}. {item.question}
+                    </strong>
+                    <div style={{ display: 'flex', gap: '6px', flexShrink: 0 }}>
+                      <button
+                        type="button"
+                        className="btn-edit"
+                        onClick={() => {
+                          setIsNewFaq(false);
+                          setEditingFaq({ ...item, _index: idx });
+                        }}
+                      >
+                        Edit
+                      </button>
+                      <button
+                        type="button"
+                        className="btn-delete"
+                        onClick={() => handleDeleteFaq(item.id || idx)}
+                      >
+                        Hapus
+                      </button>
+                    </div>
+                  </div>
+                  <p style={{ margin: 0, fontSize: '0.88rem', color: '#475569', lineHeight: 1.6 }}>
+                    {item.answer}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* ==========================================
+            TAB 7: KEAMANAN & BACKUP
+            ========================================== */}
+        {activeTab === 'security' && (
+          <div className="admin-panel-card">
+            <div className="panel-header">
+              <h3>Keamanan Akun &amp; Backup Sistem</h3>
+              <p>Ubah password masuk CMS, unduh salinan data seluruh website, atau reset ke pengaturan awal.</p>
+            </div>
+
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '24px' }}>
+              {/* Change Passcode */}
+              <form onSubmit={handleChangePasscode} style={{ background: '#0f172a', color: '#fff', borderRadius: '16px', padding: '24px', display: 'flex', flexDirection: 'column', gap: '14px' }}>
+                <h4 style={{ margin: 0, color: '#fff' }}>🔐 Ubah Password Masuk CMS</h4>
+                <p style={{ margin: 0, fontSize: '0.84rem', color: '#94a3b8', lineHeight: 1.5 }}>
+                  Ganti passcode studio bawaan ("{localStorage.getItem('supernova_admin_passcode') || DEFAULT_PASSCODE}") dengan password rahasia baru Anda.
                 </p>
-                <button type="button" onClick={handleExportJSON} className="studio-btn-primary" style={{ width: '100%' }}>
+                <div className="form-group">
+                  <label style={{ color: '#cbd5e1' }}>Password Baru</label>
+                  <input
+                    type="text"
+                    value={newPasscode}
+                    onChange={(e) => setNewPasscode(e.target.value)}
+                    placeholder="Minimal 4 karakter"
+                    className="studio-input"
+                    style={{ background: '#1e293b', color: '#fff', borderColor: 'rgba(255,255,255,0.15)' }}
+                    required
+                  />
+                </div>
+                <button type="submit" className="studio-btn-primary" style={{ background: '#dfbe76', color: '#0f172a', borderColor: '#dfbe76' }}>
+                  Simpan Password Baru
+                </button>
+              </form>
+
+              {/* Backup & Export */}
+              <div style={{ background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: '16px', padding: '24px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                <h4 style={{ margin: 0, color: '#0f172a' }}>📥 Download Seluruh Data (JSON)</h4>
+                <p style={{ margin: 0, fontSize: '0.84rem', color: '#64748b', lineHeight: 1.5 }}>
+                  Unduh backup lengkap yang mencakup data Kontak, Hero, Portofolio Proyek, Layanan, Testimoni, dan FAQ dalam satu file JSON.
+                </p>
+                <button type="button" onClick={handleExportJSON} className="studio-btn-primary" style={{ marginTop: 'auto' }}>
                   Unduh File Backup JSON
                 </button>
               </div>
 
-              <div className="backup-box" style={{ background: '#1e293b', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '14px', padding: '24px' }}>
-                <h4 style={{ color: '#ffffff', margin: '0 0 8px 0' }}>📋 Salin Data Projects ke Kode</h4>
-                <p style={{ color: '#94a3b8', fontSize: '0.85rem', lineHeight: '1.5', margin: '0 0 16px 0' }}>
-                  Salin array JavaScript <code>PROJECTS_DATA</code> jika Anda ingin menempelkannya langsung ke file <code>src/data/projects.js</code>.
-                </p>
-                <button type="button" onClick={handleCopyProjectsJS} className="studio-btn-secondary" style={{ width: '100%' }}>
-                  Salin Kode PROJECTS_DATA
-                </button>
-              </div>
-
-              <div className="backup-box" style={{ background: '#1e293b', border: '1px solid rgba(239, 68, 68, 0.2)', borderRadius: '14px', padding: '24px' }}>
-                <h4 style={{ color: '#fca5a5', margin: '0 0 8px 0' }}>⚠️ Reset Konten Bawaan</h4>
-                <p style={{ color: '#94a3b8', fontSize: '0.85rem', lineHeight: '1.5', margin: '0 0 16px 0' }}>
-                  Menghapus perubahan lokal dan mengembalikan teks kontak, hero, dan portofolio ke konfigurasi awal bawaan template.
+              {/* Reset to Factory Defaults */}
+              <div style={{ background: '#fff1f2', border: '1px solid #fecdd3', borderRadius: '16px', padding: '24px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                <h4 style={{ margin: 0, color: '#9f1239' }}>⚠️ Kembalikan ke Data Bawaan</h4>
+                <p style={{ margin: 0, fontSize: '0.84rem', color: '#881337', lineHeight: 1.5 }}>
+                  Reset seluruh konten kembali ke data bawaan awal template Supernova Studio. Seluruh draf lokal akan diganti.
                 </p>
                 <button
                   type="button"
                   onClick={handleReset}
                   className="studio-btn-secondary"
-                  style={{ width: '100%', borderColor: 'rgba(239, 68, 68, 0.4)', color: '#fca5a5' }}
+                  style={{ marginTop: 'auto', borderColor: '#fda4af', color: '#9f1239' }}
                 >
-                  Reset ke Data Awal
+                  Reset Konten Bawaan
                 </button>
               </div>
             </div>
@@ -693,12 +1189,14 @@ export default function AdminPage() {
         )}
       </div>
 
-      {/* PROJECT EDIT / ADD MODAL */}
+      {/* ==========================================
+          PROJECT MODAL (FULL CAPABILITY)
+          ========================================== */}
       {editingProject && (
         <div className="modal-backdrop" onClick={() => setEditingProject(null)}>
-          <div className="admin-modal-box" onClick={(e) => e.stopPropagation()}>
+          <div className="admin-modal-box" style={{ maxWidth: '680px' }} onClick={(e) => e.stopPropagation()}>
             <div className="admin-modal-header">
-              <h3>{isNewProject ? 'Tambah Proyek Baru' : 'Edit Proyek'}</h3>
+              <h3>{isNewProject ? 'Tambah Proyek Baru' : 'Edit Detail Proyek'}</h3>
               <button className="modal-close-btn" onClick={() => setEditingProject(null)}>✕</button>
             </div>
 
@@ -717,13 +1215,13 @@ export default function AdminPage() {
 
               <div className="form-row">
                 <div className="form-group">
-                  <label>Kategori Layanan</label>
+                  <label>Kategori</label>
                   <select
                     value={editingProject.category}
                     onChange={(e) => {
                       const cat = e.target.value;
                       let label = 'Presentation & Pitch Deck (PPT)';
-                      if (cat === 'web') label = 'Web Development & Landing Page';
+                      if (cat === 'web') label = 'Website & Digital Experience';
                       if (cat === 'branding') label = 'Graphic Design & Brand Identity';
                       setEditingProject({
                         ...editingProject,
@@ -734,7 +1232,7 @@ export default function AdminPage() {
                     className="studio-input"
                   >
                     <option value="presentation">Presentation &amp; Pitch Deck (PPT)</option>
-                    <option value="web">Web Development &amp; Landing Page</option>
+                    <option value="web">Website &amp; Digital Experience</option>
                     <option value="branding">Graphic Design &amp; Brand Identity</option>
                   </select>
                 </div>
@@ -745,14 +1243,15 @@ export default function AdminPage() {
                     type="text"
                     value={editingProject.badge || ''}
                     onChange={(e) => setEditingProject({ ...editingProject, badge: e.target.value })}
-                    placeholder="Contoh: Format PPTX • 16:9 HD"
+                    placeholder="Contoh: Lolos Seed Round • 16:9 HD"
                     className="studio-input"
                   />
                 </div>
               </div>
 
+              {/* Image URL & Preset Selection */}
               <div className="form-group">
-                <label>URL Gambar (Path lokal seperti /assets/images/... atau URL online)</label>
+                <label>URL / Path Gambar Proyek</label>
                 <input
                   type="text"
                   value={editingProject.image}
@@ -761,6 +1260,31 @@ export default function AdminPage() {
                   className="studio-input"
                   required
                 />
+                <div style={{ marginTop: '8px' }}>
+                  <span style={{ fontSize: '0.75rem', color: '#64748b', display: 'block', marginBottom: '6px' }}>
+                    Pilih Cepat dari Gambar Bawaan Studio:
+                  </span>
+                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
+                    {IMAGE_PRESETS.map((preset, i) => (
+                      <button
+                        key={i}
+                        type="button"
+                        onClick={() => setEditingProject({ ...editingProject, image: preset.url })}
+                        style={{
+                          fontSize: '0.72rem',
+                          padding: '3px 8px',
+                          borderRadius: '6px',
+                          border: '1px solid #cbd5e1',
+                          background: editingProject.image === preset.url ? '#0f172a' : '#ffffff',
+                          color: editingProject.image === preset.url ? '#ffffff' : '#334155',
+                          cursor: 'pointer',
+                        }}
+                      >
+                        {preset.label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
               </div>
 
               <div className="form-group">
@@ -774,7 +1298,7 @@ export default function AdminPage() {
                       tags: e.target.value.split(',').map((t) => t.trim()).filter(Boolean),
                     })
                   }
-                  placeholder="Pitch Deck, Keynote, Infografik"
+                  placeholder="Pitch Deck, Master PPTX, Infografik"
                   className="studio-input"
                 />
               </div>
@@ -782,11 +1306,49 @@ export default function AdminPage() {
               <div className="form-group">
                 <label>Ringkasan Proyek (Overview)</label>
                 <textarea
-                  rows="3"
+                  rows="2"
                   value={editingProject.overview || ''}
                   onChange={(e) => setEditingProject({ ...editingProject, overview: e.target.value })}
                   className="studio-textarea"
-                  placeholder="Jelaskan secara singkat mengenai karya ini..."
+                  placeholder="Gambaran umum singkat tentang proyek ini..."
+                />
+              </div>
+
+              <div className="form-group">
+                <label>Tantangan Klien (Challenge)</label>
+                <textarea
+                  rows="2"
+                  value={editingProject.challenge || ''}
+                  onChange={(e) => setEditingProject({ ...editingProject, challenge: e.target.value })}
+                  className="studio-textarea"
+                  placeholder="Masalah atau kebutuhan klien sebelum datang ke Supernova..."
+                />
+              </div>
+
+              <div className="form-group">
+                <label>Solusi Studio (Solution)</label>
+                <textarea
+                  rows="2"
+                  value={editingProject.solution || ''}
+                  onChange={(e) => setEditingProject({ ...editingProject, solution: e.target.value })}
+                  className="studio-textarea"
+                  placeholder="Langkah desain atau rekayasa yang kami terapkan..."
+                />
+              </div>
+
+              <div className="form-group">
+                <label>Dampak / Hasil Nyata (Pisahkan tiap poin dengan Enter)</label>
+                <textarea
+                  rows="3"
+                  value={Array.isArray(editingProject.results) ? editingProject.results.join('\n') : editingProject.results}
+                  onChange={(e) =>
+                    setEditingProject({
+                      ...editingProject,
+                      results: e.target.value.split('\n').filter(Boolean),
+                    })
+                  }
+                  className="studio-textarea"
+                  placeholder="Contoh:&#10;Lolos pendanaan sesuai target&#10;Waktu presentasi 40% lebih efisien&#10;Master file 100% editable"
                 />
               </div>
 
@@ -796,6 +1358,213 @@ export default function AdminPage() {
                 </button>
                 <button type="submit" className="studio-btn-primary">
                   {isNewProject ? 'Tambahkan ke Daftar' : 'Perbarui Proyek'}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* ==========================================
+          SERVICE MODAL
+          ========================================== */}
+      {editingService && (
+        <div className="modal-backdrop" onClick={() => setEditingService(null)}>
+          <div className="admin-modal-box" style={{ maxWidth: '560px' }} onClick={(e) => e.stopPropagation()}>
+            <div className="admin-modal-header">
+              <h3>Edit Layanan: {editingService.name}</h3>
+              <button className="modal-close-btn" onClick={() => setEditingService(null)}>✕</button>
+            </div>
+
+            <form onSubmit={handleSaveServiceModal} className="admin-modal-form">
+              <div className="form-group">
+                <label>Nama Layanan</label>
+                <input
+                  type="text"
+                  value={editingService.name}
+                  onChange={(e) => setEditingService({ ...editingService, name: e.target.value })}
+                  className="studio-input"
+                  required
+                />
+              </div>
+
+              <div className="form-row">
+                <div className="form-group">
+                  <label>Badge Kategori</label>
+                  <input
+                    type="text"
+                    value={editingService.badge}
+                    onChange={(e) => setEditingService({ ...editingService, badge: e.target.value })}
+                    className="studio-input"
+                    required
+                  />
+                </div>
+                <div className="form-group">
+                  <label>Estimasi Turnaround</label>
+                  <input
+                    type="text"
+                    value={editingService.turnaround}
+                    onChange={(e) => setEditingService({ ...editingService, turnaround: e.target.value })}
+                    className="studio-input"
+                    required
+                  />
+                </div>
+              </div>
+
+              <div className="form-group">
+                <label>Deskripsi Singkat</label>
+                <textarea
+                  rows="2"
+                  value={editingService.desc}
+                  onChange={(e) => setEditingService({ ...editingService, desc: e.target.value })}
+                  className="studio-textarea"
+                />
+              </div>
+
+              <div className="form-group">
+                <label>Hasil Serah Terima / Deliverables (Satu per baris)</label>
+                <textarea
+                  rows="4"
+                  value={Array.isArray(editingService.deliverables) ? editingService.deliverables.join('\n') : editingService.deliverables}
+                  onChange={(e) =>
+                    setEditingService({
+                      ...editingService,
+                      deliverables: e.target.value.split('\n').filter(Boolean),
+                    })
+                  }
+                  className="studio-textarea"
+                  placeholder="Master File PPTX&#10;PDF Siap Cetak&#10;Infografik Data"
+                />
+              </div>
+
+              <div className="admin-modal-actions">
+                <button type="button" className="studio-btn-secondary" onClick={() => setEditingService(null)}>
+                  Batal
+                </button>
+                <button type="submit" className="studio-btn-primary">
+                  Perbarui Layanan
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* ==========================================
+          TESTIMONIAL MODAL
+          ========================================== */}
+      {editingTesti && (
+        <div className="modal-backdrop" onClick={() => setEditingTesti(null)}>
+          <div className="admin-modal-box" style={{ maxWidth: '520px' }} onClick={(e) => e.stopPropagation()}>
+            <div className="admin-modal-header">
+              <h3>{isNewTesti ? 'Tambah Testimoni' : 'Edit Testimoni'}</h3>
+              <button className="modal-close-btn" onClick={() => setEditingTesti(null)}>✕</button>
+            </div>
+
+            <form onSubmit={handleSaveTestiModal} className="admin-modal-form">
+              <div className="form-group">
+                <label>Nama Klien</label>
+                <input
+                  type="text"
+                  value={editingTesti.name}
+                  onChange={(e) => setEditingTesti({ ...editingTesti, name: e.target.value })}
+                  placeholder="Contoh: Reza Pratama"
+                  className="studio-input"
+                  required
+                />
+              </div>
+
+              <div className="form-group">
+                <label>Jabatan / Perusahaan</label>
+                <input
+                  type="text"
+                  value={editingTesti.role}
+                  onChange={(e) => setEditingTesti({ ...editingTesti, role: e.target.value })}
+                  placeholder="Co-Founder, Nexus Fintech"
+                  className="studio-input"
+                  required
+                />
+              </div>
+
+              <div className="form-group">
+                <label>Isi Kutipan Ulasan</label>
+                <textarea
+                  rows="3"
+                  value={editingTesti.quote}
+                  onChange={(e) => setEditingTesti({ ...editingTesti, quote: e.target.value })}
+                  placeholder="Tulis testimoni positif dari klien..."
+                  className="studio-textarea"
+                  required
+                />
+              </div>
+
+              <div className="form-group" style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '8px' }}>
+                <input
+                  type="checkbox"
+                  id="featuredCheck"
+                  checked={Boolean(editingTesti.featured)}
+                  onChange={(e) => setEditingTesti({ ...editingTesti, featured: e.target.checked })}
+                />
+                <label htmlFor="featuredCheck" style={{ margin: 0, textTransform: 'none', fontWeight: 500 }}>
+                  Sorot testimoni ini sebagai kartu utama (Featured)
+                </label>
+              </div>
+
+              <div className="admin-modal-actions">
+                <button type="button" className="studio-btn-secondary" onClick={() => setEditingTesti(null)}>
+                  Batal
+                </button>
+                <button type="submit" className="studio-btn-primary">
+                  {isNewTesti ? 'Tambahkan Testimoni' : 'Simpan Perubahan'}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* ==========================================
+          FAQ MODAL
+          ========================================== */}
+      {editingFaq && (
+        <div className="modal-backdrop" onClick={() => setEditingFaq(null)}>
+          <div className="admin-modal-box" style={{ maxWidth: '560px' }} onClick={(e) => e.stopPropagation()}>
+            <div className="admin-modal-header">
+              <h3>{isNewFaq ? 'Tambah Pertanyaan FAQ' : 'Edit Pertanyaan FAQ'}</h3>
+              <button className="modal-close-btn" onClick={() => setEditingFaq(null)}>✕</button>
+            </div>
+
+            <form onSubmit={handleSaveFaqModal} className="admin-modal-form">
+              <div className="form-group">
+                <label>Pertanyaan</label>
+                <input
+                  type="text"
+                  value={editingFaq.question}
+                  onChange={(e) => setEditingFaq({ ...editingFaq, question: e.target.value })}
+                  placeholder="Contoh: Berapa lama waktu pengerjaan?"
+                  className="studio-input"
+                  required
+                />
+              </div>
+
+              <div className="form-group">
+                <label>Jawaban Lengkap</label>
+                <textarea
+                  rows="4"
+                  value={editingFaq.answer}
+                  onChange={(e) => setEditingFaq({ ...editingFaq, answer: e.target.value })}
+                  placeholder="Jelaskan secara transparan dan detail..."
+                  className="studio-textarea"
+                  required
+                />
+              </div>
+
+              <div className="admin-modal-actions">
+                <button type="button" className="studio-btn-secondary" onClick={() => setEditingFaq(null)}>
+                  Batal
+                </button>
+                <button type="submit" className="studio-btn-primary">
+                  {isNewFaq ? 'Tambahkan ke FAQ' : 'Simpan Perubahan'}
                 </button>
               </div>
             </form>
