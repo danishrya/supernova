@@ -212,7 +212,7 @@ export default function AdminPage() {
     }
   };
 
-  const handleSaveProjectModal = (e) => {
+  const handleSaveProjectModal = async (e) => {
     e.preventDefault();
     if (!editingProject.title.trim()) {
       alert('Judul proyek wajib diisi.');
@@ -221,7 +221,7 @@ export default function AdminPage() {
 
     let updatedList;
     if (isNewProject) {
-      const newId = editingProject.title.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+      const newId = editingProject.title.toLowerCase().replace(/[^a-z0-9]+/g, '-') + '-' + Date.now().toString().slice(-4);
       updatedList = [{ ...editingProject, id: newId }, ...draftProjects];
     } else {
       updatedList = draftProjects.map((p) => (p.id === editingProject.id ? editingProject : p));
@@ -229,14 +229,24 @@ export default function AdminPage() {
 
     setDraftProjects(updatedList);
     setEditingProject(null);
-    showToast('info', 'Proyek diperbarui di draf. Klik "Simpan Semua Proyek" untuk menerapkan.');
+    try {
+      await saveProjects(updatedList);
+      showToast('success', isNewProject ? 'Proyek baru berhasil ditambahkan dan langsung aktif di website!' : 'Perubahan proyek berhasil disimpan ke website!');
+    } catch (err) {
+      showToast('error', `Gagal menyimpan: ${err.message}`);
+    }
   };
 
-  const handleDeleteProject = (id) => {
+  const handleDeleteProject = async (id) => {
     if (window.confirm('Hapus proyek ini dari portofolio?')) {
       const updated = draftProjects.filter((p) => p.id !== id);
       setDraftProjects(updated);
-      showToast('info', 'Proyek dihapus dari draf. Klik "Simpan Semua Proyek" untuk memperbarui.');
+      try {
+        await saveProjects(updated);
+        showToast('success', 'Proyek berhasil dihapus dari website!');
+      } catch (err) {
+        showToast('error', `Gagal menghapus: ${err.message}`);
+      }
     }
   };
 
@@ -253,12 +263,17 @@ export default function AdminPage() {
     }
   };
 
-  const handleSaveServiceModal = (e) => {
+  const handleSaveServiceModal = async (e) => {
     e.preventDefault();
     const updated = draftServices.map((s) => (s.id === editingService.id ? editingService : s));
     setDraftServices(updated);
     setEditingService(null);
-    showToast('info', 'Layanan diperbarui di draf. Klik "Simpan Layanan" untuk menerapkan.');
+    try {
+      await saveServices(updated);
+      showToast('success', 'Layanan berhasil disimpan ke website!');
+    } catch (err) {
+      showToast('error', err.message);
+    }
   };
 
   // Save Testimonials
@@ -274,7 +289,7 @@ export default function AdminPage() {
     }
   };
 
-  const handleSaveTestiModal = (e) => {
+  const handleSaveTestiModal = async (e) => {
     e.preventDefault();
     if (!editingTesti.name.trim() || !editingTesti.quote.trim()) {
       alert('Nama dan kutipan ulasan wajib diisi.');
@@ -289,13 +304,24 @@ export default function AdminPage() {
     }
     setDraftTestimonials(updated);
     setEditingTesti(null);
-    showToast('info', 'Testimoni diperbarui di draf. Klik "Simpan Semua Testimoni".');
+    try {
+      await saveTestimonials(updated);
+      showToast('success', isNewTesti ? 'Testimoni baru berhasil ditambahkan!' : 'Perubahan testimoni berhasil disimpan!');
+    } catch (err) {
+      showToast('error', err.message);
+    }
   };
 
-  const handleDeleteTesti = (id) => {
+  const handleDeleteTesti = async (id) => {
     if (window.confirm('Hapus testimoni ini?')) {
       const updated = draftTestimonials.filter((t) => t.id !== id);
       setDraftTestimonials(updated);
+      try {
+        await saveTestimonials(updated);
+        showToast('success', 'Testimoni dihapus dari website!');
+      } catch (err) {
+        showToast('error', err.message);
+      }
     }
   };
 
@@ -312,7 +338,7 @@ export default function AdminPage() {
     }
   };
 
-  const handleSaveFaqModal = (e) => {
+  const handleSaveFaqModal = async (e) => {
     e.preventDefault();
     if (!editingFaq.question.trim() || !editingFaq.answer.trim()) {
       alert('Pertanyaan dan jawaban wajib diisi.');
@@ -327,13 +353,24 @@ export default function AdminPage() {
     }
     setDraftFaq(updated);
     setEditingFaq(null);
-    showToast('info', 'FAQ diperbarui di draf. Klik "Simpan Semua FAQ".');
+    try {
+      await saveFaq(updated);
+      showToast('success', isNewFaq ? 'Pertanyaan FAQ baru berhasil ditambahkan!' : 'Perubahan FAQ berhasil disimpan!');
+    } catch (err) {
+      showToast('error', err.message);
+    }
   };
 
-  const handleDeleteFaq = (idxOrId) => {
+  const handleDeleteFaq = async (idxOrId) => {
     if (window.confirm('Hapus pertanyaan FAQ ini?')) {
       const updated = draftFaq.filter((f, idx) => (f.id ? f.id !== idxOrId : idx !== idxOrId));
       setDraftFaq(updated);
+      try {
+        await saveFaq(updated);
+        showToast('success', 'FAQ dihapus dari website!');
+      } catch (err) {
+        showToast('error', err.message);
+      }
     }
   };
 
@@ -1193,7 +1230,7 @@ export default function AdminPage() {
           PROJECT MODAL (FULL CAPABILITY)
           ========================================== */}
       {editingProject && (
-        <div className="modal-backdrop" onClick={() => setEditingProject(null)}>
+        <div className="admin-modal-backdrop" onClick={() => setEditingProject(null)}>
           <div className="admin-modal-box" style={{ maxWidth: '680px' }} onClick={(e) => e.stopPropagation()}>
             <div className="admin-modal-header">
               <h3>{isNewProject ? 'Tambah Proyek Baru' : 'Edit Detail Proyek'}</h3>
@@ -1369,7 +1406,7 @@ export default function AdminPage() {
           SERVICE MODAL
           ========================================== */}
       {editingService && (
-        <div className="modal-backdrop" onClick={() => setEditingService(null)}>
+        <div className="admin-modal-backdrop" onClick={() => setEditingService(null)}>
           <div className="admin-modal-box" style={{ maxWidth: '560px' }} onClick={(e) => e.stopPropagation()}>
             <div className="admin-modal-header">
               <h3>Edit Layanan: {editingService.name}</h3>
@@ -1454,7 +1491,7 @@ export default function AdminPage() {
           TESTIMONIAL MODAL
           ========================================== */}
       {editingTesti && (
-        <div className="modal-backdrop" onClick={() => setEditingTesti(null)}>
+        <div className="admin-modal-backdrop" onClick={() => setEditingTesti(null)}>
           <div className="admin-modal-box" style={{ maxWidth: '520px' }} onClick={(e) => e.stopPropagation()}>
             <div className="admin-modal-header">
               <h3>{isNewTesti ? 'Tambah Testimoni' : 'Edit Testimoni'}</h3>
@@ -1527,7 +1564,7 @@ export default function AdminPage() {
           FAQ MODAL
           ========================================== */}
       {editingFaq && (
-        <div className="modal-backdrop" onClick={() => setEditingFaq(null)}>
+        <div className="admin-modal-backdrop" onClick={() => setEditingFaq(null)}>
           <div className="admin-modal-box" style={{ maxWidth: '560px' }} onClick={(e) => e.stopPropagation()}>
             <div className="admin-modal-header">
               <h3>{isNewFaq ? 'Tambah Pertanyaan FAQ' : 'Edit Pertanyaan FAQ'}</h3>

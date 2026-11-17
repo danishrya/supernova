@@ -502,19 +502,51 @@
   color: #ffffff;
 }
 
-/* Modal Box */
+/* Modal Backdrop & Box (Guaranteed Visibility & Stacking) */
+.admin-modal-backdrop {
+  position: fixed !important;
+  inset: 0 !important;
+  background: rgba(15, 23, 42, 0.75) !important;
+  backdrop-filter: blur(8px) !important;
+  -webkit-backdrop-filter: blur(8px) !important;
+  z-index: 99999 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 24px !important;
+  opacity: 1 !important;
+  pointer-events: auto !important;
+  visibility: visible !important;
+  overflow-y: auto !important;
+}
+
 .admin-modal-box {
   background: #ffffff;
+  border: 1px solid #e2e8f0;
   border-radius: 20px;
   width: 100%;
-  max-width: 600px;
+  max-width: 680px;
   padding: 32px;
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.35);
   display: flex;
   flex-direction: column;
   gap: 20px;
   max-height: 90vh;
   overflow-y: auto;
+  position: relative;
+  z-index: 100000 !important;
+  animation: adminModalIn 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes adminModalIn {
+  from {
+    opacity: 0;
+    transform: translateY(14px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
 }
 
 .admin-modal-header {
@@ -531,16 +563,22 @@
 
 .modal-close-btn {
   background: #f1f5f9;
-  border: none;
-  width: 32px;
-  height: 32px;
+  border: 1px solid #e2e8f0;
+  width: 34px;
+  height: 34px;
   border-radius: 50%;
-  font-size: 1rem;
+  font-size: 1.1rem;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
   color: #64748b;
+  transition: all 0.15s ease;
+}
+
+.modal-close-btn:hover {
+  background: #0f172a;
+  color: #ffffff;
 }
 
 .admin-modal-form {
