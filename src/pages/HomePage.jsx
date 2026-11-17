@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import ClientExperienceWidget from '../components/ClientExperienceWidget';
 import TechRibbon from '../components/TechRibbon';
 import VisualShowcaseGallery from '../components/VisualShowcaseGallery';
+import StudioBentoGrid from '../components/StudioBentoGrid';
 import ThreeStepEasyFlow from '../components/ThreeStepEasyFlow';
 import Pricing from '../components/Pricing';
 import { IconArrowRight } from '../components/Icons';
@@ -13,8 +14,8 @@ export default function HomePage({ onOpenProjectModal, onSelectPackage }) {
 
   return (
     <div className="page-home">
-      {/* 1. HERO SECTION: VISUAL, CONFIDENT & MINIMAL */}
-      <section className="hero-section minimal-hero">
+      {/* 1. HERO SECTION: DYNAMIC, CONFIDENT & IMMERSIVE */}
+      <section className="hero-section minimal-hero studio-hero-stage">
         <div className="container hero-container">
           <div className="hero-content">
             <div className="hero-status-pill">
@@ -34,11 +35,11 @@ export default function HomePage({ onOpenProjectModal, onSelectPackage }) {
 
             <div className="hero-cta-group">
               <Link to="/contact" className="btn btn-primary btn-lg" id="homeConsultBtn">
-                <span>Mulai Proyek</span>
+                <span>Mulai Konsultasi Proyek</span>
                 <IconArrowRight size={16} />
               </Link>
               <Link to="/catalog" className="btn btn-secondary btn-lg" id="homeWorksBtn">
-                <span>Lihat Portofolio</span>
+                <span>Jelajahi Portofolio</span>
               </Link>
             </div>
 
@@ -63,24 +64,30 @@ export default function HomePage({ onOpenProjectModal, onSelectPackage }) {
         </div>
       </section>
 
-      {/* TECH TICKER */}
+      {/* TECH TICKER / MARQUEE */}
       <TechRibbon />
 
-      {/* 2. SELECTED WORKS */}
+      {/* 2. SELECTED WORKS (PORTFOLIO) */}
       <VisualShowcaseGallery onOpenProjectModal={onOpenProjectModal} />
 
-      {/* 3. CAPABILITIES / SERVICES */}
+      {/* 3. STUDIO STANDARDS & BENTO GRID */}
+      <StudioBentoGrid />
+
+      {/* 4. CAPABILITIES / SERVICES */}
       <Pricing onSelectPackage={onSelectPackage} />
 
-      {/* 4. HOW WE WORK (3 CLEAN STEPS) */}
+      {/* 5. HOW WE WORK (3 CLEAN STEPS) */}
       <ThreeStepEasyFlow />
 
-      {/* 5. TESTIMONIALS (CLEAN & SHORT) */}
+      {/* 6. TESTIMONIALS (EDITORIAL SOCIAL PROOF) */}
       <section className="section testimonials-section minimal-testi-section">
         <div className="container">
           <div className="section-header text-center" style={{ marginBottom: 36 }}>
             <span className="section-tag">TESTIMONIALS</span>
-            <h2 className="section-title">Kata Klien Kami</h2>
+            <h2 className="section-title">Kata Founder &amp; Direktur Klien Kami</h2>
+            <p className="section-subtitle">
+              Hasil nyata yang telah kami buktikan bersama founder startup dan korporasi terkemuka.
+            </p>
           </div>
 
           <div className="testimonials-grid editorial-grid">
@@ -89,6 +96,7 @@ export default function HomePage({ onOpenProjectModal, onSelectPackage }) {
                 key={t.id || idx}
                 className={`testi-card editorial-testi ${t.featured ? 'featured-testi' : ''}`}
               >
+                <div className="testi-star-rating">★★★★★</div>
                 <p className="testi-quote">"{t.quote}"</p>
                 <div className="testi-author">
                   <div className="testi-avatar-pill">
@@ -105,7 +113,7 @@ export default function HomePage({ onOpenProjectModal, onSelectPackage }) {
         </div>
       </section>
 
-      {/* 6. CALL TO ACTION */}
+      {/* 7. CALL TO ACTION BANNER */}
       <section className="section cta-banner-section minimal-cta-section">
         <div className="container">
           <div className="cta-banner-card minimal-cta-card">
