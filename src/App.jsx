@@ -26,6 +26,7 @@ import AdminPage from './pages/AdminPage';
 import NotFoundPage from './pages/NotFoundPage';
 
 import { ContentProvider } from './context/ContentContext';
+import { ThemeProvider } from './context/ThemeContext';
 
 function AppContent() {
   const [selectedProject, setSelectedProject] = useState(null);
@@ -164,10 +165,12 @@ function AppContent() {
 
 export default function App() {
   return (
-    <BrowserRouter>
-      <ContentProvider>
-        <AppContent />
-      </ContentProvider>
-    </BrowserRouter>
+    <ThemeProvider>
+      <BrowserRouter>
+        <ContentProvider>
+          <AppContent />
+        </ContentProvider>
+      </BrowserRouter>
+    </ThemeProvider>
   );
 }

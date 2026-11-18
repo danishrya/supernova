@@ -78,7 +78,7 @@ export default function PortfolioPage({ onOpenProjectModal }) {
           <div className="portfolio-filter-toolbar">
             {/* Search Input */}
             <div className="portfolio-search-box">
-              <IconSearch size={18} color="#f59e0b" />
+              <IconSearch size={18} className="search-icon-svg" />
               <input
                 type="text"
                 placeholder="Cari berdasarkan kata kunci (contoh: Pitch Deck, Tender, E-commerce, Arsitek)..."

@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { NavLink, Link, useLocation } from 'react-router-dom';
-import { IconArrowRight, IconWhatsApp, IconClose } from './Icons';
+import { IconArrowRight, IconWhatsApp, IconClose, IconSun, IconMoon } from './Icons';
 import { playClick } from '../utils/sound';
 import { STUDIO_CONFIG } from '../config/studioConfig';
+import { useTheme } from '../context/ThemeContext';
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const location = useLocation();
+  const { theme, toggleTheme } = useTheme();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -73,8 +75,27 @@ export default function Navbar() {
           ))}
         </nav>
 
-        {/* Actions: Estimasi CTA + Mobile Menu Button */}
+        {/* Actions: Theme Toggle + Estimasi CTA + Mobile Menu Button */}
         <div className="navbar-right-action">
+          {/* Sleek Minimalist Theme Toggle Button */}
+          <button
+            type="button"
+            className="theme-toggle-pill"
+            id="themeToggleBtn"
+            onClick={() => {
+              playClick();
+              toggleTheme();
+            }}
+            aria-label={theme === 'dark' ? 'Ganti ke Mode Terang' : 'Ganti ke Mode Gelap'}
+            title={theme === 'dark' ? 'Mode Terang' : 'Mode Gelap'}
+          >
+            {theme === 'dark' ? (
+              <IconSun size={15} color="#f59e0b" />
+            ) : (
+              <IconMoon size={15} color="#0f172a" />
+            )}
+          </button>
+
           <Link
             to="/harga"
             className="floating-cta-btn"
@@ -172,8 +193,23 @@ export default function Navbar() {
             </div>
           </div>
 
-          {/* Footer Contact Details */}
+          {/* Footer Contact Details & Theme Switcher */}
           <div className="fs-menu-footer">
+            <div className="fs-theme-switch-row">
+              <span className="fs-theme-label">TEMA TAMPILAN:</span>
+              <button
+                type="button"
+                className="fs-theme-btn"
+                onClick={() => {
+                  playClick();
+                  toggleTheme();
+                }}
+              >
+                {theme === 'dark' ? <IconSun size={15} color="#f59e0b" /> : <IconMoon size={15} color="#0f172a" />}
+                <span>{theme === 'dark' ? 'Mode Terang (Light)' : 'Mode Gelap (Dark)'}</span>
+              </button>
+            </div>
+
             <a
               href={`https://wa.me/${STUDIO_CONFIG.whatsappNumber}?text=Halo%20Min%20Cham,%20saya%20mau%20konsultasi`}
               target="_blank"
