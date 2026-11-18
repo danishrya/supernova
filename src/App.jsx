@@ -7,11 +7,10 @@ import ProjectModal from './components/ProjectModal';
 import Preloader from './components/Preloader';
 import CustomCursor from './components/CustomCursor';
 import ScrollProgressBar from './components/ScrollProgressBar';
-import StarfieldCanvas from './components/StarfieldCanvas';
 import SmartWhatsAppButton from './components/SmartWhatsAppButton';
 import CommandPalette from './components/CommandPalette';
 
-// Pages
+// Multi-Page Routes
 import HomePage from './pages/HomePage';
 import ServicesPage from './pages/ServicesPage';
 import PPTServiceDetailPage from './pages/PPTServiceDetailPage';
@@ -32,7 +31,6 @@ function AppContent() {
   const [selectedProject, setSelectedProject] = useState(null);
   const [contactBrief, setContactBrief] = useState('');
   const [contactType, setContactType] = useState('Desain Presentasi & Pitch Deck (PPT)');
-  const [meteorTrigger, setMeteorTrigger] = useState(0);
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -50,19 +48,19 @@ function AppContent() {
     } else if (lower.includes('grafis') || lower.includes('brand') || lower.includes('logo')) {
       type = 'Desain Grafis & Brand Identity';
     } else if (lower.includes('bundling') || lower.includes('all-in-one')) {
-      type = 'Bundling Universal Terpadu (All-in-One)';
+      type = 'Bundling Terpadu (All-in-One)';
     }
 
     setContactType(type);
     setContactBrief(
-      `Saya berminat untuk mengambil layanan "${packageName}". Mohon penjelasan jadwal pengerjaan dan penawaran kustom langkah selanjutnya.`
+      `Halo Min Cham, kami berminat dengan layanan "${packageName}". Mohon info jadwal pengerjaan dan penawaran langkah berikutnya.`
     );
   };
 
   const handleConsultProject = (projectTitle) => {
     setSelectedProject(null);
     setContactBrief(
-      `Halo Min Cham, saya tertarik membuat karya dengan standar visual & kualitas serupa proyek: "${projectTitle}". Mohon informasi estimasi & ketersediaannya.`
+      `Halo Min Cham, kami tertarik untuk membuat karya dengan kualitas serupa proyek: "${projectTitle}". Mohon informasi estimasi biaya dan jadwalnya.`
     );
     navigate('/kontak');
   };
@@ -77,10 +75,9 @@ function AppContent() {
           <Preloader />
           <CustomCursor />
           <ScrollProgressBar />
-          <StarfieldCanvas meteorTrigger={meteorTrigger} />
           <SmartWhatsAppButton />
           <CommandPalette />
-          <Navbar onLogoEasterEgg={() => setMeteorTrigger((prev) => prev + 1)} />
+          <Navbar />
         </>
       )}
 
@@ -115,7 +112,7 @@ function AppContent() {
             element={<PortfolioPage onOpenProjectModal={setSelectedProject} />}
           />
           <Route path="/portofolio/:slug" element={<CaseStudyDetailPage />} />
-          {/* Backward compatible route */}
+          {/* Backward compatibility route */}
           <Route
             path="/catalog"
             element={<Navigate to="/portofolio" replace />}

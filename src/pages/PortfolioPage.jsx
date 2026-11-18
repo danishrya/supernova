@@ -58,16 +58,15 @@ export default function PortfolioPage({ onOpenProjectModal }) {
       <section className="portfolio-header-section">
         <div className="container">
           <div className="portfolio-header-content">
-            <div className="zine-sticker-tag" style={{ '--sticker-rot': '-1deg' }}>
-              <span className="zine-dot-pulse" />
-              <span>ARSIP KARYA &bull; DIKERJAKAN DENGAN TELITI</span>
+            <div className="section-index-stamp">
+              <span>03 &bull; ARSIP &amp; CONTOH KARYA</span>
             </div>
             <h1 className="portfolio-main-title">
-              Koleksi karya nyata, <br />
-              <span className="title-serif-accent">bukan sekadar pajangan mockup.</span>
+              Contoh format presentasi, <br />
+              <span className="headline-accent">identitas brand &amp; website studio.</span>
             </h1>
             <p className="portfolio-main-lead">
-              Dari slide pitch deck investor bernilai miliaran, presentasi tender korporat B2B, hingga website berkecepatan tinggi yang ramah kuota ponsel.
+              Koleksi contoh slide presentasi PPT, format profil bisnis, dan website yang siap disesuaikan dengan kebutuhan materi kamu.
             </p>
           </div>
         </div>

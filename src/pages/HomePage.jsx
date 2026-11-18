@@ -16,7 +16,7 @@ export default function HomePage({ onOpenProjectModal }) {
   const sideCases = caseStudies.slice(1, 3); // PT Samudra Energi & Valkyrie Apparel
 
   const waUrl = `https://wa.me/${STUDIO_CONFIG.whatsappNumber}?text=${encodeURIComponent(
-    'Halo Min Cham! Gue liat website Studio Supernova dan mau ngobrol santai konsultasi soal desain slide/website.'
+    'Halo Min Cham! Kami tertarik untuk konsultasi santai mengenai kebutuhan desain presentasi/website di Studio Supernova.'
   )}`;
 
   return (
@@ -28,9 +28,9 @@ export default function HomePage({ onOpenProjectModal }) {
         <div className="container">
           {/* Top Ledger Strip */}
           <div className="hero-ledger-top">
-            <span className="ledger-item">STUDIO KREATIF INDEPENDEN</span>
+            <span className="ledger-item">STUDIO DESAIN &bull; MIN CHAM</span>
             <span className="ledger-dot">&bull;</span>
-            <span className="ledger-item">MILIK MIN CHAM</span>
+            <span className="ledger-item">JAKARTA, INDONESIA</span>
             <span className="ledger-dot">&bull;</span>
             <span className="ledger-item">EDISI RESMI 2026</span>
             <span className="ledger-badge">BUKAN TEMPLATE AI</span>
@@ -41,19 +41,19 @@ export default function HomePage({ onOpenProjectModal }) {
             {/* Left Column: Bold Human Statement */}
             <div className="hero-main-column">
               <h1 className="hero-bricolage-headline">
-                Gue bikin desain yang <span className="headline-accent">punya karakter.</span> Bukan template AI yang bikin bosen.
+                Desain berkarakter untuk <span className="headline-accent">bisnis kamu.</span> Bukan template pasaran.
               </h1>
 
               {/* Handwritten Margin Note */}
               <div className="designer-handwritten-note">
                 <span className="arrow-scribble">↳</span>
-                <span>"Slide 40 halaman yang tadinya bikin ngantuk, gue bedah jadi senjata closing di depan investor."</span>
+                <span>"Slide presentasi 40 halaman yang tadinya padat dan membingungkan, kami bedah jadi alur visual yang rapi dan terarah."</span>
                 <span className="signature-tag">— Min Cham</span>
               </div>
 
-              {/* Punchy, Non-Cliché Copywriting in Hanken Grotesk */}
+              {/* Honest, Clear Copywriting in Hanken Grotesk */}
               <p className="hero-hanken-lead">
-                Banyak orang ngira desain bagus itu harus ribet dan penuh efek heboh. Padahal kuncinya ada di pesan yang jelas, tipografi berkarakter, dan rasa percaya yang langsung nancep di 3 detik pertama. Lo ngobrol langsung sama gue — tanpa sales perantara, tanpa birokrasi agensi.
+                Kami membantu UMKM, founder startup, dan profesional merapikan slide presentasi, membangun website kilat yang ringan dibuka di ponsel, serta menyediakan aset digital siap pakai. Kamu berkomunikasi langsung dengan Min Cham — tanpa perantara, tanpa birokrasi berbelit.
               </p>
 
               {/* Hero Action Row */}
@@ -68,7 +68,7 @@ export default function HomePage({ onOpenProjectModal }) {
                   data-cursor="Chat"
                 >
                   <IconWhatsApp size={18} />
-                  <span>Ngobrol Bebas via WhatsApp</span>
+                  <span>Konsultasi WhatsApp</span>
                 </a>
 
                 <Link
@@ -78,7 +78,7 @@ export default function HomePage({ onOpenProjectModal }) {
                   onClick={() => playClick()}
                   data-cursor="Hitung"
                 >
-                  <span>Hitung Estimasi Biaya</span>
+                  <span>Minta Estimasi Biaya</span>
                   <IconArrowRight size={15} />
                 </Link>
               </div>
@@ -90,9 +90,9 @@ export default function HomePage({ onOpenProjectModal }) {
                 <div className="sheet-header">
                   <div className="sheet-stamp-box">
                     <span className="sheet-id">SPECIMEN #01</span>
-                    <span className="sheet-status-pill">PROYEK TERVERIFIKASI</span>
+                    <span className="sheet-status-pill">CONTOH KARYA</span>
                   </div>
-                  <span className="sheet-category">PITCH DECK INVESTOR</span>
+                  <span className="sheet-category">PRESENTASI PITCH DECK</span>
                 </div>
 
                 <div
@@ -106,7 +106,7 @@ export default function HomePage({ onOpenProjectModal }) {
                     className="sheet-preview-img"
                   />
                   <div className="sheet-preview-overlay">
-                    <span>Lihat Bedah Studi Kasus &rarr;</span>
+                    <span>Lihat Contoh Studi Kasus &rarr;</span>
                   </div>
                 </div>
 
@@ -120,19 +120,19 @@ export default function HomePage({ onOpenProjectModal }) {
                       <span className="tbl-val">{heroCase.challenge}</span>
                     </div>
                     <div className="table-row">
-                      <span className="tbl-label">Hasil Nyata:</span>
-                      <span className="tbl-val highlight-green">Lolos pendanaan Seed Round &bull; 100% Master File diserahkan</span>
+                      <span className="tbl-label">Solusi Visual:</span>
+                      <span className="tbl-val highlight-green">{heroCase.solution}</span>
                     </div>
                   </div>
 
                   <div className="sheet-footer">
-                    <span className="sheet-mono-tools">SOFTWARE: POWERPOINT 365 + FIGMA</span>
+                    <span className="sheet-mono-tools">FORMAT: POWERPOINT 365 + KEYNOTE</span>
                     <Link
                       to={`/portofolio/${heroCase.id}`}
                       className="sheet-link"
                       onClick={() => playClick()}
                     >
-                      Baca Selengkapnya &rarr;
+                      Buka Rincian &rarr;
                     </Link>
                   </div>
                 </div>
@@ -151,21 +151,21 @@ export default function HomePage({ onOpenProjectModal }) {
                 <span className="col-num">01/</span>
                 <div className="col-content">
                   <h4>100% Hak Milik Master File</h4>
-                  <p>File .PPTX asli yang bisa diedit mandiri, file vektor SVG, atau source code bersih kami serahkan penuh tanpa ada yang disandera.</p>
+                  <p>File mentah .PPTX yang dapat kamu edit mandiri, file vektor SVG, atau kode sumber website diserahkan penuh tanpa biaya tambahan.</p>
                 </div>
               </div>
               <div className="guarantee-col">
                 <span className="col-num">02/</span>
                 <div className="col-content">
                   <h4>Bicara Langsung dengan Min Cham</h4>
-                  <p>Tanpa birokrasi account manager atau oper-operan sales. Ide dan revisi Anda langsung dieksekusi oleh desainer penanggung jawab.</p>
+                  <p>Tanpa birokrasi oper-operan perantara. Catatan dan revisi kamu langsung dikerjakan oleh desainer penanggung jawab.</p>
                 </div>
               </div>
               <div className="guarantee-col">
                 <span className="col-num">03/</span>
                 <div className="col-content">
                   <h4>Garansi Revisi Sampai Siap Tampil</h4>
-                  <p>Kami dampingi penyesuaian materi sampai Anda benar-benar siap dan percaya diri maju di depan investor atau klien.</p>
+                  <p>Kami dampingi penyesuaian materi sampai kamu benar-benar siap dan percaya diri tampil di depan audiens atau klien.</p>
                 </div>
               </div>
             </div>
@@ -178,19 +178,18 @@ export default function HomePage({ onOpenProjectModal }) {
 
       {/* =========================================================================
           SECTION 01: EDITORIAL ARCHITECTURAL ROSTER (LAYANAN)
-          Pengganti 3 kartu AI generik menjadi roster editorial bergaya monograf studio
           ========================================================================= */}
       <section className="section services-roster-section" id="layanan">
         <div className="container">
           <div className="roster-header-spread">
             <div className="header-meta-box">
-              <span className="section-index-stamp">ROSTER 01 &bull; SPESIALISASI</span>
+              <span className="section-index-stamp">01 &bull; SPESIALISASI KAMI</span>
               <h2 className="roster-main-title">
-                Tiga hal yang gue kuasai <span className="title-quirk">sampai ke detail terkecil.</span>
+                Tiga layanan utama yang kami <span className="title-quirk">kerjakan dengan teliti.</span>
               </h2>
             </div>
             <p className="roster-sub-desc">
-              Gue sengaja nggak nawarin puluhan jasa acak. Studio Supernova fokus pada 3 hal yang beneran langsung naikin wibawa dan penjualan bisnis lo.
+              Kami tidak menawarkan puluhan layanan acak. Studio Supernova fokus pada 3 disiplin yang terbukti langsung meningkatkan rasa percaya calon pembeli kamu.
             </p>
           </div>
 
@@ -200,19 +199,19 @@ export default function HomePage({ onOpenProjectModal }) {
               <div className="entry-left-col">
                 <span className="entry-index-big">01</span>
                 <div className="entry-titles">
-                  <span className="entry-tag">PRESENTASI &bull; PITCH DECK</span>
+                  <span className="entry-tag">PRESENTASI &bull; DECK</span>
                   <h3 className="entry-heading">Desain Slide Presentasi &amp; Pitch Deck (PPT)</h3>
                 </div>
               </div>
 
               <div className="entry-mid-col">
                 <p className="entry-desc">
-                  Bukan cuma mindahin teks ke template. Gue bedah ulang susunan alur cerita (storytelling), rapikan data tabel jadi infografik tajam, dan rancang visual berwibawa standar korporat dunia.
+                  Bukan sekadar memindahkan teks ke template. Kami merapikan alur narasi, menyusun bagan data menjadi infografik bersih, dan memastikan setiap slide nyaman dibaca audiens.
                 </p>
                 <div className="entry-deliverables-chips">
                   <span className="chip-item">✦ 100% Master File .PPTX &amp; Keynote</span>
-                  <span className="chip-item">✦ Layout 16:9 HD dengan grafik rapi</span>
-                  <span className="chip-item">✦ Pengerjaan kilat 24–48 jam bila genting</span>
+                  <span className="chip-item">✦ Format Rasio 16:9 HD dengan grafik rapi</span>
+                  <span className="chip-item">✦ Waktu pengerjaan fleksibel (reguler atau kilat)</span>
                 </div>
               </div>
 
@@ -222,14 +221,14 @@ export default function HomePage({ onOpenProjectModal }) {
                   className="btn btn-roster-action"
                   onClick={() => playClick()}
                 >
-                  <span>Pelajari Layanan PPT</span>
+                  <span>Lihat Contoh Slide PPT</span>
                   <IconArrowRight size={14} />
                 </Link>
               </div>
             </article>
 
             {/* Service Row 02: Website */}
-            <article className="roster-entry-row" style={{ '--accent-border': '#10b981' }}>
+            <article className="roster-entry-row" style={{ '--accent-border': '#f59e0b' }}>
               <div className="entry-left-col">
                 <span className="entry-index-big">02</span>
                 <div className="entry-titles">
@@ -240,12 +239,12 @@ export default function HomePage({ onOpenProjectModal }) {
 
               <div className="entry-mid-col">
                 <p className="entry-desc">
-                  Website kencang yang kebuka di bawah 0.4 detik di smartphone calon klien lo. Dirancang khusus untuk mengalirkan traffic langsung ke chat WhatsApp bisnis lo tanpa hambatan teknis.
+                  Website modern yang ringan dibuka di ponsel calon pelanggan kamu. Dirancang khusus untuk mengalirkan pengunjung langsung ke chat WhatsApp bisnis tanpa hambatan teknis.
                 </p>
                 <div className="entry-deliverables-chips">
-                  <span className="chip-item">✦ Responsif di HP &amp; laptop tanpa glitch</span>
-                  <span className="chip-item">✦ Tombol WhatsApp terintegrasi otomatis</span>
-                  <span className="chip-item">✦ Tanpa biaya langganan bulanan server</span>
+                  <span className="chip-item">✦ Responsif di smartphone &amp; layar desktop</span>
+                  <span className="chip-item">✦ Integrasi tombol chat WhatsApp otomatis</span>
+                  <span className="chip-item">✦ Tanpa biaya langganan bulanan server berat</span>
                 </div>
               </div>
 
@@ -255,7 +254,7 @@ export default function HomePage({ onOpenProjectModal }) {
                   className="btn btn-roster-action"
                   onClick={() => playClick()}
                 >
-                  <span>Pelajari Layanan Web</span>
+                  <span>Lihat Contoh Website</span>
                   <IconArrowRight size={14} />
                 </Link>
               </div>
@@ -266,19 +265,19 @@ export default function HomePage({ onOpenProjectModal }) {
               <div className="entry-left-col">
                 <span className="entry-index-big">03</span>
                 <div className="entry-titles">
-                  <span className="entry-tag">ASET SIAP PAKAI &bull; TEMPLATE</span>
+                  <span className="entry-tag">ASET PRAKTIS &bull; TEMPLATE</span>
                   <h3 className="entry-heading">Katalog Template &amp; Produk Digital</h3>
                 </div>
               </div>
 
               <div className="entry-mid-col">
                 <p className="entry-desc">
-                  Aset siap pakai buat lo yang butuh template deck presentasi, kit feed Instagram, atau draf surat perjanjian kerja freelance detik ini juga. Tinggal unduh dan edit sesuka hati.
+                  Solusi hemat waktu bagi kamu yang membutuhkan template slide presentasi, kit feed Instagram, atau draf surat perjanjian kerja freelance siap edit detik ini juga.
                 </p>
                 <div className="entry-deliverables-chips">
-                  <span className="chip-item">✦ Akses instan via Google Drive resmi</span>
-                  <span className="chip-item">✦ Disertai video panduan penggunaan font</span>
-                  <span className="chip-item">✦ Harga terjangkau mulai Rp 79.000</span>
+                  <span className="chip-item">✦ Tautan unduh instan via Google Drive resmi</span>
+                  <span className="chip-item">✦ Disertai petunjuk font gratis dari Google Fonts</span>
+                  <span className="chip-item">✦ Tarif terjangkau mulai dari Rp 79.000</span>
                 </div>
               </div>
 
@@ -288,7 +287,7 @@ export default function HomePage({ onOpenProjectModal }) {
                   className="btn btn-roster-action"
                   onClick={() => playClick()}
                 >
-                  <span>Buka Katalog Produk</span>
+                  <span>Lihat Katalog Template</span>
                   <IconArrowRight size={14} />
                 </Link>
               </div>
@@ -297,7 +296,7 @@ export default function HomePage({ onOpenProjectModal }) {
 
           <div className="roster-footer-cta">
             <Link to="/layanan" className="btn btn-editorial-outline" onClick={() => playClick()}>
-              <span>Buka Detail Semua Layanan &amp; Matriks Spesifikasi &rarr;</span>
+              <span>Buka Detail Semua Layanan &amp; Alur Kerja &rarr;</span>
             </Link>
           </div>
         </div>
@@ -309,28 +308,28 @@ export default function HomePage({ onOpenProjectModal }) {
       <section className="section py-small">
         <div className="container">
           <div className="craft-ruler-header">
-            <span className="ruler-stamp">BUKTI TANGAN NYATA &bull; BUKAN JANJI MANIS</span>
-            <h2 className="ruler-title">Bandingkan Slide Mentah Klien vs Hasil Bedah Studio:</h2>
-            <p className="ruler-sub">Geser handle slider ke kiri dan kanan untuk melihat perbedaan kerapian visual dan tata letak informasinya.</p>
+            <span className="ruler-stamp">02 &bull; PERBANDINGAN TATA LETAK</span>
+            <h2 className="ruler-title">Bandingkan Slide Mentah vs Hasil Sentuhan Studio:</h2>
+            <p className="ruler-sub">Geser tuas pembanding ke kiri dan kanan untuk melihat perbedaan keterbacaan materi dan struktur visualnya.</p>
           </div>
           <BeforeAfterSlider />
         </div>
       </section>
 
       {/* =========================================================================
-          SECTION 03: KARYA TERPILIH (ASYMMETRICAL CASE STUDY SPREAD)
+          SECTION 03: CONTOH KARYA TERPILIH (DUO ASYMMETRICAL SPREAD)
           ========================================================================= */}
       <section className="section curated-cases-spread-section" id="portofolio">
         <div className="container">
           <div className="cases-header-row">
             <div>
-              <span className="section-index-stamp">ARSIP 02 &bull; KARYA PILIHAN</span>
+              <span className="section-index-stamp">03 &bull; CONTOH KARYA PILIHAN</span>
               <h2 className="cases-main-title">
-                Studi kasus nyata, <span className="title-quirk">bukan sekadar screenshot mockup.</span>
+                Contoh studi kasus, <span className="title-quirk">bukan sekadar gambar pajangan.</span>
               </h2>
             </div>
             <Link to="/portofolio" className="btn btn-editorial-outline" onClick={() => playClick()}>
-              <span>Buka Semua 8+ Portofolio &rarr;</span>
+              <span>Lihat Semua Portofolio &rarr;</span>
             </Link>
           </div>
 
@@ -355,7 +354,7 @@ export default function HomePage({ onOpenProjectModal }) {
                     loading="lazy"
                   />
                   <div className="case-hover-glass">
-                    <span>Lihat Rincian Studi Kasus &rarr;</span>
+                    <span>Buka Rincian Studi Kasus &rarr;</span>
                   </div>
                 </div>
 
@@ -365,7 +364,7 @@ export default function HomePage({ onOpenProjectModal }) {
                   <p className="case-overview-text">{project.overview}</p>
 
                   <div className="case-results-mini-box">
-                    <span className="res-title">HASIL KONKRET:</span>
+                    <span className="res-title">HASIL PENGERJAAN:</span>
                     <ul className="res-items">
                       {project.results.slice(0, 2).map((r, rIdx) => (
                         <li key={rIdx}>
@@ -382,7 +381,7 @@ export default function HomePage({ onOpenProjectModal }) {
                       className="case-direct-link"
                       onClick={() => playClick()}
                     >
-                      <span>Bedah Lengkap Proyek</span>
+                      <span>Lihat Studi Kasus</span>
                       <IconArrowRight size={14} />
                     </Link>
 
@@ -407,32 +406,32 @@ export default function HomePage({ onOpenProjectModal }) {
       <NeedsQuiz />
 
       {/* =========================================================================
-          SECTION 05: CERITA PERSONAL MIN CHAM (MANIFESTO MANUSIA)
+          SECTION 05: CERITA PERSONAL MIN CHAM
           ========================================================================= */}
       <AboutMinCham />
 
       {/* =========================================================================
-          SECTION 06: TESTIMONI KLIEN NYATA DENGAN KONTEKS
+          SECTION 06: TESTIMONI KLIEN NYATA
           ========================================================================= */}
       <DraggableTestimonials />
 
       {/* =========================================================================
-          SECTION 07: MEMO AJAKAN DISKUSI (ANTI-SLOP FINAL CTA)
+          SECTION 07: MEMO AJAKAN DISKUSI (FINAL CTA)
           ========================================================================= */}
       <section className="section final-memo-section">
         <div className="container">
           <div className="studio-invitation-memo">
             <div className="memo-header-line">
-              <span className="memo-stamp">MEMO STUDIO &bull; JALUR LANGSUNG</span>
-              <span className="memo-date">RESPON &le; 2 JAM (JAM KERJA)</span>
+              <span className="memo-stamp">07 &bull; JALUR KONSULTASI LANGSUNG</span>
+              <span className="memo-date">SENIN – SABTU (09:00 – 18:00 WIB)</span>
             </div>
 
             <h2 className="memo-title">
-              Punya deadline genting atau materi yang <span className="headline-accent">masih berantakan?</span>
+              Punya materi yang ingin <span className="headline-accent">kami bedah visualnya?</span>
             </h2>
 
             <p className="memo-desc">
-              Jangan sungkan kirimkan draf kasar, coretan tangan, atau slide lama lo ke WhatsApp Min Cham. Gue bakal bedah alur visualnya secara gratis sebelum lo mutusin buat lanjut kerja bareng.
+              Kirimkan draf materi mentahan, catatan ide, atau slide lama kamu ke WhatsApp Min Cham. Kami akan bedah dan berikan masukan alur visualnya secara gratis sebelum kamu memutuskan untuk bekerja sama.
             </p>
 
             <div className="memo-actions">
@@ -445,7 +444,7 @@ export default function HomePage({ onOpenProjectModal }) {
                 data-cursor="Chat"
               >
                 <IconWhatsApp size={18} />
-                <span>Chat Min Cham Sekarang</span>
+                <span>Konsultasi via WhatsApp</span>
               </a>
 
               <Link
@@ -453,14 +452,14 @@ export default function HomePage({ onOpenProjectModal }) {
                 className="btn btn-hero-calc"
                 onClick={() => playClick()}
               >
-                <span>Hitung Estimasi Anggaran</span>
+                <span>Minta Estimasi Biaya</span>
                 <IconArrowRight size={15} />
               </Link>
             </div>
 
             <div className="memo-footer-specs">
-              <span>✦ Tanpa biaya konsultasi awal</span>
-              <span>✦ 100% Master file diserahkan</span>
+              <span>✦ Konsultasi awal bebas biaya</span>
+              <span>✦ 100% Hak milik master file diserahkan</span>
               <span>✦ Garansi revisi sampai tuntas</span>
             </div>
           </div>

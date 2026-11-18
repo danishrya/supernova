@@ -26,16 +26,15 @@ export default function DigitalProductsPage() {
       <section className="digital-header-section">
         <div className="container">
           <div className="digital-header-content">
-            <div className="zine-sticker-tag" style={{ '--sticker-rot': '1.2deg' }}>
-              <span className="zine-dot-pulse" />
-              <span>SIAP PAKAI &bull; UNDUH INSTAN</span>
+            <div className="section-index-stamp">
+              <span>04 &bull; PRODUK DIGITAL &amp; TEMPLATE</span>
             </div>
             <h1 className="digital-main-title">
-              Katalog Template &amp; <br />
-              <span className="title-serif-accent">Produk Digital Studio</span>
+              Katalog template slide &amp; <br />
+              <span className="headline-accent">dokumen siap pakai studio.</span>
             </h1>
             <p className="digital-main-lead">
-              Aset desain praktis, template slide terstruktur, draf kontrak freelance, dan source code website siap modifikasi. Dibuat langsung dengan standar studio profesional tanpa langganan mahal.
+              Aset desain praktis, template slide terstruktur, draf kontrak freelance, dan source code website siap modifikasi langsung dari Studio Supernova.
             </p>
           </div>
         </div>

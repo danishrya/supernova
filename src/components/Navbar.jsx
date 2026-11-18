@@ -4,22 +4,10 @@ import { IconArrowRight, IconWhatsApp, IconClose } from './Icons';
 import { playClick } from '../utils/sound';
 import { STUDIO_CONFIG } from '../config/studioConfig';
 
-export default function Navbar({ onLogoEasterEgg }) {
+export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [clickCount, setClickCount] = useState(0);
-
   const location = useLocation();
-
-  // Enforce dark tactile theme on mount & cleanup any stale light mode
-  useEffect(() => {
-    document.documentElement.setAttribute('data-theme', 'dark');
-    document.documentElement.classList.remove('theme-light');
-    document.documentElement.classList.add('theme-dark');
-    try {
-      localStorage.setItem('supernova_theme', 'dark');
-    } catch (e) {}
-  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -46,25 +34,12 @@ export default function Navbar({ onLogoEasterEgg }) {
     };
   }, [mobileOpen]);
 
-  const handleLogoClick = () => {
-    const nextCount = clickCount + 1;
-    setClickCount(nextCount);
-
-    if (nextCount >= 5) {
-      setClickCount(0);
-      playClick();
-      if (onLogoEasterEgg) {
-        onLogoEasterEgg();
-      }
-    }
-  };
-
   const navItems = [
     { label: 'Beranda', path: '/' },
     { label: 'Layanan', path: '/layanan' },
     { label: 'Portofolio', path: '/portofolio' },
-    { label: 'Produk Digital', path: '/produk-digital' },
-    { label: 'Harga & Estimasi', path: '/harga' },
+    { label: 'Produk', path: '/produk-digital' },
+    { label: 'Harga', path: '/harga' },
     { label: 'Tentang', path: '/tentang' },
     { label: 'Kontak', path: '/kontak' },
   ];
@@ -72,28 +47,18 @@ export default function Navbar({ onLogoEasterEgg }) {
   return (
     <header className={`site-header-floating-wrap ${scrolled ? 'is-scrolled' : 'is-top'}`}>
       <div className={`floating-navbar ${scrolled ? 'scrolled' : ''}`} id="floatingNav">
-        {/* Brand Wordmark with Signature Supernova Dot */}
+        {/* Simple Clean Wordmark Logo (Tanpa Medali Emas) */}
         <Link
           to="/"
-          className="brand-logo"
+          className="brand-wordmark-link"
           id="brandLogo"
-          onClick={handleLogoClick}
-          title="Klik 5x untuk easter egg hujan meteor 🌠"
+          title="Studio Supernova"
         >
-          <div className="logo-coin-wrapper">
-            <img
-              src="/assets/images/supernova-logo.jpg"
-              alt="Studio Supernova"
-              className="brand-logo-img"
-            />
-          </div>
-          <span className="brand-text">
-            SUPERNOVA<span className="brand-sub">STUDIO</span>
-            <span className="supernova-signature-dot" title="The Supernova Dot" />
-          </span>
+          <span className="wordmark-main">SUPERNOVA</span>
+          <span className="wordmark-dot" title="The Supernova Dot" />
         </Link>
 
-        {/* Desktop Multi-Page Nav Links */}
+        {/* Desktop Multi-Page Nav Links (white-space: nowrap) */}
         <nav className="floating-nav-links" id="mainNav" aria-label="Navigasi Utama">
           {navItems.map((item) => (
             <NavLink
@@ -103,7 +68,7 @@ export default function Navbar({ onLogoEasterEgg }) {
               className={({ isActive }) => `floating-nav-link ${isActive ? 'active' : ''}`}
               onClick={() => playClick()}
             >
-              <span>{item.label}</span>
+              <span className="nav-label-text">{item.label}</span>
             </NavLink>
           ))}
         </nav>
@@ -118,7 +83,7 @@ export default function Navbar({ onLogoEasterEgg }) {
             data-cursor="Hitung"
           >
             <span>Minta Estimasi</span>
-            <IconArrowRight size={14} />
+            <IconArrowRight size={13} />
           </Link>
 
           {/* Mobile Toggle Button */}
@@ -138,7 +103,7 @@ export default function Navbar({ onLogoEasterEgg }) {
       </div>
 
       {/* =========================================================================
-          FULLSCREEN ANIMATED MOBILE MENU (Anti-AI Slop: Big Editorial Serif + Zine Stickers)
+          FULLSCREEN ANIMATED MOBILE MENU
           ========================================================================= */}
       <div
         className={`fullscreen-mobile-menu ${mobileOpen ? 'is-open' : ''}`}
@@ -151,8 +116,8 @@ export default function Navbar({ onLogoEasterEgg }) {
         <div className="fs-menu-sheet">
           <div className="fs-menu-header">
             <div className="fs-brand">
-              <span className="fs-brand-title">STUDIO SUPERNOVA</span>
-              <span className="fs-brand-badge">EDISI INDONESIA &bull; 2026</span>
+              <span className="fs-brand-title">SUPERNOVA</span>
+              <span className="fs-brand-badge">STUDIO DESAIN &bull; 2026</span>
             </div>
             <button
               type="button"
@@ -188,21 +153,21 @@ export default function Navbar({ onLogoEasterEgg }) {
 
           {/* Sub-Services Quick Links */}
           <div className="fs-quick-services">
-            <span className="fs-section-tag">SPESIALISASI KAMI:</span>
+            <span className="fs-section-tag">SPESIALISASI:</span>
             <div className="fs-services-chips">
               <Link
                 to="/layanan/desain-ppt"
                 className="fs-chip"
                 onClick={() => setMobileOpen(false)}
               >
-                Desain Presentasi PPT &rarr;
+                Desain Presentasi &amp; Pitch Deck PPT &rarr;
               </Link>
               <Link
                 to="/layanan/website"
                 className="fs-chip"
                 onClick={() => setMobileOpen(false)}
               >
-                Pembuatan Website Kilat &rarr;
+                Pembuatan Website &amp; Landing Page &rarr;
               </Link>
             </div>
           </div>
@@ -217,7 +182,7 @@ export default function Navbar({ onLogoEasterEgg }) {
               onClick={() => setMobileOpen(false)}
             >
               <IconWhatsApp size={18} />
-              <span>Chat WhatsApp Min Cham ({STUDIO_CONFIG.phone})</span>
+              <span>Chat WhatsApp Min Cham</span>
             </a>
             <p className="fs-guarantee-note">
               ✦ {STUDIO_CONFIG.guaranteeText}

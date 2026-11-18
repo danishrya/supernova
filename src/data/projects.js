@@ -1,73 +1,79 @@
+// =============================================================================
+// STUDIO SUPERNOVA — DATA PORTOFOLIO & CONTOH KARYA
+// Catatan: Seluruh karya non-klien diberi label jelas sebagai 'Contoh Karya' / 'Konsep'
+// Hindari klaim palsu tanpa bukti autentik dari pemilik studio.
+// =============================================================================
+
 export const PROJECTS_DATA = [
   // 1. PRESENTATION & PITCH DECK (PPT)
   {
     id: 'nexus-pitch-deck',
     title: 'Nexus Capital — Investor Pitch Deck & Fundraise PPT',
     category: 'presentation',
-    categoryLabel: 'Presentation & Pitch Deck (PPT)',
-    badge: 'Lolos Pendanaan Seed Round • 16:9 HD',
+    categoryLabel: 'Presentasi & Pitch Deck (PPT)',
+    badge: 'Contoh Karya • Format 16:9 HD',
     image: '/assets/images/corporate.jpg',
     tags: ['Pitch Deck Investor', 'PowerPoint / Keynote', 'Infografik Visual', 'Master File PPTX'],
-    overview: 'Perancangan slide presentasi pitch deck 18 slide untuk startup fintech saat penggalangan dana tahap awal di hadapan angel investor dan modal ventura.',
-    challenge: 'Founder memiliki materi data teknis yang sangat padat dan slide lama terlihat membosankan, sehingga poin keunggulan bisnis sulit ditangkap oleh calon investor.',
-    solution: 'Kami menyusun ulang struktur alur cerita (storytelling), menyederhanakan grafik angka menjadi infografik yang memikat, serta mendesain tata letak visual mewah khas korporat internasional.',
+    overview: 'Perancangan slide presentasi pitch deck 18 slide untuk startup fintech saat penggalangan dana di hadapan calon investor.',
+    challenge: 'Materi lama berupa data teknis padat dan slide terlihat membosankan, sehingga poin keunggulan bisnis sulit ditangkap audiens.',
+    solution: 'Menyusun ulang alur cerita (storytelling), menyederhanakan tabel angka menjadi infografik yang ringkas, dan merapikan hierarki tipografi.',
     results: [
-      'Berhasil mengamankan komitmen pendanaan seed round sesuai target',
-      'Waktu presentasi 40% lebih efisien karena visual langsung to-the-point',
-      'Slide master file PPTX 100% editable sehingga mudah diperbarui mandiri'
+      'Alur presentasi lebih terstruktur dan to-the-point',
+      'Slide master file PPTX 100% editable sehingga mudah disesuaikan mandiri',
+      '[ISI: Bukti keberhasilan atau testimoni asli dari klien bila ada]'
     ]
   },
   {
     id: 'samudra-corp-deck',
     title: 'PT Samudra Energi — Profil Perusahaan & Tender Deck',
     category: 'presentation',
-    categoryLabel: 'Presentation & Pitch Deck (PPT)',
-    badge: 'Menang Tender Korporat • Format PPTX & PDF',
+    categoryLabel: 'Presentasi & Pitch Deck (PPT)',
+    badge: 'Contoh Format • PPTX & PDF',
     image: '/assets/images/cms-tablet.jpg',
-    tags: ['Company Profile PPT', 'Proposal Tender B2B', 'Animasi Halus', 'Siap Cetak & Presentasi'],
-    overview: 'Slide presentasi profil korporat dan proposal tender untuk perusahaan logistik & energi dalam rangka meyakinkan mitra multinasional.',
-    challenge: 'Materi tender lama terlihat kaku dan tidak mencerminkan reputasi serta armada skala besar yang dimiliki perusahaan.',
-    solution: 'Merancang presentasi berwibawa dengan palet warna navy & emas, menyertakan peta operasional interaktif dan hierarki informasi yang sangat profesional.',
+    tags: ['Company Profile PPT', 'Proposal Tender B2B', 'Tata Letak Formal', 'Siap Cetak & Presentasi'],
+    overview: 'Slide presentasi profil korporat dan proposal kerja sama untuk perusahaan bidang logistik dan energi.',
+    challenge: 'Materi tender sebelumnya kaku dan belum mencerminkan kapasitas operasional serta armada yang dimiliki perusahaan.',
+    solution: 'Merancang tata letak berwibawa dengan palet warna navy dan aksen oranye, menyertakan diagram alur operasional yang rapi.',
     results: [
-      'Memenangkan kualifikasi tender proyek kerja sama strategis tahunan',
-      'Mendapatkan pujian dari dewan direksi klien atas kerapian visual',
-      'Disediakan versi cetak HD dan versi digital ringan untuk lampiran email'
+      'Struktur profil perusahaan lebih tertata dan mudah dipahami mitra',
+      'Disediakan versi cetak HD dan versi digital ringan untuk lampiran email',
+      '[ISI: Catatan pencapaian atau feedback resmi bila ada]'
     ]
   },
 
   // 2. BRANDING & GRAPHIC DESIGN
   {
     id: 'valkyrie-brand-identity',
-    title: 'Valkyrie Apparel — Brand Identity & Social Media Kit',
+    title: 'Valkyrie Apparel — Identitas Brand & Social Media Kit',
     category: 'branding',
-    categoryLabel: 'Graphic Design & Brand Identity',
-    badge: 'Identitas Visual Lengkap • Siap Cetak & Sosmed',
+    categoryLabel: 'Desain Brand & Grafis',
+    badge: 'Konsep Desain • Siap Cetak & Sosmed',
     image: '/assets/images/ecommerce.jpg',
-    tags: ['Desain Logo', 'Brand Guidelines', 'Feed & Story Instagram', 'Kemasan & Label'],
-    overview: 'Pengembangan identitas visual menyeluruh untuk brand fashion premium, mencakup logo utama, palet warna, tipografi, panduan brand, hingga kemasan belanja eksklusif.',
-    challenge: 'Brand baru membutuhkan citra yang langsung terkesan mewah dan bernilai tinggi agar dapat bersaing di segmen pasar kelas menengah ke atas.',
-    solution: 'Merancang logo monogram minimalis dengan sentuhan modern luxury, dilengkapi template konten media sosial siap pakai di Canva/Photoshop serta panduan brand lengkap.',
+    tags: ['Desain Logo', 'Brand Guidelines', 'Feed & Story Instagram', 'Panduan Palet Warna'],
+    overview: 'Pengembangan konsep identitas visual untuk brand fashion, mencakup logo utama, palet warna, panduan tipografi, dan template media sosial.',
+    challenge: 'Brand baru membutuhkan citra yang terkesan rapi dan punya karakter kuat agar mudah diingat calon pembeli di media sosial.',
+    solution: 'Merancang logo monogram minimalis, template feed Instagram siap edit di Canva, serta buku panduan visual sederhana.',
     results: [
-      'Penjualan peluncuran batch pertama habis dalam waktu kurang dari 2 minggu',
-      'Feed Instagram tampil konsisten, estetik, dan berstandar internasional',
-      'Tim internal klien mudah membuat materi promosi harian secara mandiri'
+      'Tampilan konten media sosial terlihat konsisten dan rapi',
+      'Pemilik brand dapat membuat materi promosi mandiri menggunakan template Canva',
+      '[ISI: Data penjualan atau testimoni asli klien bila ada]'
     ]
   },
   {
     id: 'artisan-roastery-collateral',
-    title: 'Aura Artisan Coffee — Visual Branding & Marketing Collateral',
+    title: 'Aura Artisan Coffee — Visual Branding & Kemasan Kopi',
     category: 'branding',
-    categoryLabel: 'Graphic Design & Brand Identity',
-    badge: 'Desain Menu & Kemasan • Master File Vektor',
+    categoryLabel: 'Desain Brand & Grafis',
+    badge: 'Contoh Kemasan • File Vektor SVG',
     image: '/assets/images/resto-cafe.jpg',
-    tags: ['Desain Kemasan (Packaging)', 'Buku Menu Cafe', 'Brosur & Poster', 'Materi Cetak HD'],
-    overview: 'Desain materi pemasaran grafis lengkap untuk kedai kopi artisan & roastery, mencakup label kemasan biji kopi, buku menu digital & cetak, serta standing banner event.',
-    challenge: 'Kemasan sebelumnya polos tanpa karakter khusus, sehingga kurang menarik perhatian saat dipajang di rak display ritel.',
-    solution: 'Menciptakan ilustrasi visual berkarakter dengan tipografi elegan yang menonjolkan aroma dan asal biji kopi pilihan.',
+    tags: ['Desain Kemasan', 'Buku Menu Cafe', 'Brosur & Poster', 'Master File Vektor'],
+    overview: 'Desain materi promosi dan kemasan untuk kedai kopi, mencakup label kemasan biji kopi, buku menu, dan standing banner.',
+    challenge: 'Kemasan sebelumnya polos tanpa pembeda karakter, sehingga kurang menonjol di rak display toko.',
+    solution: 'Membuat ilustrasi sederhana dan penataan tipografi yang menonjolkan varian rasa serta asal biji kopi.',
     results: [
-      'Penjualan ritel biji kopi meningkat lebih dari 65% di bulan pertama',
-      'Menu digital mudah discan dan tampil menggugah selera di ponsel pengunjung',
-      'Seluruh file master beresolusi tinggi siap dikirim langsung ke percetakan'
+      'Label kemasan siap cetak dengan ukuran presisi',
+      'Menu digital mudah dibaca di layar HP pengunjung cafe',
+      '[ISI: Bukti respon pelanggan atau angka penjualan bila ada]'
     ]
   },
 
@@ -76,68 +82,34 @@ export const PROJECTS_DATA = [
     id: 'architekton-corp',
     title: 'A&E Architekton — Website Profil Studio Arsitektur',
     category: 'web',
-    categoryLabel: 'Website & Digital Experience',
-    badge: 'Loading < 0.5s • Galeri Foto HD Layar Penuh',
-    image: '/assets/images/corporate.jpg',
-    tags: ['Company Profile Web', 'Galeri Proyek HD', 'Terdaftar di Google', 'Multi-Device'],
-    overview: 'Website profil perusahaan untuk studio arsitektur terkemuka, menampilkan galeri foto proyek bangunan megah dalam resolusi tinggi yang tetap ringan dibuka.',
-    challenge: 'Klien butuh website prestisius untuk meyakinkan investor dan calon klien besar, namun tidak ingin website menjadi berat karena memuat banyak foto gedung.',
-    solution: 'Kami menerapkan teknologi kompresi foto otomatis sehingga ratusan foto proyek arsitektur tetap jernih dan tajam, namun halaman tetap terbuka dalam hitungan milidetik.',
+    categoryLabel: 'Website & Digital',
+    badge: 'Contoh Website • Responsif HP & Laptop',
+    image: '/assets/images/landing.jpg',
+    tags: ['Company Profile Web', 'Galeri Proyek HD', 'Navigasi Cepat', 'Multi-Device'],
+    overview: 'Konsep website profil untuk studio arsitektur, menampilkan galeri foto proyek bangunan dengan kompresi gambar yang ringan dibuka di ponsel.',
+    challenge: 'Kebutuhan menampilkan banyak foto resolusi tinggi tanpa membuat website lambat saat diakses dengan koneksi ponsel.',
+    solution: 'Menerapkan kompresi gambar modern dan tata letak minimalis agar pengunjung bisa langsung melihat portofolio proyek dengan nyaman.',
     results: [
-      'Berhasil memenangkan kontrak proyek arsitektur berskala besar',
-      'Mudah ditemukan di pencarian Google oleh calon klien yang mencari jasa arsitek',
-      'Mendapatkan pujian atas tampilan visual yang sangat elegan'
+      'Halaman terbuka cepat tanpa lag di smartphone',
+      'Navigasi galeri proyek rapi dan terstruktur',
+      '[ISI: Hasil kerja sama atau alamat website klien aktif bila ada]'
     ]
   },
   {
     id: 'aurora-luxe',
-    title: 'Aurora Luxe — Toko Online Jam & Audio Mewah',
+    title: 'Aurora Luxe — Website Katalog Produk & WhatsApp Order',
     category: 'web',
-    categoryLabel: 'Website & Digital Experience',
-    badge: '+85% Penjualan Naik • Anti Lemot di HP',
-    image: '/assets/images/ecommerce.jpg',
-    tags: ['Toko Online', 'Keranjang Belanja', 'WhatsApp Order', 'Bisa Edit Produk'],
-    overview: 'Toko online berkelas eksklusif untuk produk jam tangan mewah dan perangkat audio premium dengan keranjang belanja otomatis dan kemudahan bayar.',
-    challenge: 'Website lama klien lambat diakses dari HP calon pembeli, sehingga banyak pembeli membatalkan pesanan sebelum sempat membayar.',
-    solution: 'Kami bangun toko online berkecepatan tinggi dengan proses checkout yang sangat ringkas, terhubung langsung ke transfer bank/QRIS, serta notifikasi pesanan otomatis.',
+    categoryLabel: 'Website & Digital',
+    badge: 'Contoh Katalog • Order via WhatsApp',
+    image: '/assets/images/devices-showcase.jpg',
+    tags: ['Katalog Produk', 'Order WhatsApp', 'Ringan di HP', 'Bisa Diperbarui'],
+    overview: 'Website katalog produk untuk ritel aksesori dengan tombol pemesanan langsung yang terhubung ke chat WhatsApp penjual.',
+    challenge: 'Pelanggan sering bingung cara memesan lewat website e-commerce yang rumit dengan form pendaftaran panjang.',
+    solution: 'Menyederhanakan alur: pengunjung memilih produk, lalu tombol mengarahkan ke WhatsApp dengan pesan yang sudah terisi otomatis.',
     results: [
-      'Pembeli menyelesaikan transaksi naik sebesar +85%',
-      'Owner toko bisa menambah dan mengganti foto produk sendiri dalam 2 menit',
-      'Tampilan toko terlihat setara dengan brand internasional'
-    ]
-  },
-  {
-    id: 'aether-flow',
-    title: 'Aether Flow — Landing Page Produk Otomasi Kerja',
-    category: 'web',
-    categoryLabel: 'Website & Digital Experience',
-    badge: '+145% Peminat Bertambah • Cepat di Semua HP',
-    image: '/assets/images/landing.jpg',
-    tags: ['Landing Page Promosi', 'Tombol WhatsApp Langsung', 'Simulasi Interaktif', 'Bebas Ribet'],
-    overview: 'Halaman website satu halaman (Landing Page) khusus promosi produk teknologi, dirancang fokus untuk membuat pengunjung langsung mendaftar atau menghubungi sales.',
-    challenge: 'Calon pembeli sering tidak paham keunggulan produk jika hanya membaca teks panjang yang membosankan.',
-    solution: 'Menyajikan simulasi langsung fitur produk secara interaktif, dipadukan dengan tombol pendaftaran cepat yang langsung terhubung ke admin WhatsApp.',
-    results: [
-      'Pendaftaran calon pembeli baru melonjak sebesar +145%',
-      'Waktu membaca pengunjung naik 2 kali lipat',
-      'Biaya iklan menjadi jauh lebih efisien karena konversi tinggi'
-    ]
-  },
-  {
-    id: 'amarta-villa',
-    title: 'Amarta Luxury Villa Bali — Reservasi & Booking Resort',
-    category: 'web',
-    categoryLabel: 'Website & Digital Experience',
-    badge: 'Booking Naik +210% • WhatsApp Concierge',
-    image: '/assets/images/villa-resort.jpg',
-    tags: ['Website Villa & Hotel', 'Cek Tanggal Menginap', 'WhatsApp Concierge', 'Galeri Foto Mewah'],
-    overview: 'Website pemesanan villa mewah di Bali dengan foto kamar kolam renang spektakuler, kalender cek tanggal inap, dan konfirmasi langsung ke nomor WhatsApp concierge.',
-    challenge: 'Tergantung pada komisi aplikasi travel online yang tinggi dan ingin tamu memesan langsung tanpa potongan perantara.',
-    solution: 'Membangun website booking langsung yang sangat memukau, membuat calon tamu yakin dan langsung reservasi lewat WhatsApp concierge.',
-    results: [
-      'Pemesanan langsung via WhatsApp naik +210%',
-      'Menghemat biaya komisi perantara hingga puluhan juta rupiah',
-      'Tamu asing dan lokal memuji kemudahan reservasi'
+      'Alur transaksi langsung ke WhatsApp tanpa hambatan checkout berbelit',
+      'Tampilan katalog bersih dan mudah dijelajahi di layar HP',
+      '[ISI: Testimoni pemilik toko atau metrik konversi bila ada]'
     ]
   }
 ];
