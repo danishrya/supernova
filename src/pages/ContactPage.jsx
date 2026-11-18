@@ -1,22 +1,30 @@
 import React from 'react';
+import Breadcrumb from '../components/Breadcrumb';
 import Contact from '../components/Contact';
-import FAQ from '../components/FAQ';
+import FAQSearchable from '../components/FAQSearchable';
+import { STUDIO_CONFIG } from '../config/studioConfig';
 
 export default function ContactPage({ initialBrief, initialType }) {
   return (
-    <div className="page-contact">
+    <div className="page-contact human-page-wrap">
+      <div className="container">
+        <Breadcrumb items={[{ label: 'Kontak & Konsultasi' }]} />
+      </div>
+
       {/* Header Banner */}
-      <section className="page-header-section">
+      <section className="contact-header-section">
         <div className="container">
-          <div className="page-header-box text-center">
-            <span className="section-tag">HUB KONSULTASI &amp; KOLABORASI</span>
-            <h1 className="page-main-title">
-              Mulai Diskusi Proyek Anda <br />
-              Bersama Tim Kreatif &amp; Digital Kami.
+          <div className="contact-header-content">
+            <div className="zine-sticker-tag" style={{ '--sticker-rot': '-1deg' }}>
+              <span className="zine-dot-pulse" />
+              <span>RESPON CEPAT &bull; LANGSUNG KE MIN CHAM</span>
+            </div>
+            <h1 className="contact-main-title">
+              Mulai obrolan santai, <br />
+              <span className="title-serif-accent">tanpa tekanan atau birokrasi kaku.</span>
             </h1>
-            <p className="page-main-subtitle">
-              Tidak ada komitmen awal dan konsultasi 100% gratis. Ceritakan visi, kebutuhan slide presentasi (PPT),
-              rekayasa website, atau identitas brand Anda — kami siap merumuskan solusi dan penawaran kustom yang paling efisien.
+            <p className="contact-main-lead">
+              Kirim draf slide, coretan kasar, atau rencana website Anda. Konsultasi awal 100% gratis dan Anda berbicara langsung dengan desainer penanggung jawab proyek.
             </p>
           </div>
         </div>
@@ -25,8 +33,8 @@ export default function ContactPage({ initialBrief, initialType }) {
       {/* Main Contact Form & Channels */}
       <Contact initialBrief={initialBrief} initialType={initialType} />
 
-      {/* Integrated FAQ */}
-      <FAQ />
+      {/* Integrated Searchable FAQ */}
+      <FAQSearchable />
     </div>
   );
 }
