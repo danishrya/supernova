@@ -1,27 +1,27 @@
 import React from 'react';
 
 export default function TechRibbon() {
-  const marqueeItems = [
-    'INVESTOR PITCH DECKS',
-    'BRAND IDENTITY SYSTEMS',
-    'DIGITAL & WEB EXPERIENCES',
-    'CORPORATE PRESENTATIONS',
-    'VENTURE CAPITAL & STARTUPS',
-    'LUXURY & HOSPITALITY',
-    'EDITORIAL & MARKETING COLLATERAL',
-    '100% MASTER FILES INCLUDED',
+  const editorialNotes = [
+    '100% MASTER FILE .PPTX & KODE DISERAHKAN PENUH',
+    'NGOBROL LANGSUNG DENGAN MIN CHAM (TANPA SALES PERANTARA)',
+    'BUKAN TEMPLATE AI PASARAN',
+    'WEBSITE KILAT TERBUKA < 0.4 DETIK DI HP',
+    'GARANSI REVISI FLEKSIBEL SAMPAI SIAP TAMPIL',
   ];
 
   return (
-    <div className="studio-marquee-strip">
-      <div className="marquee-inner">
-        <div className="marquee-content">
-          {marqueeItems.concat(marqueeItems).map((item, idx) => (
-            <span key={idx} className="marquee-item">
-              <span className="marquee-text">{item}</span>
-              <span className="marquee-separator">&bull;</span>
-            </span>
-          ))}
+    <div className="studio-dateline-strip" aria-label="Studio Guarantees">
+      <div className="container">
+        <div className="dateline-inner-row">
+          <span className="dateline-stamp">STUDIO SUPERNOVA &bull; PRINSIP KERJA:</span>
+          <div className="dateline-items-track">
+            {editorialNotes.map((note, idx) => (
+              <span key={idx} className="dateline-pill-item">
+                <span className="pill-dot">✦</span>
+                <span className="pill-label">{note}</span>
+              </span>
+            ))}
+          </div>
         </div>
       </div>
     </div>
