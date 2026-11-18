@@ -1,22 +1,25 @@
 import React, { useState, useEffect } from 'react';
 import { NavLink, Link, useLocation } from 'react-router-dom';
 import { IconArrowRight, IconWhatsApp, IconClose } from './Icons';
-import { playClick, playPop } from '../utils/sound';
+import { playClick } from '../utils/sound';
 import { STUDIO_CONFIG } from '../config/studioConfig';
 
 export default function Navbar({ onLogoEasterEgg }) {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [clickCount, setClickCount] = useState(0);
-  const [theme, setTheme] = useState(() => {
-    try {
-      return localStorage.getItem('supernova_theme') || 'dark';
-    } catch (e) {
-      return 'dark';
-    }
-  });
 
   const location = useLocation();
+
+  // Enforce dark tactile theme on mount & cleanup any stale light mode
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', 'dark');
+    document.documentElement.classList.remove('theme-light');
+    document.documentElement.classList.add('theme-dark');
+    try {
+      localStorage.setItem('supernova_theme', 'dark');
+    } catch (e) {}
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -42,19 +45,6 @@ export default function Navbar({ onLogoEasterEgg }) {
       document.body.style.overflow = '';
     };
   }, [mobileOpen]);
-
-  // Set theme attribute on root html
-  useEffect(() => {
-    document.documentElement.setAttribute('data-theme', theme);
-    try {
-      localStorage.setItem('supernova_theme', theme);
-    } catch (e) {}
-  }, [theme]);
-
-  const toggleTheme = () => {
-    playPop();
-    setTheme((prev) => (prev === 'dark' ? 'light' : 'dark'));
-  };
 
   const handleLogoClick = () => {
     const nextCount = clickCount + 1;
@@ -118,18 +108,8 @@ export default function Navbar({ onLogoEasterEgg }) {
           ))}
         </nav>
 
-        {/* Actions: Theme Toggle + Estimasi CTA + Mobile Menu Button */}
+        {/* Actions: Estimasi CTA + Mobile Menu Button */}
         <div className="navbar-right-action">
-          <button
-            type="button"
-            className="theme-toggle-btn"
-            onClick={toggleTheme}
-            title={theme === 'dark' ? 'Ganti ke Mode Terang' : 'Ganti ke Mode Gelap'}
-            aria-label="Toggle Mode Terang/Gelap"
-          >
-            <span>{theme === 'dark' ? '☀️' : '🌙'}</span>
-          </button>
-
           <Link
             to="/harga"
             className="floating-cta-btn"

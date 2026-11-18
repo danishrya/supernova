@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
 import { PROJECTS_DATA } from '../data/projects';
 import { STUDIO_CONFIG } from '../config/studioConfig';
@@ -6,12 +6,11 @@ import BeforeAfterSlider from '../components/BeforeAfterSlider';
 import NeedsQuiz from '../components/NeedsQuiz';
 import DraggableTestimonials from '../components/DraggableTestimonials';
 import TechRibbon from '../components/TechRibbon';
-import { IconArrowRight, IconWhatsApp, IconLayers } from '../components/Icons';
+import { IconArrowRight, IconWhatsApp } from '../components/Icons';
 import { playClick } from '../utils/sound';
 
 export default function HomePage({ onOpenProjectModal }) {
   const curatedProjects = PROJECTS_DATA.slice(0, 3);
-  const [activeTab, setActiveTab] = useState('all');
 
   const waUrl = `https://wa.me/${STUDIO_CONFIG.whatsappNumber}?text=${encodeURIComponent(
     'Halo Min Cham! Saya melihat website Studio Supernova dan ingin konsultasi santai mengenai proyek desain/website.'
@@ -23,114 +22,127 @@ export default function HomePage({ onOpenProjectModal }) {
           HERO: HUMAN CRAFT • ASYMMETRICAL EDITORIAL LAYOUT
           ========================================================================= */}
       <section className="hero-section space-hero-stage zine-hero" id="hero">
-        <div className="container hero-container">
-          <div className="hero-content">
-            {/* Note-Style Physical Badge Sticker */}
-            <div className="zine-sticker-tag" style={{ '--sticker-rot': '-1.5deg' }}>
-              <span className="zine-dot-pulse" />
-              <span className="zine-sticker-text">
-                ✦ Studio Independen &bull; Dikerjakan Langsung oleh {STUDIO_CONFIG.owner}
-              </span>
-            </div>
-
-            {/* Bold Asymmetrical Headline with Handcrafted Emphasis */}
-            <h1 className="hero-title human-hero-title">
-              Bukan template AI pasaran.{' '}
-              <span className="title-serif-accent">Desain presisi</span> yang bikin audiens percaya.
-            </h1>
-
-            {/* Handwritten Human Annotation */}
-            <div className="handwritten-annotation" style={{ '--annot-rot': '1.8deg' }}>
-              <span>✍ "slide 40 halaman yang bikin ngantuk, kami bedah jadi senjata closing"</span>
-            </div>
-
-            {/* Punchy, Non-Cliché Copywriting */}
-            <p className="hero-description human-hero-desc">
-              Kami mendesain presentasi tingkat tinggi, membangun website kilat yang ringan dibuka di HP UMKM, dan menyediakan aset digital siap pakai. Tanpa sales perantara—Anda bicara langsung dengan pembuat karyanya.
-            </p>
-
-            {/* CTA Group */}
-            <div className="hero-cta-group">
-              <a
-                href={waUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="btn btn-primary btn-lg"
-                id="homeHeroWaBtn"
-                onClick={() => playClick()}
-                data-cursor="Chat"
-              >
-                <IconWhatsApp size={18} />
-                <span>Konsultasi Bebas via WhatsApp</span>
-              </a>
-
-              <Link
-                to="/harga"
-                className="btn btn-secondary btn-lg"
-                id="homeHeroCalcBtn"
-                onClick={() => playClick()}
-                data-cursor="Hitung"
-              >
-                <span>Hitung Estimasi Biaya</span>
-                <IconArrowRight size={15} />
-              </Link>
-            </div>
-
-            {/* Physical Note Checklist: 3 Concrete Guarantees */}
-            <div className="zine-guarantee-receipt">
-              <div className="receipt-header">
-                <span className="receipt-mono">NO. JAMINAN: SN-2026-ID</span>
-                <span className="receipt-stamp">VERIFIED 100%</span>
+        <div className="container hero-container-stacked">
+          {/* Top 2-Column Split */}
+          <div className="hero-grid-split">
+            {/* Left Content */}
+            <div className="hero-content">
+              {/* Note-Style Physical Badge Sticker */}
+              <div className="zine-sticker-tag" style={{ '--sticker-rot': '-1.2deg' }}>
+                <span className="zine-dot-pulse" />
+                <span className="zine-sticker-text">
+                  ✦ Studio Independen &bull; Dikerjakan Langsung oleh {STUDIO_CONFIG.owner}
+                </span>
               </div>
-              <ul className="receipt-list">
-                <li>
-                  <span className="receipt-num">01</span>
-                  <span><strong>100% Hak Milik Master File</strong> (.PPTX / Vektor SVG / Source Code Web) diserahkan penuh.</span>
-                </li>
-                <li>
-                  <span className="receipt-num">02</span>
-                  <span><strong>Bicara Langsung dengan Min Cham</strong> — tanpa birokrasi account executive atau perantara.</span>
-                </li>
-                <li>
-                  <span className="receipt-num">03</span>
-                  <span><strong>Garansi Revisi Fleksibel</strong> sampai materi siap dipresentasikan di hadapan klien/investor.</span>
-                </li>
-              </ul>
-            </div>
-          </div>
 
-          {/* Interactive Hero Side Showcase: Tactile Specimen Card */}
-          <div className="hero-preview-wrapper">
-            <div className="hero-specimen-card" style={{ '--spec-rot': '0.8deg' }}>
-              <div className="specimen-badge-row">
-                <span className="specimen-badge">SPESIMEN 01 &bull; STUDIO KARYA</span>
-                <span className="specimen-badge-accent">LIVE INTERACTIVE</span>
+              {/* Bold Asymmetrical Headline with Handcrafted Emphasis */}
+              <h1 className="hero-title human-hero-title">
+                Bukan template AI pasaran.{' '}
+                <span className="title-serif-accent">Desain presisi</span> yang bikin audiens percaya.
+              </h1>
+
+              {/* Handwritten Human Annotation */}
+              <div className="handwritten-annotation" style={{ '--annot-rot': '1.5deg' }}>
+                <span>✍ "slide 40 halaman yang bikin ngantuk, kami bedah jadi senjata closing"</span>
               </div>
-              <div className="specimen-img-frame">
-                <img
-                  src="/assets/images/corporate.jpg"
-                  alt="Nexus Capital Pitch Deck Showcase"
-                  className="specimen-img"
-                />
-                <div className="specimen-overlay-label">
-                  <span className="specimen-label-title">Nexus Capital Fundraise Deck</span>
-                  <span className="specimen-label-desc">Lolos pendanaan Seed Round &bull; 18 Slide 16:9 HD</span>
-                </div>
-              </div>
-              <div className="specimen-footer">
-                <div className="specimen-meta">
-                  <span className="specimen-mono">STATUS: FINISHED & DELIVERED</span>
-                  <span className="specimen-mono">TOOLS: PPTX + FIGMA</span>
-                </div>
-                <Link
-                  to="/portofolio/nexus-pitch-deck"
-                  className="specimen-link"
+
+              {/* Punchy, Non-Cliché Copywriting */}
+              <p className="hero-description human-hero-desc">
+                Kami mendesain presentasi tingkat tinggi, membangun website kilat yang ringan dibuka di HP UMKM, dan menyediakan aset digital siap pakai. Tanpa sales perantara—Anda bicara langsung dengan pembuat karyanya.
+              </p>
+
+              {/* CTA Group */}
+              <div className="hero-cta-group">
+                <a
+                  href={waUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="btn btn-primary btn-lg"
+                  id="homeHeroWaBtn"
                   onClick={() => playClick()}
+                  data-cursor="Chat"
                 >
-                  Bedah Studi Kasus &rarr;
+                  <IconWhatsApp size={18} />
+                  <span>Konsultasi Bebas via WhatsApp</span>
+                </a>
+
+                <Link
+                  to="/harga"
+                  className="btn btn-secondary btn-lg"
+                  id="homeHeroCalcBtn"
+                  onClick={() => playClick()}
+                  data-cursor="Hitung"
+                >
+                  <span>Hitung Estimasi Biaya</span>
+                  <IconArrowRight size={15} />
                 </Link>
               </div>
             </div>
+
+            {/* Right Side Showcase: Tactile Specimen Card */}
+            <div className="hero-preview-wrapper">
+              <div className="hero-specimen-card" style={{ '--spec-rot': '1deg' }}>
+                <div className="specimen-badge-row">
+                  <span className="specimen-badge">SPESIMEN 01 &bull; STUDIO KARYA</span>
+                  <span className="specimen-badge-accent">LIVE INTERACTIVE</span>
+                </div>
+                <div className="specimen-img-frame">
+                  <img
+                    src="/assets/images/corporate.jpg"
+                    alt="Nexus Capital Pitch Deck Showcase"
+                    className="specimen-img"
+                  />
+                  <div className="specimen-overlay-label">
+                    <span className="specimen-label-title">Nexus Capital Fundraise Deck</span>
+                    <span className="specimen-label-desc">Lolos pendanaan Seed Round &bull; 18 Slide 16:9 HD</span>
+                  </div>
+                </div>
+                <div className="specimen-footer">
+                  <div className="specimen-meta">
+                    <span className="specimen-mono">STATUS: FINISHED & DELIVERED</span>
+                    <span className="specimen-mono">TOOLS: PPTX + FIGMA</span>
+                  </div>
+                  <Link
+                    to="/portofolio/nexus-pitch-deck"
+                    className="specimen-link"
+                    onClick={() => playClick()}
+                  >
+                    Bedah Studi Kasus &rarr;
+                  </Link>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Bottom Full-Width Guarantee Receipt */}
+          <div className="zine-guarantee-receipt">
+            <div className="receipt-header">
+              <span className="receipt-mono">NO. JAMINAN: SN-2026-ID &bull; STANDAR STUDIO SUPERNOVA</span>
+              <span className="receipt-stamp">VERIFIED 100%</span>
+            </div>
+            <ul className="receipt-list-row">
+              <li className="receipt-col-item">
+                <span className="receipt-num">01</span>
+                <div>
+                  <strong>100% Hak Milik Master File</strong>
+                  <p>File mentah .PPTX, vektor SVG, atau source code diserahkan penuh tanpa watermark.</p>
+                </div>
+              </li>
+              <li className="receipt-col-item">
+                <span className="receipt-num">02</span>
+                <div>
+                  <strong>Bicara Langsung dengan Min Cham</strong>
+                  <p>Komunikasi satu pintu langsung dengan desainer penanggung jawab tanpa perantara.</p>
+                </div>
+              </li>
+              <li className="receipt-col-item">
+                <span className="receipt-num">03</span>
+                <div>
+                  <strong>Garansi Revisi Fleksibel</strong>
+                  <p>Pendampingan perbaikan sampai materi Anda siap dipresentasikan di depan audiens.</p>
+                </div>
+              </li>
+            </ul>
           </div>
         </div>
       </section>
@@ -139,7 +151,7 @@ export default function HomePage({ onOpenProjectModal }) {
       <TechRibbon />
 
       {/* =========================================================================
-          SECTION 01: RINGKASAN 3 LAYANAN UTAMA (DENGAN TAUTAN KE HALAMAN DETAIL)
+          SECTION 01: RINGKASAN 3 LAYANAN UTAMA
           ========================================================================= */}
       <section className="section services-summary-section" id="ringkasan-layanan">
         <div className="container">
@@ -355,12 +367,12 @@ export default function HomePage({ onOpenProjectModal }) {
       </section>
 
       {/* =========================================================================
-          SECTION 04: MINI QUIZ "KAMU BUTUH APA?" (INTERAKTIF & EDUKATIF)
+          SECTION 04: MINI QUIZ "KAMU BUTUH APA?"
           ========================================================================= */}
       <NeedsQuiz />
 
       {/* =========================================================================
-          SECTION 05: TESTIMONI KLIEN DENGAN KONTEKS NYATA (BUKAN ANGIN LALU)
+          SECTION 05: TESTIMONI KLIEN DENGAN KONTEKS NYATA
           ========================================================================= */}
       <DraggableTestimonials />
 
