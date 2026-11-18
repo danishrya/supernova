@@ -4,6 +4,11 @@ import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import ScrollToTop from './components/ScrollToTop';
 import ProjectModal from './components/ProjectModal';
+import Preloader from './components/Preloader';
+import CustomCursor from './components/CustomCursor';
+import ScrollProgressBar from './components/ScrollProgressBar';
+import StarfieldCanvas from './components/StarfieldCanvas';
+import SmartWhatsAppButton from './components/SmartWhatsAppButton';
 import HomePage from './pages/HomePage';
 import AboutPage from './pages/AboutPage';
 import CatalogPage from './pages/CatalogPage';
@@ -16,6 +21,8 @@ function AppContent() {
   const [selectedProject, setSelectedProject] = useState(null);
   const [contactBrief, setContactBrief] = useState('');
   const [contactType, setContactType] = useState('Desain Presentasi & Pitch Deck (PPT)');
+  const [meteorTrigger, setMeteorTrigger] = useState(0);
+
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -44,7 +51,7 @@ function AppContent() {
   const handleConsultProject = (projectTitle) => {
     setSelectedProject(null);
     setContactBrief(
-      `Halo Supernova, saya tertarik membuat karya dengan standar visual & kualitas serupa proyek: "${projectTitle}". Mohon informasi estimasi & ketersediaannya.`
+      `Halo Min Cham, saya tertarik membuat karya dengan standar visual & kualitas serupa proyek: "${projectTitle}". Mohon informasi estimasi & ketersediaannya.`
     );
     navigate('/contact');
   };
@@ -53,8 +60,17 @@ function AppContent() {
     <div className="supernova-app">
       <ScrollToTop />
 
-      {/* Header Navigation - Hidden on /admin */}
-      {!isAdminRoute && <Navbar />}
+      {/* Global Interactive Elements (Hidden on Admin) */}
+      {!isAdminRoute && (
+        <>
+          <Preloader />
+          <CustomCursor />
+          <ScrollProgressBar />
+          <StarfieldCanvas meteorTrigger={meteorTrigger} />
+          <SmartWhatsAppButton />
+          <Navbar onLogoEasterEgg={() => setMeteorTrigger((prev) => prev + 1)} />
+        </>
+      )}
 
       {/* Multi-Page Routes */}
       <main className={isAdminRoute ? 'admin-content-flow' : 'main-content-flow'}>

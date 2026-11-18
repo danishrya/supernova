@@ -2,176 +2,179 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import ClientExperienceWidget from '../components/ClientExperienceWidget';
 import TechRibbon from '../components/TechRibbon';
+import ServiceCardsExpanded from '../components/ServiceCardsExpanded';
+import BeforeAfterSlider from '../components/BeforeAfterSlider';
 import VisualShowcaseGallery from '../components/VisualShowcaseGallery';
-import StudioBentoGrid from '../components/StudioBentoGrid';
-import Calculator from '../components/Calculator';
+import PriceCalculator from '../components/PriceCalculator';
+import NeedsQuiz from '../components/NeedsQuiz';
+import DigitalProductsSection from '../components/DigitalProductsSection';
+import InteractiveTimeline from '../components/InteractiveTimeline';
+import AboutMinCham from '../components/AboutMinCham';
+import DraggableTestimonials from '../components/DraggableTestimonials';
 import StudioArcadeGame from '../components/StudioArcadeGame';
-import ThreeStepEasyFlow from '../components/ThreeStepEasyFlow';
-import Pricing from '../components/Pricing';
-import StudioFloatingDock from '../components/StudioFloatingDock';
-import { IconArrowRight } from '../components/Icons';
+import FAQSearchable from '../components/FAQSearchable';
+import { IconArrowRight, IconWhatsApp } from '../components/Icons';
 import { useSiteContent } from '../context/ContentContext';
 import { playClick } from '../utils/sound';
 
 export default function HomePage({ onOpenProjectModal, onSelectPackage }) {
-  const { heroContent, testimonials, ctaContent } = useSiteContent();
+  const { contactInfo } = useSiteContent();
+
+  const waUrl = `https://wa.me/${contactInfo?.whatsappClean || '6285714521584'}?text=${encodeURIComponent(
+    'Halo Min Cham! Saya mau konsultasi santai untuk pembuatan proyek desain/digital.'
+  )}`;
 
   return (
     <div className="page-home">
-      {/* 1. HERO SECTION: DYNAMIC, INTERACTIVE & CONFIDENT */}
-      <section className="hero-section minimal-hero studio-hero-stage">
+      {/* =========================================================================
+          HERO SECTION: DIBUAT TANGAN, TEMA LUAR ANGKASA ELEGAN, TANPA GRADIENT AI
+          ========================================================================= */}
+      <section className="hero-section space-hero-stage" id="hero">
         <div className="container hero-container">
           <div className="hero-content">
-            <div className="hero-status-pill">
+            {/* Note-Style Badge Sticker */}
+            <div className="hero-status-pill" style={{ '--rot': '-1.5deg' }}>
               <span className="status-indicator-dot" />
               <span className="status-pill-text">
-                {heroContent?.badge || '✦ Universal Studio • PPT • Branding • Web'}
+                ✦ Studio Kreatif Independen &bull; Min Cham
               </span>
             </div>
 
-            <h1 className="hero-title interactive-hero-title" style={{ whiteSpace: 'pre-line' }}>
-              {heroContent?.title || 'Desain Presisi Tinggi untuk Memikat Klien & Investor.'}
+            {/* Bold Headline with Emphasized Words */}
+            <h1 className="hero-title human-hero-title">
+              Bukan Template AI Pasaran.{' '}
+              <span className="headline-highlight">Desain Presisi</span> yang Bikin Audiens Percaya.
             </h1>
 
-            <p className="hero-description minimal-hero-desc">
-              {heroContent?.desc ||
-                'Kami merancang slide presentasi (PPT) berkelas, identitas visual brand, dan website modern berkinerja tinggi. 100% master file milik Anda seutuhnya.'}
+            {/* Punchy, Non-Cliché Copywriting */}
+            <p className="hero-description human-hero-desc">
+              Slide PPT 40 halaman yang tadinya bikin dosen atau investor ngantuk, kami bedah jadi visual tajam yang meyakinkan.
+              Website lambat kami sulap jadi mesin konversi kilat yang mengalir langsung ke WhatsApp Anda.
             </p>
 
+            {/* CTA Group */}
             <div className="hero-cta-group">
-              <Link
-                to="/contact"
+              <a
+                href={waUrl}
+                target="_blank"
+                rel="noopener noreferrer"
                 className="btn btn-primary btn-lg"
                 id="homeConsultBtn"
                 onClick={() => playClick()}
+                data-cursor="Chat"
               >
-                <span>Mulai Konsultasi Proyek</span>
-                <IconArrowRight size={16} />
-              </Link>
-              <Link
-                to="/catalog"
+                <IconWhatsApp size={18} />
+                <span>Diskusi Langsung via WhatsApp</span>
+              </a>
+
+              <a
+                href="#kalkulator"
                 className="btn btn-secondary btn-lg"
-                id="homeWorksBtn"
+                id="homeCalcBtn"
                 onClick={() => playClick()}
+                data-cursor="Hitung"
               >
-                <span>Jelajahi Portofolio</span>
-              </Link>
+                <span>Hitung Estimasi Harga</span>
+              </a>
             </div>
 
-            {/* Interactive Key Value Stickers */}
-            <div className="hero-stats-row minimal-hero-stats">
-              <div className="stat-pill-item interactive-sticker-stat" style={{ '--rot': '-1deg' }}>
-                <span className="stat-pill-num">{heroContent?.stat1 || '100% Hak Milik Master File'}</span>
+            {/* Handcrafted Note Badges */}
+            <div className="hero-handcrafted-notes">
+              <div className="note-item" style={{ '--rot': '-1deg' }}>
+                <span className="note-check">✓</span>
+                <span>100% Hak Milik Master File (.PPTX / Vektor / Source Code)</span>
               </div>
-              <div className="stat-pill-divider" />
-              <div className="stat-pill-item interactive-sticker-stat" style={{ '--rot': '1.5deg' }}>
-                <span className="stat-pill-num">{heroContent?.stat2 || 'Pengerjaan Cepat 48 Jam'}</span>
+              <div className="note-item" style={{ '--rot': '1.2deg' }}>
+                <span className="note-check">✓</span>
+                <span>Bicara Langsung dengan Desainer (Tanpa Sales Perantara)</span>
               </div>
-              <div className="stat-pill-divider" />
-              <div className="stat-pill-item interactive-sticker-stat" style={{ '--rot': '-1deg' }}>
-                <span className="stat-pill-num">{heroContent?.stat3 || 'Konsultasi Gratis via WA'}</span>
+              <div className="note-item" style={{ '--rot': '-0.8deg' }}>
+                <span className="note-check">✓</span>
+                <span>Garansi Revisi Fleksibel Sampai Siap Presentasi</span>
               </div>
             </div>
           </div>
 
-          <div className="hero-preview-wrapper minimal-hero-widget">
+          {/* Interactive Live Sandbox Preview */}
+          <div className="hero-preview-wrapper">
             <ClientExperienceWidget onOpenProjectModal={onOpenProjectModal} />
           </div>
         </div>
       </section>
 
-      {/* TECH TICKER / MARQUEE */}
+      {/* SUBTLE TICKER BAR */}
       <TechRibbon />
 
-      {/* 2. SELECTED WORKS (PORTFOLIO GALLERY) */}
+      {/* 01. LAYANAN UTAMA (EXPANDABLE 3D TILT CARDS) */}
+      <ServiceCardsExpanded onSelectPackage={onSelectPackage} />
+
+      {/* 02. BUKTI NYATA BEFORE / AFTER (DRAGGABLE SLIDER) */}
+      <BeforeAfterSlider />
+
+      {/* 03. PORTOFOLIO & KARYA TERPILIH */}
       <VisualShowcaseGallery onOpenProjectModal={onOpenProjectModal} />
 
-      {/* 3. STUDIO STANDARDS & SPOTLIGHT BENTO GRID */}
-      <StudioBentoGrid />
+      {/* 04. KALKULATOR ESTIMASI REALTIME (RP + KIRIM WA) */}
+      <PriceCalculator />
 
-      {/* 4. INTERACTIVE SIMULATOR (SCOPE & TIMELINE CALCULATOR) */}
-      <div className="homepage-calculator-wrapper">
-        <Calculator />
-      </div>
+      {/* 05. MINI QUIZ "KAMU BUTUH APA?" */}
+      <NeedsQuiz />
 
-      {/* 5. INTERACTIVE ARCADE MINI-GAME (VOYNANN-INSPIRED BREAK) */}
+      {/* 06. PRODUK DIGITAL & TEMPLATE SIAP PAKAI */}
+      <DigitalProductsSection />
+
+      {/* 07. ALUR KERJA INTERAKTIF (TIMELINE 4 TAHAP) */}
+      <InteractiveTimeline />
+
+      {/* 08. TENTANG MIN CHAM & MANIFESTO STUDIO */}
+      <AboutMinCham />
+
+      {/* 09. ULASAN & TESTIMONI KLIEN (DRAGGABLE SLIDER) */}
+      <DraggableTestimonials />
+
+      {/* 10. MINI GAME SANTAI (SHIP IT PAST THE BUGS) */}
       <StudioArcadeGame />
 
-      {/* 6. CAPABILITIES & SERVICES OVERVIEW */}
-      <Pricing onSelectPackage={onSelectPackage} />
+      {/* 11. FAQ SEARCHABLE & ACCORDION */}
+      <FAQSearchable />
 
-      {/* 7. HOW WE WORK (3 CLEAN STEPS) */}
-      <ThreeStepEasyFlow />
-
-      {/* 8. TESTIMONIALS (EDITORIAL SOCIAL PROOF) */}
-      <section className="section testimonials-section minimal-testi-section">
+      {/* 12. CALL TO ACTION BANNER FINAL */}
+      <section className="section final-cta-section">
         <div className="container">
-          <div className="section-header text-center" style={{ marginBottom: 36 }}>
-            <span className="section-tag">TESTIMONIALS</span>
-            <h2 className="section-title">Kata Founder &amp; Direktur Klien Kami</h2>
-            <p className="section-subtitle">
-              Hasil nyata yang telah kami buktikan bersama founder startup dan korporasi terkemuka.
+          <div className="final-cta-card">
+            <div className="cta-note-badge">09 &bull; MARI MULAI KERJA SAMA</div>
+            <h2 className="cta-title">
+              Punya Deadline Mendesak atau <span className="highlight-text">Ide yang Ingin Diwujudkan?</span>
+            </h2>
+            <p className="cta-desc">
+              Kirimkan draft atau materi mentahan Anda ke WhatsApp Min Cham. Kami akan bedah alur visualnya secara gratis sebelum Anda memutuskan untuk bekerja sama.
             </p>
-          </div>
 
-          <div className="testimonials-grid editorial-grid">
-            {(testimonials || []).map((t, idx) => (
-              <div
-                key={t.id || idx}
-                className={`testi-card editorial-testi ${t.featured ? 'featured-testi' : ''}`}
+            <div className="cta-actions-group">
+              <a
+                href={waUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn btn-primary btn-lg"
+                onClick={() => playClick()}
+                data-cursor="Chat"
               >
-                <div className="testi-star-rating">★★★★★</div>
-                <p className="testi-quote">"{t.quote}"</p>
-                <div className="testi-author">
-                  <div className="testi-avatar-pill">
-                    {t.avatar || (t.name ? t.name.charAt(0) : 'K')}
-                  </div>
-                  <div>
-                    <strong className="testi-name">{t.name}</strong>
-                    <span className="testi-role">{t.role}</span>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+                <IconWhatsApp size={18} />
+                <span>Chat Min Cham via WhatsApp</span>
+              </a>
 
-      {/* 9. CALL TO ACTION BANNER */}
-      <section className="section cta-banner-section minimal-cta-section">
-        <div className="container">
-          <div className="cta-banner-card minimal-cta-card">
-            <div className="cta-banner-content">
-              <span className="cta-banner-tag">{ctaContent?.tag || "LET'S TALK"}</span>
-              <h2>{ctaContent?.title || 'Punya Ide atau Proyek yang Ingin Diwujudkan?'}</h2>
-              <p>
-                {ctaContent?.desc ||
-                  'Ceritakan kebutuhan Anda — baik slide presentasi (PPT), identitas brand, maupun website modern.'}
-              </p>
-              <div className="cta-banner-actions">
-                <Link
-                  to="/contact"
-                  className="btn btn-primary btn-lg"
-                  onClick={() => playClick()}
-                >
-                  <span>{ctaContent?.btnText || 'Mulai Diskusi via WhatsApp'}</span>
-                  <IconArrowRight size={16} />
-                </Link>
-                <Link
-                  to="/catalog"
-                  className="btn btn-secondary btn-lg"
-                  onClick={() => playClick()}
-                >
-                  <span>Lihat Portofolio</span>
-                </Link>
-              </div>
+              <Link
+                to="/catalog"
+                className="btn btn-secondary btn-lg"
+                onClick={() => playClick()}
+              >
+                <span>Lihat Portofolio Karya</span>
+                <IconArrowRight size={15} />
+              </Link>
             </div>
           </div>
         </div>
       </section>
-
-      {/* FLOATING DYNAMIC DOCK (QUICK ACTIONS, SOUND TOGGLE, WA) */}
-      <StudioFloatingDock />
     </div>
   );
 }
