@@ -15,6 +15,14 @@ import {
   IconWhatsApp,
   IconMail,
   IconClose,
+  IconChart,
+  IconLayers,
+  IconBolt,
+  IconStar,
+  IconSettings,
+  IconGlobe,
+  IconSearch,
+  IconUserCheck,
 } from '../components/Icons';
 
 const DEFAULT_PASSCODE = 'supernova';
@@ -66,7 +74,8 @@ export default function AdminPage() {
 
   // Active dashboard tab
   // 'contact', 'hero', 'projects', 'services', 'testimonials', 'faq', 'security'
-  const [activeTab, setActiveTab] = useState('contact');
+  const [activeTab, setActiveTab] = useState('overview');
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   // Editable drafts
   const [draftContact, setDraftContact] = useState(contactInfo);
@@ -493,10 +502,10 @@ export default function AdminPage() {
   }
 
   // ==========================================
-  // DASHBOARD SCREEN
+  // DASHBOARD SCREEN (V2 CLEAN WHITE THEME)
   // ==========================================
   return (
-    <div className="admin-dashboard-layout">
+    <div className="admin-v2-layout">
       {/* Toast Notification */}
       {toast && (
         <div className={`admin-toast ${toast.type}`}>
@@ -505,82 +514,471 @@ export default function AdminPage() {
         </div>
       )}
 
-      {/* Top Admin Bar */}
-      <header className="admin-topbar">
-        <div className="admin-topbar-left">
-          <div className="admin-coin-small">
-            <img src="/assets/images/supernova-logo.jpg" alt="Logo" />
+      {/* Mobile Sidebar Backdrop */}
+      {sidebarOpen && (
+        <div className="admin-sidebar-backdrop" onClick={() => setSidebarOpen(false)} />
+      )}
+
+      {/* LEFT SIDEBAR (PAULCODES & VOYNANN GRADE) */}
+      <aside className={`admin-v2-sidebar ${sidebarOpen ? 'open' : ''}`}>
+        <div className="sidebar-header">
+          <div className="sidebar-logo-coin">
+            <img src="/assets/images/supernova-logo.jpg" alt="Supernova Emblem" />
           </div>
-          <span className="admin-brand-name">
-            SUPERNOVA <strong>CMS STUDIO</strong>
-          </span>
-          <span className="admin-user-pill">{user.email || 'Admin'}</span>
-          <span className={`status-pill ${isCloudSynced ? 'online' : 'local'}`}>
-            <span className="dot"></span>
-            {isCloudSynced ? 'Cloud Synced' : 'Live di Browser'}
-          </span>
+          <div className="sidebar-brand-text">
+            <span className="sidebar-brand-title">SUPERNOVA</span>
+            <span className="sidebar-brand-badge">STUDIO CMS V2</span>
+          </div>
         </div>
 
-        <div className="admin-topbar-right">
-          <button onClick={handleExportJSON} className="btn-outline-admin" title="Unduh Backup Lengkap JSON">
-            📥 Unduh Backup JSON
-          </button>
-          <Link to="/" target="_blank" rel="noopener noreferrer" className="btn-outline-admin">
-            Lihat Website ↗
-          </Link>
-          <button onClick={handleLogout} className="btn-logout-admin">
-            Keluar
-          </button>
-        </div>
-      </header>
+        <nav className="sidebar-nav-groups">
+          {/* Group 1: OVERVIEW */}
+          <div className="nav-group">
+            <div className="nav-group-title">OVERVIEW</div>
+            <div className="nav-group-items">
+              <button
+                type="button"
+                className={`sidebar-nav-btn ${activeTab === 'overview' ? 'active' : ''}`}
+                onClick={() => {
+                  setActiveTab('overview');
+                  setSidebarOpen(false);
+                }}
+              >
+                <div className="nav-btn-left">
+                  <span className="nav-btn-icon">📊</span>
+                  <span>Ringkasan Studio</span>
+                </div>
+              </button>
 
-      {/* Main Admin Area */}
-      <div className="admin-main-container">
-        {/* Navigation Tabs (Scrollable) */}
-        <div className="admin-tabs-row" style={{ overflowX: 'auto', flexWrap: 'nowrap' }}>
-          <button
-            className={`admin-tab-btn ${activeTab === 'contact' ? 'active' : ''}`}
-            onClick={() => setActiveTab('contact')}
-          >
-            📞 Kontak &amp; WA
-          </button>
-          <button
-            className={`admin-tab-btn ${activeTab === 'hero' ? 'active' : ''}`}
-            onClick={() => setActiveTab('hero')}
-          >
-            ✏️ Beranda &amp; Banner
-          </button>
-          <button
-            className={`admin-tab-btn ${activeTab === 'projects' ? 'active' : ''}`}
-            onClick={() => setActiveTab('projects')}
-          >
-            📁 Portofolio ({draftProjects.length})
-          </button>
-          <button
-            className={`admin-tab-btn ${activeTab === 'services' ? 'active' : ''}`}
-            onClick={() => setActiveTab('services')}
-          >
-            🛠️ Layanan Studio ({draftServices.length})
-          </button>
-          <button
-            className={`admin-tab-btn ${activeTab === 'testimonials' ? 'active' : ''}`}
-            onClick={() => setActiveTab('testimonials')}
-          >
-            💬 Testimoni ({draftTestimonials.length})
-          </button>
-          <button
-            className={`admin-tab-btn ${activeTab === 'faq' ? 'active' : ''}`}
-            onClick={() => setActiveTab('faq')}
-          >
-            ❓ FAQ ({draftFaq.length})
-          </button>
-          <button
-            className={`admin-tab-btn ${activeTab === 'security' ? 'active' : ''}`}
-            onClick={() => setActiveTab('security')}
-          >
-            🔐 Keamanan &amp; Backup
-          </button>
+              <button
+                type="button"
+                className={`sidebar-nav-btn ${activeTab === 'projects' ? 'active' : ''}`}
+                onClick={() => {
+                  setActiveTab('projects');
+                  setSidebarOpen(false);
+                }}
+              >
+                <div className="nav-btn-left">
+                  <span className="nav-btn-icon">📁</span>
+                  <span>Portofolio &amp; Karya</span>
+                </div>
+                <span className="nav-badge-pill">{draftProjects.length}</span>
+              </button>
+            </div>
+          </div>
+
+          {/* Group 2: KONTEN STUDIO */}
+          <div className="nav-group">
+            <div className="nav-group-title">KONTEN STUDIO</div>
+            <div className="nav-group-items">
+              <button
+                type="button"
+                className={`sidebar-nav-btn ${activeTab === 'services' ? 'active' : ''}`}
+                onClick={() => {
+                  setActiveTab('services');
+                  setSidebarOpen(false);
+                }}
+              >
+                <div className="nav-btn-left">
+                  <span className="nav-btn-icon">🛠️</span>
+                  <span>Layanan Studio</span>
+                </div>
+                <span className="nav-badge-pill">{draftServices.length}</span>
+              </button>
+
+              <button
+                type="button"
+                className={`sidebar-nav-btn ${activeTab === 'testimonials' ? 'active' : ''}`}
+                onClick={() => {
+                  setActiveTab('testimonials');
+                  setSidebarOpen(false);
+                }}
+              >
+                <div className="nav-btn-left">
+                  <span className="nav-btn-icon">💬</span>
+                  <span>Testimoni Klien</span>
+                </div>
+                <span className="nav-badge-pill">{draftTestimonials.length}</span>
+              </button>
+
+              <button
+                type="button"
+                className={`sidebar-nav-btn ${activeTab === 'faq' ? 'active' : ''}`}
+                onClick={() => {
+                  setActiveTab('faq');
+                  setSidebarOpen(false);
+                }}
+              >
+                <div className="nav-btn-left">
+                  <span className="nav-btn-icon">❓</span>
+                  <span>FAQ &amp; Bantuan</span>
+                </div>
+                <span className="nav-badge-pill">{draftFaq.length}</span>
+              </button>
+
+              <button
+                type="button"
+                className={`sidebar-nav-btn ${activeTab === 'hero' ? 'active' : ''}`}
+                onClick={() => {
+                  setActiveTab('hero');
+                  setSidebarOpen(false);
+                }}
+              >
+                <div className="nav-btn-left">
+                  <span className="nav-btn-icon">✏️</span>
+                  <span>Beranda &amp; Banner</span>
+                </div>
+              </button>
+
+              <button
+                type="button"
+                className={`sidebar-nav-btn ${activeTab === 'contact' ? 'active' : ''}`}
+                onClick={() => {
+                  setActiveTab('contact');
+                  setSidebarOpen(false);
+                }}
+              >
+                <div className="nav-btn-left">
+                  <span className="nav-btn-icon">📞</span>
+                  <span>Kontak &amp; WhatsApp</span>
+                </div>
+              </button>
+            </div>
+          </div>
+
+          {/* Group 3: SISTEM */}
+          <div className="nav-group">
+            <div className="nav-group-title">SISTEM</div>
+            <div className="nav-group-items">
+              <button
+                type="button"
+                className={`sidebar-nav-btn ${activeTab === 'security' ? 'active' : ''}`}
+                onClick={() => {
+                  setActiveTab('security');
+                  setSidebarOpen(false);
+                }}
+              >
+                <div className="nav-btn-left">
+                  <span className="nav-btn-icon">🔐</span>
+                  <span>Keamanan &amp; Backup</span>
+                </div>
+              </button>
+            </div>
+          </div>
+        </nav>
+
+        {/* Sidebar Footer User Profile */}
+        <div className="sidebar-footer">
+          <div className="sidebar-user-card">
+            <div className="user-avatar-pill">A</div>
+            <div className="user-info-col">
+              <span className="user-email-text">{user.email || 'Admin Studio'}</span>
+              <span className="user-status-text">
+                <span className="user-status-dot" />
+                <span>Online &bull; {isCloudSynced ? 'Cloud' : 'Browser'}</span>
+              </span>
+            </div>
+            <button
+              type="button"
+              className="user-logout-btn"
+              onClick={handleLogout}
+              title="Keluar dari CMS"
+            >
+              ⎋
+            </button>
+          </div>
         </div>
+      </aside>
+
+      {/* MAIN CONTENT AREA */}
+      <div className="admin-v2-main">
+        {/* TOP HEADER */}
+        <header className="admin-v2-header">
+          <div className="header-left-col">
+            <button
+              type="button"
+              className="mobile-menu-toggle"
+              onClick={() => setSidebarOpen(!sidebarOpen)}
+              aria-label="Buka Menu"
+            >
+              ☰
+            </button>
+            <div className="header-titles">
+              <h1 className="header-page-title">
+                {activeTab === 'overview' && 'Ringkasan & Analytics Studio'}
+                {activeTab === 'projects' && 'Kelola Portofolio & Karya'}
+                {activeTab === 'services' && 'Layanan Studio & Spesifikasi'}
+                {activeTab === 'testimonials' && 'Testimoni & Ulasan Klien'}
+                {activeTab === 'faq' && 'Daftar FAQ & Informasi Klien'}
+                {activeTab === 'hero' && 'Pengaturan Teks Beranda & Banner'}
+                {activeTab === 'contact' && 'Kontak WhatsApp & Komunikasi'}
+                {activeTab === 'security' && 'Keamanan Sandi & Backup Sistem'}
+              </h1>
+              <span className="header-page-breadcrumb">
+                CMS Supernova &bull; {activeTab.toUpperCase()}
+              </span>
+            </div>
+          </div>
+
+          <div className="header-right-col">
+            <span className={`status-pill ${isCloudSynced ? 'online' : 'local'}`}>
+              <span className="dot"></span>
+              {isCloudSynced ? 'Cloud Synced' : 'Live di Browser'}
+            </span>
+
+            <button
+              type="button"
+              onClick={handleExportJSON}
+              className="header-action-btn"
+              title="Unduh Backup Lengkap JSON"
+            >
+              <span>📥 Backup JSON</span>
+            </button>
+
+            <Link
+              to="/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="header-action-btn primary"
+            >
+              <span>Lihat Website ↗</span>
+            </Link>
+          </div>
+        </header>
+
+        {/* CONTENT VIEWPORT */}
+        <main className="admin-v2-content">
+
+        {/* ==========================================
+            TAB 0: RINGKASAN & ANALYTICS (VOYNANN & PAULCODES STYLE)
+            ========================================== */}
+        {activeTab === 'overview' && (
+          <div className="admin-overview-view" style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
+            {/* Welcome Banner */}
+            <div className="overview-welcome-card">
+              <div className="overview-welcome-text">
+                <h2>Selamat Datang, Admin Studio 👋</h2>
+                <p>
+                  Pusat kontrol konten Supernova Studio. Seluruh perubahan pada portofolio, nomor WhatsApp,
+                  dan materi publikasi langsung aktif secara instan di website utama.
+                </p>
+              </div>
+              <div className="overview-welcome-actions">
+                <button
+                  type="button"
+                  className="studio-btn-primary"
+                  onClick={() => {
+                    setIsNewProject(true);
+                    setEditingProject({
+                      title: '',
+                      category: 'presentation',
+                      overview: '',
+                      deliverables: '',
+                      thumbnail: '/assets/images/corporate.jpg',
+                      specs: ['18 Slide Persuasif', 'Master PPTX Editable'],
+                      metrics: 'Lolos Tahap Pitching Investor',
+                    });
+                  }}
+                >
+                  <span>+ Tambah Proyek Baru</span>
+                </button>
+              </div>
+            </div>
+
+            {/* 4 Stats Cards (Analytics V2 from Paulcodes video) */}
+            <div className="admin-stats-grid">
+              {/* Card 1: Portofolio */}
+              <div className="admin-stat-card" onClick={() => setActiveTab('projects')}>
+                <div className="stat-card-top">
+                  <span className="stat-card-label">Total Portofolio</span>
+                  <div className="stat-icon-wrapper blue">
+                    <IconLayers size={20} />
+                  </div>
+                </div>
+                <h3 className="stat-card-value">{draftProjects.length} Karya</h3>
+                <div className="stat-card-bottom">
+                  <span className="stat-trend-badge positive">▲ +2 bulan ini</span>
+                  <span>Aktif di Galeri Publik</span>
+                </div>
+              </div>
+
+              {/* Card 2: Layanan */}
+              <div className="admin-stat-card" onClick={() => setActiveTab('services')}>
+                <div className="stat-card-top">
+                  <span className="stat-card-label">Layanan Studio</span>
+                  <div className="stat-icon-wrapper gold">
+                    <IconBolt size={20} />
+                  </div>
+                </div>
+                <h3 className="stat-card-value">{draftServices.length} Solusi</h3>
+                <div className="stat-card-bottom">
+                  <span className="stat-trend-badge gold">✦ Universal</span>
+                  <span>PPT, Web, Branding, All-in-One</span>
+                </div>
+              </div>
+
+              {/* Card 3: Testimoni */}
+              <div className="admin-stat-card" onClick={() => setActiveTab('testimonials')}>
+                <div className="stat-card-top">
+                  <span className="stat-card-label">Ulasan Klien</span>
+                  <div className="stat-icon-wrapper emerald">
+                    <IconStar size={20} />
+                  </div>
+                </div>
+                <h3 className="stat-card-value">{draftTestimonials.length} Klien</h3>
+                <div className="stat-card-bottom">
+                  <span className="stat-trend-badge positive">★ 5.0 Rating</span>
+                  <span>Founder &amp; Direktur Korporat</span>
+                </div>
+              </div>
+
+              {/* Card 4: WhatsApp & Kontak */}
+              <div className="admin-stat-card" onClick={() => setActiveTab('contact')}>
+                <div className="stat-card-top">
+                  <span className="stat-card-label">Kontak WhatsApp</span>
+                  <div className="stat-icon-wrapper emerald">
+                    <IconWhatsApp size={20} />
+                  </div>
+                </div>
+                <h3 className="stat-card-value" style={{ fontSize: '1.45rem' }}>{draftContact.phone || '+62 857-1452-1584'}</h3>
+                <div className="stat-card-bottom">
+                  <span className="stat-trend-badge positive">● Respon Aktif</span>
+                  <span>{draftContact.email || 'chasupernova.studio@gmail.com'}</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Quick Management Hub */}
+            <div className="admin-panel-card">
+              <div className="panel-header">
+                <h3>Pintasan Aksi Cepat (Quick Actions)</h3>
+                <p>Akses cepat untuk menambah atau memperbarui bagian penting website studio.</p>
+              </div>
+
+              <div className="quick-hub-grid">
+                <div
+                  className="quick-hub-card"
+                  onClick={() => {
+                    setIsNewProject(true);
+                    setEditingProject({
+                      title: '',
+                      category: 'presentation',
+                      overview: '',
+                      deliverables: '',
+                      thumbnail: '/assets/images/corporate.jpg',
+                      specs: ['18 Slide Persuasif', 'Master PPTX Editable'],
+                      metrics: 'Lolos Tahap Pitching Investor',
+                    });
+                  }}
+                >
+                  <div className="quick-hub-icon">📁</div>
+                  <div className="quick-hub-text">
+                    <h4>+ Portofolio Baru</h4>
+                    <p>Upload karya atau studi kasus</p>
+                  </div>
+                </div>
+
+                <div
+                  className="quick-hub-card"
+                  onClick={() => {
+                    setIsNewTesti(true);
+                    setEditingTesti({
+                      name: '',
+                      role: 'Founder & CEO',
+                      quote: '',
+                      avatar: 'K',
+                      featured: true,
+                    });
+                  }}
+                >
+                  <div className="quick-hub-icon">💬</div>
+                  <div className="quick-hub-text">
+                    <h4>+ Testimoni Klien</h4>
+                    <p>Tambah ulasan kepuasan klien</p>
+                  </div>
+                </div>
+
+                <div
+                  className="quick-hub-card"
+                  onClick={() => {
+                    setIsNewFaq(true);
+                    setEditingFaq({
+                      question: '',
+                      answer: '',
+                      category: 'Umum',
+                    });
+                  }}
+                >
+                  <div className="quick-hub-icon">❓</div>
+                  <div className="quick-hub-text">
+                    <h4>+ Pertanyaan FAQ</h4>
+                    <p>Tambah panduan atau tanya-jawab</p>
+                  </div>
+                </div>
+
+                <div className="quick-hub-card" onClick={() => setActiveTab('contact')}>
+                  <div className="quick-hub-icon">📞</div>
+                  <div className="quick-hub-text">
+                    <h4>Edit Kontak &amp; WA</h4>
+                    <p>Perbarui nomor WA &amp; email</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Recent Projects Preview Table */}
+            <div className="admin-panel-card">
+              <div className="panel-header-with-action">
+                <div>
+                  <h3>Portofolio Terkini ({draftProjects.length} Proyek)</h3>
+                  <p>Daftar karya yang sedang tampil di halaman depan dan katalog portofolio.</p>
+                </div>
+                <button
+                  type="button"
+                  className="header-action-btn primary"
+                  onClick={() => setActiveTab('projects')}
+                >
+                  <span>Lihat Semua Portofolio &rarr;</span>
+                </button>
+              </div>
+
+              <div className="admin-projects-grid">
+                {draftProjects.slice(0, 3).map((p) => (
+                  <div key={p.id} className="admin-project-card">
+                    <div className="project-card-media">
+                      <img src={p.thumbnail || p.image} alt={p.title} />
+                      <span className="project-card-badge">{p.category}</span>
+                    </div>
+                    <div className="project-card-body">
+                      <h4 className="project-card-title">{p.title}</h4>
+                      <p className="project-card-desc">{p.overview || p.desc}</p>
+                      <div className="project-card-actions">
+                        <button
+                          type="button"
+                          className="btn-card-action edit"
+                          onClick={() => {
+                            setIsNewProject(false);
+                            setEditingProject({ ...p });
+                          }}
+                        >
+                          ✏️ Edit Proyek
+                        </button>
+                        <button
+                          type="button"
+                          className="btn-card-action delete"
+                          onClick={() => handleDeleteProject(p.id)}
+                        >
+                          Hapus
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
+
 
         {/* ==========================================
             TAB 1: KONTAK & WHATSAPP
@@ -1224,6 +1622,7 @@ export default function AdminPage() {
             </div>
           </div>
         )}
+        </main>
       </div>
 
       {/* ==========================================

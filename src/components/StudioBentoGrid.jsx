@@ -1,13 +1,23 @@
 import React from 'react';
-import { IconShield, IconBolt, IconCheck, IconLayers, IconArrowRight } from './Icons';
+import { IconShield, IconBolt, IconLayers, IconArrowRight } from './Icons';
 import { Link } from 'react-router-dom';
+import { playClick } from '../utils/sound';
 
 export default function StudioBentoGrid() {
+  const handleMouseMove = (e) => {
+    const card = e.currentTarget;
+    const rect = card.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    card.style.setProperty('--mouse-x', `${x}px`);
+    card.style.setProperty('--mouse-y', `${y}px`);
+  };
+
   return (
     <section className="section bento-section" id="standards">
       <div className="container">
         <div className="section-header text-center" style={{ marginBottom: 44 }}>
-          <span className="section-tag">STANDAR STUDIO</span>
+          <span className="section-tag interactive-tag">STANDAR STUDIO</span>
           <h2 className="section-title">Mengapa Founder &amp; Bisnis Memilih Supernova</h2>
           <p className="section-subtitle">
             Kombinasi standar visual kelas dunia, kecepatan eksekusi, dan transparansi penuh tanpa perantara berbelit.
@@ -16,7 +26,11 @@ export default function StudioBentoGrid() {
 
         <div className="bento-grid">
           {/* Card 1: Master Files (Span 2 columns on desktop) */}
-          <div className="bento-card bento-feature-card">
+          <div
+            className="bento-card bento-feature-card spotlight-card"
+            onMouseMove={handleMouseMove}
+          >
+            <div className="spotlight-layer" />
             <div className="bento-card-top">
               <div className="bento-icon-wrap">
                 <IconShield size={22} color="#0f172a" />
@@ -37,7 +51,11 @@ export default function StudioBentoGrid() {
           </div>
 
           {/* Card 2: Direct WhatsApp Chat */}
-          <div className="bento-card">
+          <div
+            className="bento-card spotlight-card"
+            onMouseMove={handleMouseMove}
+          >
+            <div className="spotlight-layer" />
             <div className="bento-card-top">
               <div className="bento-icon-wrap">
                 <IconBolt size={22} color="#0f172a" />
@@ -64,7 +82,11 @@ export default function StudioBentoGrid() {
           </div>
 
           {/* Card 3: World-Class Visual Craft */}
-          <div className="bento-card">
+          <div
+            className="bento-card spotlight-card"
+            onMouseMove={handleMouseMove}
+          >
+            <div className="spotlight-layer" />
             <div className="bento-card-top">
               <div className="bento-icon-wrap">
                 <IconLayers size={22} color="#0f172a" />
@@ -93,7 +115,11 @@ export default function StudioBentoGrid() {
           </div>
 
           {/* Card 4: Revision & Partnership (Span 2 columns) */}
-          <div className="bento-card bento-action-card">
+          <div
+            className="bento-card bento-action-card spotlight-card"
+            onMouseMove={handleMouseMove}
+          >
+            <div className="spotlight-layer" />
             <div className="bento-action-content">
               <span className="bento-badge">COLLABORATION</span>
               <h3 className="bento-title">Garansi Revisi Terbimbing &amp; Bebas Tekanan</h3>
@@ -102,11 +128,19 @@ export default function StudioBentoGrid() {
                 siap Anda presentasikan atau luncurkan ke pasar dengan penuh percaya diri.
               </p>
               <div className="bento-action-btn-row">
-                <Link to="/contact" className="btn btn-primary btn-md">
+                <Link
+                  to="/contact"
+                  className="btn btn-primary btn-md"
+                  onClick={() => playClick()}
+                >
                   <span>Konsultasi Proyek Sekarang</span>
                   <IconArrowRight size={15} />
                 </Link>
-                <Link to="/catalog" className="btn btn-secondary btn-md">
+                <Link
+                  to="/catalog"
+                  className="btn btn-secondary btn-md"
+                  onClick={() => playClick()}
+                >
                   <span>Lihat Galeri Karya</span>
                 </Link>
               </div>
