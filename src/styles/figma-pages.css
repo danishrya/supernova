@@ -3095,3 +3095,17 @@
   .pd-related { padding-top: 56px; padding-bottom: 64px; }
 }
 .pd-stage .dp-mock__art { justify-content: center; gap: 16px; }
+
+/* ---------- Phone fixes ---------- */
+@media (max-width: 640px) {
+  /* Beranda hero: keep the giant Nova Dot behind the mockups, not the headline */
+  .figma-giant-nova-dot { top: auto !important; bottom: 40px; right: -110px !important; width: 260px !important; height: 260px !important; }
+  .figma-hero-section { overflow: hidden; }
+  .figma-hero-right.hero-stack { height: 360px; transform: scale(0.8); transform-origin: left top; margin-bottom: -60px; }
+
+  /* Before/after compare: stack the two states instead of overlapping text */
+  .sd-compare { height: auto; display: flex; flex-direction: column; gap: 1px; background: var(--sn-border); }
+  .sd-compare__side { position: static; clip-path: none !important; align-items: flex-start !important; text-align: left !important; }
+  .sd-compare__headline { max-width: 100%; }
+  .sd-compare__handle, .sd-compare input { display: none; }
+}
