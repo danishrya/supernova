@@ -1571,3 +1571,615 @@ body {
     padding: 10px 16px;
   }
 }
+
+
+/* ==========================================================================
+   HALAMAN 2: LAYANAN (SERVICES) — Figma 2001:454
+   ========================================================================== */
+
+.figma-layanan-header-section {
+  background-color: var(--figma-bg);
+  border-bottom: 1px solid var(--figma-border);
+  padding: 80px 80px 65px 80px;
+  box-sizing: border-box;
+}
+
+.figma-layanan-header-container {
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
+.figma-layanan-tracker-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.figma-tracker-chip {
+  background-color: var(--figma-card);
+  border: 1px solid var(--figma-border);
+  border-radius: 999px;
+  padding: 6px 14px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  color: var(--figma-orange);
+}
+
+.figma-tracker-meta {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.55px;
+  text-transform: uppercase;
+  color: var(--figma-text-muted);
+}
+
+.figma-tracker-meta .highlight-slot {
+  color: var(--figma-yellow);
+}
+
+.figma-layanan-title-split {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  column-gap: 32px;
+  align-items: flex-end;
+}
+
+.figma-layanan-title-left {
+  grid-column: 1 / span 8;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.figma-layanan-h1 {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 80px;
+  line-height: 84px;
+  letter-spacing: -2.4px;
+  color: var(--figma-text-primary);
+  margin: 0;
+}
+
+.figma-layanan-intro {
+  font-family: var(--font-body);
+  font-size: 20px;
+  line-height: 30px;
+  color: var(--figma-text-secondary);
+  max-width: 672px;
+  margin: 0;
+}
+
+.figma-layanan-title-right {
+  grid-column: 9 / span 4;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding-left: 24px;
+  padding-bottom: 8px;
+}
+
+.figma-layanan-note-box {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.figma-layanan-note-text {
+  font-family: var(--font-caveat);
+  font-weight: 700;
+  font-size: 24px;
+  line-height: 30px;
+  color: var(--figma-yellow);
+  transform: rotate(-2deg);
+}
+
+.figma-layanan-note-author {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.55px;
+  color: var(--figma-text-muted);
+  text-transform: uppercase;
+}
+
+/* 3 BIG ALTERNATING SERVICE BLOCKS */
+.figma-layanan-blocks-container {
+  display: flex;
+  flex-direction: column;
+  background-color: var(--figma-bg);
+}
+
+.figma-layanan-block {
+  min-height: 560px;
+  border-bottom: 1px solid var(--figma-border);
+  padding: 64px 80px;
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  column-gap: 56px;
+  align-items: center;
+  box-sizing: border-box;
+}
+
+.figma-layanan-block-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.figma-layanan-block-visual {
+  height: 460px;
+  background-color: var(--figma-card);
+  border: 1px solid var(--figma-border);
+  border-radius: 6px;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  padding: 32px;
+}
+
+.figma-block-service-tag {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 2.4px;
+  text-transform: uppercase;
+  color: var(--figma-orange);
+  margin-bottom: 8px;
+}
+
+.figma-block-h2 {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 40px;
+  line-height: 44px;
+  letter-spacing: -0.6px;
+  color: var(--figma-text-primary);
+  margin: 0 0 16px 0;
+}
+
+.figma-block-p {
+  font-family: var(--font-body);
+  font-size: 17px;
+  line-height: 27.2px;
+  color: var(--figma-text-secondary);
+  margin: 0 0 24px 0;
+}
+
+.figma-block-checklist {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.figma-block-check-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.figma-block-check-item span {
+  font-family: var(--font-body);
+  font-size: 15px;
+  line-height: 22.5px;
+  color: var(--figma-text-primary);
+}
+
+.figma-block-meta-row {
+  border-top: 1px solid var(--figma-border);
+  padding-top: 17px;
+  margin-bottom: 24px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  color: var(--figma-text-muted);
+}
+
+.figma-block-meta-row .dot-sep {
+  color: var(--figma-orange);
+  margin: 0 4px;
+}
+
+.figma-block-actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.figma-block-cta-btn {
+  height: 46px;
+  padding: 0 24px;
+  border-radius: 9999px;
+  background-color: var(--figma-orange);
+  color: var(--figma-text-dark);
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 15px;
+  line-height: 22.5px;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: background-color 0.15s ease, transform 0.15s ease;
+}
+
+.figma-block-cta-btn:hover {
+  background-color: var(--figma-orange-hover);
+  transform: translateY(-1px);
+}
+
+.figma-block-sublink {
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: 15px;
+  color: var(--figma-text-primary);
+  text-decoration: underline;
+  text-underline-position: from-font;
+}
+
+.figma-visual-sticky-badge {
+  position: absolute;
+  bottom: 16px;
+  left: 16px;
+  background-color: var(--figma-card-elevated);
+  border: 1px solid var(--figma-border);
+  border-radius: 4px;
+  padding: 5px 13px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.55px;
+  text-transform: uppercase;
+  color: var(--figma-text-secondary);
+}
+
+/* SECTION TAHAPAN KERJA (5 STEPS) */
+.figma-layanan-timeline-section {
+  background-color: var(--figma-bg);
+  border-bottom: 1px solid var(--figma-border);
+  padding: 100px 80px 101px 80px;
+  box-sizing: border-box;
+}
+
+.figma-layanan-timeline-container {
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
+.figma-layanan-steps-5-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  column-gap: 20px;
+  position: relative;
+  margin-top: 48px;
+}
+
+.figma-step-5-card {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.figma-step-5-badge {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: 13px;
+  box-sizing: border-box;
+}
+
+.figma-step-5-badge.is-active {
+  background-color: var(--figma-orange);
+  color: var(--figma-text-dark);
+}
+
+.figma-step-5-badge.is-pending {
+  background-color: var(--figma-bg);
+  border: 2px solid var(--figma-border);
+  color: var(--figma-text-muted);
+}
+
+.figma-step-5-tag {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.55px;
+  text-transform: uppercase;
+  color: var(--figma-orange);
+}
+
+.figma-step-5-tag.is-pending {
+  color: var(--figma-text-muted);
+}
+
+.figma-step-5-title {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 18px;
+  line-height: 27px;
+  color: var(--figma-text-primary);
+  margin: 0;
+}
+
+.figma-step-5-desc {
+  font-family: var(--font-body);
+  font-size: 14px;
+  line-height: 22.75px;
+  color: var(--figma-text-secondary);
+  margin: 0;
+}
+
+.figma-step-5-desc.is-pending {
+  color: var(--figma-text-muted);
+}
+
+/* SECTION FAQ */
+.figma-layanan-faq-section {
+  background-color: var(--figma-card);
+  border-bottom: 1px solid var(--figma-border);
+  padding: 100px 80px 101px 80px;
+  box-sizing: border-box;
+}
+
+.figma-layanan-faq-grid {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  column-gap: 40px;
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
+.figma-layanan-faq-sidebar {
+  grid-column: 1 / span 4;
+  display: flex;
+  flex-direction: column;
+}
+
+.figma-layanan-faq-list {
+  grid-column: 5 / span 8;
+  border-top: 1px solid var(--figma-border);
+  display: flex;
+  flex-direction: column;
+}
+
+.figma-faq-item-row {
+  border-bottom: 1px solid var(--figma-border);
+}
+
+.figma-faq-question-btn {
+  width: 100%;
+  padding: 24px 0;
+  background: transparent;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  text-align: left;
+}
+
+.figma-faq-q-text {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 21px;
+  line-height: 31.5px;
+  color: var(--figma-text-primary);
+}
+
+.figma-faq-toggle-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  border: 1px solid var(--figma-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-mono);
+  font-size: 18px;
+  color: var(--figma-orange);
+}
+
+.figma-faq-answer-box {
+  padding-bottom: 25px;
+  font-family: var(--font-body);
+  font-size: 15px;
+  line-height: 24.38px;
+  color: var(--figma-text-secondary);
+}
+
+/* SECTION AJAKAN PENUTUP (PAPER CREAM) */
+.figma-layanan-closing-section {
+  background-color: var(--figma-bg-alt);
+  border-bottom: 1px solid var(--figma-border);
+  padding: 100px 80px 101px 80px;
+  box-sizing: border-box;
+}
+
+.figma-layanan-closing-container {
+  max-width: 768px;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.figma-closing-h2 {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 56px;
+  line-height: 60.5px;
+  letter-spacing: -1.4px;
+  color: var(--figma-text-quiz-dark);
+  margin: 0;
+}
+
+.figma-closing-desc {
+  font-family: var(--font-body);
+  font-size: 20px;
+  line-height: 32.5px;
+  color: #432c00;
+  margin: 0;
+}
+
+.figma-closing-actions-wrap {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  flex-wrap: wrap;
+  margin-top: 16px;
+}
+
+.figma-closing-wa-btn {
+  height: 50px;
+  padding: 0 32px;
+  background-color: var(--figma-text-quiz-dark);
+  color: var(--figma-bg-alt);
+  border-radius: 9999px;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 15px;
+  transition: transform 0.15s ease;
+}
+
+.figma-closing-wa-btn:hover {
+  transform: translateY(-2px);
+}
+
+.figma-closing-portfolio-btn {
+  height: 50px;
+  padding: 0 33px;
+  border: 1px solid var(--figma-text-quiz-dark);
+  background: transparent;
+  color: var(--figma-text-quiz-dark);
+  border-radius: 9999px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 15px;
+}
+
+.figma-closing-handwritten-note {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-caveat);
+  font-weight: 700;
+  font-size: 20px;
+  line-height: 28px;
+  color: #7e2c00;
+  transform: rotate(-1deg);
+}
+
+/* RESPONSIVE LAYANAN */
+@media (max-width: 1024px) {
+  .figma-layanan-header-section,
+  .figma-layanan-block,
+  .figma-layanan-timeline-section,
+  .figma-layanan-faq-section,
+  .figma-layanan-closing-section {
+    padding: 64px 24px;
+  }
+  
+  .figma-layanan-title-split {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+  
+  .figma-layanan-title-left,
+  .figma-layanan-title-right {
+    grid-column: 1 / -1;
+    padding-left: 0;
+  }
+  
+  .figma-layanan-h1 {
+    font-size: 48px;
+    line-height: 52px;
+  }
+  
+  .figma-layanan-block {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+  
+  .figma-layanan-block .figma-layanan-block-content,
+  .figma-layanan-block .figma-layanan-block-visual {
+    grid-column: 1 / -1;
+  }
+  
+  .figma-layanan-block-visual {
+    order: -1;
+    height: 380px;
+  }
+  
+  .figma-layanan-steps-5-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+  }
+  
+  .figma-layanan-faq-grid {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+  
+  .figma-layanan-faq-sidebar,
+  .figma-layanan-faq-list {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 640px) {
+  .figma-layanan-h1 {
+    font-size: 38px;
+    line-height: 44px;
+  }
+  
+  .figma-block-h2 {
+    font-size: 32px;
+    line-height: 36px;
+  }
+  
+  .figma-closing-h2 {
+    font-size: 36px;
+    line-height: 42px;
+  }
+  
+  .figma-layanan-steps-5-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .figma-closing-actions-wrap {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .figma-closing-wa-btn,
+  .figma-closing-portfolio-btn {
+    justify-content: center;
+  }
+}
