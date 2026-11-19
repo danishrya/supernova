@@ -1,15 +1,75 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { NavLink, Link, useLocation } from 'react-router-dom';
 import { useTheme } from '../context/ThemeContext';
 import { playClick } from '../utils/sound';
 
 export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [navVisible, setNavVisible] = useState(true);
+  const lastScrollY = useRef(0);
+  const navRef = useRef(null);
+  const [pillStyle, setPillStyle] = useState({ left: 0, width: 0, opacity: 0 });
+
   const { theme, toggleTheme } = useTheme();
   const location = useLocation();
 
+  // Directional scroll listener & dynamic island elevation
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+
+      // Scrolled threshold (becomes floating island)
+      if (currentScrollY > 25) {
+        setIsScrolled(true);
+      } else {
+        setIsScrolled(false);
+      }
+
+      // Smart hide on fast scroll down, reveal on scroll up
+      if (currentScrollY > 120) {
+        if (currentScrollY > lastScrollY.current + 8) {
+          setNavVisible(false);
+        } else if (currentScrollY < lastScrollY.current - 8) {
+          setNavVisible(true);
+        }
+      } else {
+        setNavVisible(true);
+      }
+
+      lastScrollY.current = currentScrollY;
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  // Update gliding active indicator position
+  const updatePill = () => {
+    if (!navRef.current) return;
+    const activeItem = navRef.current.querySelector('.figma-nav-item.is-active');
+    if (activeItem) {
+      const navRect = navRef.current.getBoundingClientRect();
+      const itemRect = activeItem.getBoundingClientRect();
+      setPillStyle({
+        left: itemRect.left - navRect.left,
+        width: itemRect.width,
+        opacity: 1,
+      });
+    } else {
+      setPillStyle((prev) => ({ ...prev, opacity: 0 }));
+    }
+  };
+
   useEffect(() => {
     setMobileOpen(false);
+    // Short delay to let React Router finish class updates on active item
+    const timer = setTimeout(updatePill, 40);
+    window.addEventListener('resize', updatePill);
+    return () => {
+      clearTimeout(timer);
+      window.removeEventListener('resize', updatePill);
+    };
   }, [location.pathname]);
 
   useEffect(() => {
@@ -35,7 +95,12 @@ export default function Navbar() {
 
   return (
     <>
-      <header className="figma-navbar" data-name="Header - STICKY NAVBAR (72px)">
+      <header
+        className={`figma-navbar ${isScrolled ? 'is-scrolled' : ''} ${
+          navVisible || mobileOpen ? 'is-visible' : 'is-hidden'
+        }`}
+        data-name="Header - DYNAMIC SMART NAVBAR"
+      >
         <div className="figma-navbar-container">
           {/* Brand Logo Left */}
           <Link
@@ -49,12 +114,24 @@ export default function Navbar() {
             <span className="figma-brand-dot" />
           </Link>
 
-          {/* Desktop Center Links */}
+          {/* Desktop Center Links with Gliding Pill Indicator */}
           <nav
+            ref={navRef}
             className="figma-nav-center"
             aria-label="Navigasi Utama"
             data-name="Nav - Center Links"
           >
+            {/* Smooth Sliding Pill Indicator */}
+            <span
+              className="figma-nav-gliding-pill"
+              style={{
+                transform: `translateX(${pillStyle.left}px)`,
+                width: `${pillStyle.width}px`,
+                opacity: pillStyle.opacity,
+              }}
+              aria-hidden="true"
+            />
+
             {navItems.map((item) => (
               <NavLink
                 key={item.path}
@@ -65,12 +142,7 @@ export default function Navbar() {
                 }
                 onClick={() => playClick()}
               >
-                {({ isActive }) => (
-                  <>
-                    <span>{item.label}</span>
-                    {isActive && <span className="figma-nav-active-dot" />}
-                  </>
-                )}
+                <span>{item.label}</span>
               </NavLink>
             ))}
           </nav>

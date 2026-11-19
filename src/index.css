@@ -148,7 +148,7 @@
 }
 
 html {
-  scroll-behavior: smooth;
+  scroll-behavior: auto;
   scroll-padding-top: 100px;
   font-size: 16px;
   color-scheme: light;
