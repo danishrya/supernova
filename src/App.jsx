@@ -75,7 +75,6 @@ function AppContent() {
         <>
           <Preloader />
           <CustomCursor />
-          <ScrollProgressBar />
           <SmartWhatsAppButton />
           <CommandPalette />
           <Navbar />

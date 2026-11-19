@@ -1,53 +1,15 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { NavLink, Link, useLocation } from 'react-router-dom';
 import { useTheme } from '../context/ThemeContext';
 import { playClick } from '../utils/sound';
 
 export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [isScrolled, setIsScrolled] = useState(false);
-  const navRef = useRef(null);
-  const [pillStyle, setPillStyle] = useState({ left: 0, width: 0, opacity: 0 });
-
   const { theme, toggleTheme } = useTheme();
   const location = useLocation();
 
-  // Scroll listener: smoothly contract height & increase glass shadow when scrolled down
-  useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 20);
-    };
-
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
-  // Update gliding active indicator position
-  const updatePill = () => {
-    if (!navRef.current) return;
-    const activeItem = navRef.current.querySelector('.figma-nav-item.is-active');
-    if (activeItem) {
-      const navRect = navRef.current.getBoundingClientRect();
-      const itemRect = activeItem.getBoundingClientRect();
-      setPillStyle({
-        left: itemRect.left - navRect.left,
-        width: itemRect.width,
-        opacity: 1,
-      });
-    } else {
-      setPillStyle((prev) => ({ ...prev, opacity: 0 }));
-    }
-  };
-
   useEffect(() => {
     setMobileOpen(false);
-    // Short delay to let React Router finish class updates on active item
-    const timer = setTimeout(updatePill, 40);
-    window.addEventListener('resize', updatePill);
-    return () => {
-      clearTimeout(timer);
-      window.removeEventListener('resize', updatePill);
-    };
   }, [location.pathname]);
 
   useEffect(() => {
@@ -61,7 +23,7 @@ export default function Navbar() {
     };
   }, [mobileOpen]);
 
-  // Click handler that removes focus and smoothly returns to top if already on that page
+  // Click handler: blurs link to prevent Chrome focus-scroll, and smoothly scrolls to top if on current page
   const handleNavItemClick = (e, targetPath) => {
     playClick();
     if (e.currentTarget) {
@@ -85,12 +47,9 @@ export default function Navbar() {
 
   return (
     <>
-      <header
-        className={`figma-navbar ${isScrolled ? 'is-scrolled' : ''}`}
-        data-name="Header - DYNAMIC SMART NAVBAR"
-      >
+      <header className="figma-navbar" data-name="Header - STICKY NAVBAR (72px)">
         <div className="figma-navbar-container">
-          {/* Brand Logo Left */}
+          {/* Brand Logo Left (Figma 2001:12) */}
           <Link
             to="/"
             className="figma-brand-link"
@@ -102,24 +61,12 @@ export default function Navbar() {
             <span className="figma-brand-dot" />
           </Link>
 
-          {/* Desktop Center Links with Gliding Pill Indicator */}
+          {/* Desktop Center Links (Figma 2001:19: flat text links, gap 32px, active dot underneath) */}
           <nav
-            ref={navRef}
             className="figma-nav-center"
             aria-label="Navigasi Utama"
-            data-name="Nav - Center Links"
+            data-name="Nav - Center Links (Desktop only, single row, no wrap)"
           >
-            {/* Smooth Sliding Pill Indicator */}
-            <span
-              className="figma-nav-gliding-pill"
-              style={{
-                transform: `translateX(${pillStyle.left}px)`,
-                width: `${pillStyle.width}px`,
-                opacity: pillStyle.opacity,
-              }}
-              aria-hidden="true"
-            />
-
             {navItems.map((item) => (
               <NavLink
                 key={item.path}
@@ -130,13 +77,18 @@ export default function Navbar() {
                 }
                 onClick={(e) => handleNavItemClick(e, item.path)}
               >
-                <span>{item.label}</span>
+                {({ isActive }) => (
+                  <>
+                    <span>{item.label}</span>
+                    {isActive && <span className="figma-nav-active-dot" />}
+                  </>
+                )}
               </NavLink>
             ))}
           </nav>
 
-          {/* Right Action CTA & Mobile Toggle */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+          {/* Right Action CTA & Theme Toggle */}
+          <div className="figma-nav-right-actions">
             {/* Theme Toggle Button (Dark / Light) */}
             <button
               type="button"
@@ -149,7 +101,7 @@ export default function Navbar() {
               title={theme === 'dark' ? 'Tema Terang' : 'Tema Gelap'}
             >
               {theme === 'dark' ? (
-                /* Sun Icon for Switching to Light */
+                /* Sun Icon */
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <circle cx="12" cy="12" r="5" />
                   <line x1="12" y1="1" x2="12" y2="3" />
@@ -162,13 +114,14 @@ export default function Navbar() {
                   <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
                 </svg>
               ) : (
-                /* Moon Icon for Switching to Dark */
+                /* Moon Icon */
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
                 </svg>
               )}
             </button>
 
+            {/* Figma 2001:35 Right Action CTA */}
             <Link
               to="/harga"
               className="figma-nav-cta"
@@ -187,6 +140,7 @@ export default function Navbar() {
               </svg>
             </Link>
 
+            {/* Mobile Hamburger Toggle */}
             <button
               type="button"
               className="figma-nav-mobile-toggle"
@@ -249,34 +203,27 @@ export default function Navbar() {
             ))}
           </nav>
 
-          <div className="figma-mobile-menu-footer">
-            <div className="figma-mobile-theme-row">
-              <span className="figma-mobile-theme-label">Mode Tampilan:</span>
-              <button
-                type="button"
-                className="figma-mobile-theme-btn"
-                onClick={() => {
-                  playClick();
-                  toggleTheme();
-                }}
-              >
-                {theme === 'dark' ? '☀️ Mode Terang' : '🌙 Mode Gelap'}
-              </button>
-            </div>
-
+          <div style={{ marginTop: 'auto', paddingTop: '24px' }}>
             <Link
               to="/harga"
-              className="figma-mobile-cta-btn"
+              className="figma-btn-primary"
+              style={{ width: '100%', boxSizing: 'border-box' }}
               onClick={() => {
                 playClick();
                 setMobileOpen(false);
               }}
             >
-              Minta estimasi &rarr;
+              <span>Minta estimasi</span>
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+                <path
+                  d="M2.625 7H11.375M7.875 3.5L11.375 7L7.875 10.5"
+                  stroke="#14110F"
+                  strokeWidth="1.75"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
             </Link>
-            <div style={{ textAlign: 'center', fontFamily: 'var(--font-mono)', fontSize: '11px', color: 'var(--figma-text-muted)' }}>
-              KONSULTASI AWAL LEWAT WHATSAPP
-            </div>
           </div>
         </div>
       )}

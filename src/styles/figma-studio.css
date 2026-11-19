@@ -191,7 +191,7 @@ main.main-content-flow {
 }
 
 /* ==========================================================================
-   DYNAMIC SMART NAVBAR (Figma 2001:10) — Glitch-Free & Smooth Transition
+   STICKY NAVBAR (Figma 2001:10) — 1:1 Match to Figma Design (No Glitch, No Jump)
    ========================================================================== */
 .figma-navbar {
   position: fixed;
@@ -208,20 +208,6 @@ main.main-content-flow {
   display: flex;
   align-items: center;
   box-sizing: border-box;
-  transition: height 0.25s cubic-bezier(0.16, 1, 0.3, 1),
-              background-color 0.25s ease,
-              border-color 0.25s ease,
-              box-shadow 0.25s ease;
-}
-
-/* Scrolled Compact Dynamic Navbar */
-.figma-navbar.is-scrolled {
-  height: 60px;
-  background-color: var(--figma-nav-bg);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.4);
-  border-bottom: 1px solid var(--figma-border);
 }
 
 .figma-navbar-container {
@@ -233,7 +219,6 @@ main.main-content-flow {
   align-items: center;
   justify-content: space-between;
   box-sizing: border-box;
-  transition: padding 0.25s ease;
 }
 
 .figma-brand-link {
@@ -242,12 +227,11 @@ main.main-content-flow {
   gap: 8px;
   text-decoration: none;
   cursor: pointer;
-  transition: transform 0.2s ease, opacity 0.2s ease;
+  outline: none !important;
 }
 
 .figma-brand-link:hover {
   opacity: 0.9;
-  transform: scale(1.02);
 }
 
 .figma-brand-title {
@@ -278,77 +262,36 @@ main.main-content-flow {
   border-radius: 9999px;
   background-color: var(--figma-orange);
   margin-left: 2px;
-  box-shadow: 0 0 8px rgba(255, 107, 31, 0.5);
-  animation: figmaDotPulse 3s ease-in-out infinite;
 }
 
-@keyframes figmaDotPulse {
-  0%, 100% {
-    transform: scale(1);
-    opacity: 1;
-  }
-  50% {
-    transform: scale(1.15);
-    opacity: 0.8;
-  }
-}
-
-/* Center Links Container with Smooth Gliding Indicator */
+/* Center Links: Flat text links separated by 32px (Figma 2001:19) — No capsule, no background */
 .figma-nav-center {
-  position: relative;
   display: flex;
   align-items: center;
-  gap: 2px;
-  padding: 4px 6px;
-  background-color: var(--figma-card);
-  border: 1px solid var(--figma-border);
-  border-radius: 9999px;
-  box-sizing: border-box;
-}
-
-/* Gliding Active Pill */
-.figma-nav-gliding-pill {
-  position: absolute;
-  top: 4px;
-  bottom: 4px;
-  left: 0;
-  border-radius: 9999px;
-  background-color: var(--figma-card-elevated);
-  border: 1px solid var(--figma-border);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-  pointer-events: none;
-  z-index: 1;
-  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
-              width 0.35s cubic-bezier(0.16, 1, 0.3, 1),
-              opacity 0.2s ease;
-}
-
-.figma-nav-gliding-pill::after {
-  content: '';
-  position: absolute;
-  bottom: 3px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 5px;
-  height: 5px;
-  border-radius: 9999px;
-  background-color: var(--figma-orange);
-  box-shadow: 0 0 6px var(--figma-orange);
+  gap: 32px;
+  background: transparent !important;
+  border: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
 }
 
 .figma-nav-item {
   position: relative;
-  z-index: 2;
   font-family: var(--font-body);
   font-weight: 500;
-  font-size: 14.5px;
-  line-height: 20px;
+  font-size: 16px;
+  line-height: 24px;
   color: var(--figma-text-secondary);
   text-decoration: none;
   white-space: nowrap;
-  padding: 8px 16px;
-  border-radius: 9999px;
-  transition: color 0.2s ease;
+  padding: 8px 0;
+  background: transparent !important;
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+  transition: color 0.15s ease;
 }
 
 .figma-nav-item:hover {
@@ -366,6 +309,26 @@ main.main-content-flow {
   box-shadow: none !important;
 }
 
+/* Active 6px Orange Dot underneath (Figma 2001:22) */
+.figma-nav-active-dot {
+  position: absolute;
+  bottom: -4px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 6px;
+  height: 6px;
+  border-radius: 9999px;
+  background-color: var(--figma-orange);
+  pointer-events: none;
+}
+
+/* Right Actions Container */
+.figma-nav-right-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
 /* Theme Switcher Toggle */
 .figma-theme-toggle {
   display: inline-flex;
@@ -381,22 +344,20 @@ main.main-content-flow {
   transition: all 0.2s ease;
   box-sizing: border-box;
   flex-shrink: 0;
+  outline: none !important;
+  box-shadow: none !important;
 }
 
 .figma-theme-toggle:hover {
   background-color: var(--figma-card-elevated);
   border-color: var(--figma-orange);
   color: var(--figma-orange);
-  transform: translateY(-1px);
 }
 
-.figma-theme-toggle:focus {
-  outline: none;
-}
-
+.figma-theme-toggle:focus,
 .figma-theme-toggle:focus-visible {
-  outline: 2px solid var(--figma-orange);
-  outline-offset: 2px;
+  outline: none !important;
+  box-shadow: none !important;
 }
 
 .figma-mobile-theme-row {
