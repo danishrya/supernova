@@ -2280,3 +2280,79 @@
   .figma-navbar-container { padding: 0 16px; }
   .figma-nav-right-actions .figma-nav-cta { display: none; }
 }
+
+/* ==========================================================================
+   CUSTOM CURSOR — these styles were missing, so the dot/ring rendered in the
+   page flow and the ring's "Klik" label pushed <main> down 26px whenever a
+   link was hovered (the gap between navbar and hero).
+   ========================================================================== */
+.custom-cursor-dot,
+.custom-cursor-ring {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 9999;
+  pointer-events: none;
+  will-change: transform;
+}
+
+.custom-cursor-dot {
+  width: 6px;
+  height: 6px;
+  margin: -3px 0 0 -3px;
+  border-radius: 50%;
+  background: var(--sn-orange, #ff6b1f);
+  transition: width 0.2s ease, height 0.2s ease, margin 0.2s ease, opacity 0.2s ease;
+}
+
+.custom-cursor-dot.hovered { opacity: 0; }
+
+.custom-cursor-ring {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  margin: -16px 0 0 -16px;
+  border: 1px solid rgba(255, 107, 31, 0.55);
+  border-radius: 999px;
+  transition: width 0.25s cubic-bezier(0.2, 0.8, 0.2, 1), height 0.25s cubic-bezier(0.2, 0.8, 0.2, 1),
+    margin 0.25s cubic-bezier(0.2, 0.8, 0.2, 1), background-color 0.25s ease, border-color 0.25s ease;
+}
+
+.custom-cursor-ring.hovered {
+  width: 48px;
+  height: 48px;
+  margin: -24px 0 0 -24px;
+  border-color: var(--sn-orange, #ff6b1f);
+  background: rgba(255, 107, 31, 0.08);
+}
+
+.custom-cursor-ring.has-text {
+  border-color: var(--sn-orange, #ff6b1f);
+  background: rgba(255, 107, 31, 0.08);
+}
+
+/* Label sits under the ring so it never covers the text being hovered */
+.cursor-label-text {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: var(--sn-orange, #ff6b1f);
+  font-family: var(--font-space, 'Space Mono', monospace);
+  font-size: 10px;
+  line-height: 14px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #14110f;
+  white-space: nowrap;
+}
+
+@media (pointer: coarse) {
+  .custom-cursor-dot,
+  .custom-cursor-ring { display: none; }
+}
