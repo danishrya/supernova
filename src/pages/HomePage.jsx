@@ -1,329 +1,635 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { PROJECTS_DATA } from '../data/projects';
-import { STUDIO_CONFIG } from '../config/studioConfig';
-import BeforeAfterSlider from '../components/BeforeAfterSlider';
-import AboutMinCham from '../components/AboutMinCham';
-import DraggableTestimonials from '../components/DraggableTestimonials';
-import { IconArrowRight, IconWhatsApp } from '../components/Icons';
 import { playClick } from '../utils/sound';
 
-export default function HomePage({ onOpenProjectModal }) {
-  const caseStudies = PROJECTS_DATA.slice(0, 3);
-  const heroCase = caseStudies[0]; // Nexus Capital
+export default function HomePage() {
+  // Service Row 02 (Website) expanded state (from Figma 2001:167)
+  const [row2Expanded, setRow2Expanded] = useState(true);
 
-  const waUrl = `https://wa.me/${STUDIO_CONFIG.whatsappNumber}?text=${encodeURIComponent(
-    'Halo Min Cham! Kami tertarik untuk konsultasi santai mengenai kebutuhan desain presentasi/website di Studio Supernova.'
-  )}`;
+  // Quiz state (from Figma 2001:311)
+  const [selectedQuizOption, setSelectedQuizOption] = useState('presentasi');
+
+  const quizOptions = [
+    {
+      id: 'presentasi',
+      label: 'Presentasi',
+      recommendation: 'Desain presentasi',
+      link: '/layanan/desain-ppt',
+      btnLabel: 'Lihat paketnya',
+    },
+    {
+      id: 'website',
+      label: 'Website',
+      recommendation: 'Pembuatan website',
+      link: '/layanan/website',
+      btnLabel: 'Lihat paketnya',
+    },
+    {
+      id: 'template',
+      label: 'Template siap pakai',
+      recommendation: 'Katalog template digital',
+      link: '/produk-digital',
+      btnLabel: 'Buka katalog',
+    },
+    {
+      id: 'belum-tau',
+      label: 'Belum tau',
+      recommendation: 'Konsultasi gratis & bedah ide',
+      link: 'https://wa.me/6285714521584?text=Halo%20Min%20Cham,%20saya%20punya%20ide%20tapi%20belum%20tau%20format%20yang%20paling%20pas',
+      isExternal: true,
+      btnLabel: 'Tanya Min Cham via WA',
+    },
+  ];
+
+  const currentRec =
+    quizOptions.find((opt) => opt.id === selectedQuizOption) || quizOptions[0];
+
+  const waClosingUrl =
+    'https://wa.me/6285714521584?text=Halo%20Min%20Cham,%20saya%20punya%20ide%20yang%20mau%20dibikin%20tampilannya%20jadi%20profesional.';
 
   return (
-    <div className="page-home human-page-wrap">
-      {/* =========================================================================
-          HERO SECTION: CLEAN, BOLD & AUTHENTIC STUDIO HERO
-          ========================================================================= */}
-      <section className="hero-studio-section" id="hero">
-        <div className="container">
-          <div className="hero-top-meta">
-            <span className="studio-pill-tag">STUDIO DESAIN &bull; JAKARTA</span>
-            <span className="studio-status-live">
-              <span className="live-dot" /> Siap Terima Proyek Baru
-            </span>
-          </div>
-
-          <div className="hero-grid-layout">
-            {/* Left Column: Clear Value Proposition */}
-            <div className="hero-content-col">
-              <h1 className="hero-studio-title">
-                Desain berkarakter untuk <span className="accent-text">bisnis kamu.</span>
-              </h1>
-
-              <p className="hero-studio-sub">
-                Slide pitch deck tajam, website kilat ramah smartphone, dan aset digital siap pakai — dikerjakan langsung oleh Min Cham tanpa sales perantara.
-              </p>
-
-              <div className="hero-cta-buttons">
-                <a
-                  href={waUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="btn btn-primary btn-lg"
-                  id="homeHeroWaBtn"
-                  onClick={() => playClick()}
-                  data-cursor="Chat"
-                >
-                  <IconWhatsApp size={18} />
-                  <span>Konsultasi WhatsApp</span>
-                </a>
-
-                <Link
-                  to="/portofolio"
-                  className="btn btn-secondary btn-lg"
-                  id="homeHeroWorksBtn"
-                  onClick={() => playClick()}
-                  data-cursor="Karya"
-                >
-                  <span>Lihat Portofolio</span>
-                  <IconArrowRight size={15} />
-                </Link>
-              </div>
-            </div>
-
-            {/* Right Column: Clean Project Showcase Frame */}
-            <div className="hero-showcase-col">
-              <div className="hero-featured-project-card">
-                <div
-                  className="project-cover-wrap"
-                  onClick={() => onOpenProjectModal && onOpenProjectModal(heroCase)}
-                  style={{ cursor: 'pointer' }}
-                >
-                  <img
-                    src={heroCase.image}
-                    alt={heroCase.title}
-                    className="project-cover-img"
-                  />
-                  <div className="project-cover-overlay">
-                    <span>Lihat Rincian Studi Kasus &rarr;</span>
-                  </div>
-                </div>
-
-                <div className="project-card-footer">
-                  <div className="project-info">
-                    <span className="project-cat-tag">PRESENTASI PITCH DECK</span>
-                    <h3 className="project-name">{heroCase.title}</h3>
-                  </div>
-                  <Link
-                    to={`/portofolio/${heroCase.id}`}
-                    className="project-action-link"
-                    onClick={() => playClick()}
-                  >
-                    Buka Rincian &rarr;
-                  </Link>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Minimalist 3-Point Guarantee Strip */}
-          <div className="studio-trust-strip">
-            <div className="trust-item">
-              <span className="trust-icon">✦</span>
-              <span>100% Master File .PPTX &amp; Kode Milik Klien</span>
-            </div>
-            <div className="trust-divider" />
-            <div className="trust-item">
-              <span className="trust-icon">✦</span>
-              <span>Bicara Langsung dengan Desainer</span>
-            </div>
-            <div className="trust-divider" />
-            <div className="trust-item">
-              <span className="trust-icon">✦</span>
-              <span>Garansi Revisi Fleksibel Sampai Puas</span>
-            </div>
-          </div>
-        </div>
-      </section>
+    <div className="figma-main-wrapper" data-name="Supernova Studio — Beranda Website Desktop">
+      {/* Subtle Grain Overlay */}
+      <div className="figma-grain-overlay" aria-hidden="true">
+        <img src="/figma-assets/grain.svg" alt="" />
+      </div>
 
       {/* =========================================================================
-          SECTION 01: 3 LAYANAN UTAMA
+          SECTION 1: HERO SECTION (Figma 2001:43)
           ========================================================================= */}
-      <section className="section services-summary-section" id="layanan">
-        <div className="container">
-          <div className="section-title-wrap">
-            <span className="section-badge">SPESIALISASI KAMI</span>
-            <h2 className="section-headline">
-              Tiga layanan utama yang kami kerjakan <span className="accent-text">dengan teliti.</span>
-            </h2>
-            <p className="section-subheadline">
-              Fokus pada 3 disiplin yang terbukti langsung meningkatkan kredibilitas dan penjualan bisnis kamu.
-            </p>
+      <section className="figma-hero-section" id="hero" data-name="Section 01 - HERO">
+        {/* Giant Cut-off Nova Dot Background (Right side, 640px) */}
+        <div className="figma-giant-nova-dot" aria-hidden="true" />
+
+        {/* Left Column (7 Columns) */}
+        <div className="figma-hero-left">
+          <div className="figma-mono-tag">
+            <span className="figma-tag-dot" />
+            <span className="figma-tag-text">01 — STUDIO KREATIF DIGITAL</span>
           </div>
 
-          <div className="services-grid-three">
-            {/* Service 01: PPT */}
-            <article className="service-card-item">
-              <div className="service-card-top">
-                <span className="service-num">01</span>
-                <span className="service-tag">PRESENTASI &bull; DECK</span>
-              </div>
-              <h3 className="service-card-title">Desain Slide Presentasi &amp; Pitch Deck (PPT)</h3>
-              <p className="service-card-desc">
-                Rombak narasi slide bisnis dan data tabel jadi alur visual berkelas yang nyaman dibaca dan siap memikat investor.
-              </p>
-              <Link
-                to="/layanan/desain-ppt"
-                className="service-card-link"
-                onClick={() => playClick()}
-              >
-                <span>Lihat Layanan PPT</span>
-                <IconArrowRight size={14} />
-              </Link>
-            </article>
+          <h1 className="figma-hero-h1">
+            Ide lo udah bagus.<br />
+            Tampilannya<br />
+            <span className="highlight">yang bikin orang</span><br />
+            <span className="highlight">percaya.</span>
+          </h1>
 
-            {/* Service 02: Website */}
-            <article className="service-card-item">
-              <div className="service-card-top">
-                <span className="service-num">02</span>
-                <span className="service-tag">DIGITAL &bull; WEB</span>
-              </div>
-              <h3 className="service-card-title">Pembuatan Website &amp; Landing Page Kilat</h3>
-              <p className="service-card-desc">
-                Website modern berkecepatan tinggi yang ringan dibuka di smartphone calon pelanggan dan langsung terhubung ke WhatsApp.
-              </p>
-              <Link
-                to="/layanan/website"
-                className="service-card-link"
-                onClick={() => playClick()}
-              >
-                <span>Lihat Layanan Website</span>
-                <IconArrowRight size={14} />
-              </Link>
-            </article>
+          <p className="figma-hero-body">
+            Gue bikin presentasi, website, dan produk digital buat bisnis kecil, freelancer, dan mahasiswa. Rapi, jelas, dan nggak kelihatan template.
+          </p>
 
-            {/* Service 03: Produk Digital */}
-            <article className="service-card-item">
-              <div className="service-card-top">
-                <span className="service-num">03</span>
-                <span className="service-tag">SIAP PAKAI &bull; TEMPLATE</span>
-              </div>
-              <h3 className="service-card-title">Katalog Template &amp; Produk Digital</h3>
-              <p className="service-card-desc">
-                Template slide presentasi, kit feed media sosial, dan draf kontrak freelance siap unduh detik ini juga untuk kebutuhan cepat.
-              </p>
-              <Link
-                to="/produk-digital"
-                className="service-card-link"
-                onClick={() => playClick()}
-              >
-                <span>Buka Katalog Produk</span>
-                <IconArrowRight size={14} />
-              </Link>
-            </article>
-          </div>
-        </div>
-      </section>
+          <div className="figma-hero-ctas">
+            <Link
+              to="/harga"
+              className="figma-btn-primary"
+              onClick={() => playClick()}
+            >
+              <span>Minta estimasi</span>
+              <img src="/figma-assets/arrow-hero.svg" alt="" width="16" height="16" />
+            </Link>
 
-      {/* =========================================================================
-          SECTION 02: BUKTI NYATA (BEFORE / AFTER INTERAKTIF)
-          ========================================================================= */}
-      <section className="section before-after-section">
-        <div className="container">
-          <div className="section-title-wrap text-center">
-            <span className="section-badge">HASIL NYATA</span>
-            <h2 className="section-headline">
-              Perbedaan Slide Mentahan vs Sentuhan Studio
-            </h2>
-            <p className="section-subheadline mx-auto">
-              Geser tuas pembanding ke kiri dan kanan untuk melihat perbedaan struktur visual materi dan keterbacaan data.
-            </p>
-          </div>
-          <BeforeAfterSlider />
-        </div>
-      </section>
-
-      {/* =========================================================================
-          SECTION 03: 3 CONTOH KARYA PILIHAN
-          ========================================================================= */}
-      <section className="section curated-works-section" id="portofolio">
-        <div className="container">
-          <div className="section-head-split">
-            <div>
-              <span className="section-badge">CONTOH KARYA PILIHAN</span>
-              <h2 className="section-headline">
-                Koleksi karya nyata, <span className="accent-text">bukan sekadar pajangan mockup.</span>
-              </h2>
-            </div>
-            <Link to="/portofolio" className="btn btn-secondary" onClick={() => playClick()}>
-              <span>Semua Portofolio &rarr;</span>
+            <Link
+              to="/portofolio"
+              className="figma-btn-secondary"
+              onClick={() => playClick()}
+            >
+              <span>Lihat contoh karya</span>
             </Link>
           </div>
 
-          <div className="works-grid-three">
-            {caseStudies.map((project, idx) => (
-              <article key={project.id} className="work-card-clean">
-                <div className="work-card-media" onClick={() => onOpenProjectModal && onOpenProjectModal(project)}>
-                  <img
-                    src={project.image}
-                    alt={project.title}
-                    className="work-card-img"
-                    loading="lazy"
-                  />
-                  <span className="work-category-pill">{project.categoryLabel}</span>
-                </div>
+          <div className="figma-hero-microcopy">
+            KONSULTASI AWAL LEWAT WHATSAPP
+          </div>
 
-                <div className="work-card-body">
-                  <h3 className="work-card-title">{project.title}</h3>
-                  <p className="work-card-desc">{project.overview}</p>
+          <div className="figma-hero-scroll">
+            <span>SCROLL</span>
+            <div className="figma-hero-scroll-line" />
+          </div>
+        </div>
 
-                  <div className="work-card-footer">
-                    <Link
-                      to={`/portofolio/${project.id}`}
-                      className="work-link"
-                      onClick={() => playClick()}
-                    >
-                      <span>Lihat Studi Kasus</span>
-                      <IconArrowRight size={14} />
-                    </Link>
-                    <button
-                      type="button"
-                      className="work-preview-btn"
-                      onClick={() => onOpenProjectModal && onOpenProjectModal(project)}
-                    >
-                      Preview
-                    </button>
-                  </div>
-                </div>
-              </article>
-            ))}
+        {/* Right Column: Layered Editorial Mockups (5 Columns) */}
+        <div className="figma-hero-right" data-name="Right Column with flat layered mockups">
+          {/* Mockup 1: PPT Slide 16:9 (-4 deg) */}
+          <div className="figma-mockup-slide">
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderBottom: '1px solid var(--figma-border)', paddingBottom: '9px' }}>
+              <span style={{ fontFamily: 'var(--font-mono)', fontSize: '12px', letterSpacing: '0.96px', color: 'var(--figma-text-muted)' }}>
+                PPT // SLIDE 16:9
+              </span>
+              <span style={{ width: '6px', height: '6px', borderRadius: '9999px', backgroundColor: 'var(--figma-orange)' }} />
+            </div>
+
+            <div style={{ padding: '8px 0', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+              <span style={{ fontFamily: 'var(--font-mono)', fontSize: '12px', color: 'var(--figma-text-muted)' }}>
+                [ganti: screenshot pitch deck]
+              </span>
+              <div style={{ width: '80%', height: '8px', backgroundColor: 'var(--figma-card-elevated)', borderRadius: '4px' }} />
+              <div style={{ width: '55%', height: '8px', backgroundColor: 'var(--figma-card-elevated)', borderRadius: '4px' }} />
+            </div>
+
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+              <span style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', color: 'var(--figma-text-muted)' }}>
+                SERIES A PITCH
+              </span>
+              <span style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', color: 'var(--figma-text-muted)' }}>
+                SLIDE 04/12
+              </span>
+            </div>
+          </div>
+
+          {/* Mockup 2: Website Browser Window (+2 deg) */}
+          <div className="figma-mockup-browser">
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderBottom: '1px solid var(--figma-border)', paddingBottom: '9px' }}>
+              <div style={{ display: 'flex', gap: '6px' }}>
+                <span style={{ width: '10px', height: '10px', borderRadius: '9999px', backgroundColor: 'var(--figma-bg)', border: '1px solid var(--figma-border)' }} />
+                <span style={{ width: '10px', height: '10px', borderRadius: '9999px', backgroundColor: 'var(--figma-bg)', border: '1px solid var(--figma-border)' }} />
+                <span style={{ width: '10px', height: '10px', borderRadius: '9999px', backgroundColor: 'var(--figma-bg)', border: '1px solid var(--figma-border)' }} />
+              </div>
+              <span style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: 'var(--figma-text-muted)' }}>
+                Website // supernova.id
+              </span>
+              <span style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: 'var(--figma-orange)' }}>
+                1440px
+              </span>
+            </div>
+
+            <div style={{ flex: 1, margin: '8px 0', border: '1px dashed var(--figma-border)', borderRadius: '4px', backgroundColor: 'var(--figma-bg)', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '12px' }}>
+              <span style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: 'var(--figma-text-muted)' }}>
+                [ganti: mockup landing page]
+              </span>
+              <span style={{ fontFamily: 'var(--font-display)', fontWeight: 800, fontSize: '15px', color: 'var(--figma-text-primary)', marginTop: '4px' }}>
+                UMKM Kopi Lokal
+              </span>
+            </div>
+
+            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+              <span style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', color: 'var(--figma-text-muted)' }}>
+                STATUS: LIVE
+              </span>
+              <span style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', color: 'var(--figma-text-muted)' }}>
+                RESPONSIVE OK
+              </span>
+            </div>
+          </div>
+
+          {/* Mockup 3: Template Book / Cover (-1 deg) */}
+          <div className="figma-mockup-cover">
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderBottom: '1px solid var(--figma-border)', paddingBottom: '9px' }}>
+              <span style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: 'var(--figma-orange)', letterSpacing: '0.88px' }}>
+                TEMPLATE
+              </span>
+              <span style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', color: 'var(--figma-text-muted)' }}>
+                FIGMA / NOTION
+              </span>
+            </div>
+
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px', padding: '16px 0' }}>
+              <span style={{ width: '32px', height: '32px', borderRadius: '9999px', backgroundColor: 'var(--figma-orange)', opacity: 0.8 }} />
+              <span style={{ fontFamily: 'var(--font-display)', fontWeight: 800, fontSize: '14px', color: 'var(--figma-text-primary)', textAlign: 'center', marginTop: '6px' }}>
+                Brand Kit UMKM v1.2
+              </span>
+              <span style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: 'var(--figma-text-muted)' }}>
+                [siap pakai]
+              </span>
+            </div>
+
+            <div style={{ display: 'flex', justifyContent: 'space-between', borderTop: '1px solid var(--figma-border)', paddingTop: '9px' }}>
+              <span style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', color: 'var(--figma-text-muted)' }}>
+                RP 149.000
+              </span>
+              <span style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', color: 'var(--figma-text-muted)' }}>
+                INSTANT DL
+              </span>
+            </div>
+          </div>
+
+          {/* Handwritten Caveat Note with curved hand-drawn arrow */}
+          <div className="figma-handwritten-note">
+            <span className="figma-handwritten-text">ini contoh tampilannya</span>
+            <img src="/figma-assets/arrow-caveat.svg" alt="" width="48" height="40" />
           </div>
         </div>
       </section>
 
       {/* =========================================================================
-          SECTION 04: CERITA PERSONAL MIN CHAM
+          SECTION 2: 3 HAL (SERVICES) (Figma 2001:136)
           ========================================================================= */}
-      <AboutMinCham />
+      <section className="figma-services-section" id="layanan" data-name="Section 02 - TIGA HAL">
+        <div className="figma-section-header">
+          <div className="figma-mono-tag">
+            <span className="figma-tag-dot" />
+            <span className="figma-tag-text">02</span>
+          </div>
+          <h2 className="figma-section-h2">Tiga hal, dikerjain sampai detail.</h2>
+        </div>
 
-      {/* =========================================================================
-          SECTION 05: TESTIMONI KLIEN
-          ========================================================================= */}
-      <DraggableTestimonials />
-
-      {/* =========================================================================
-          SECTION 06: CALL TO ACTION PENUTUP
-          ========================================================================= */}
-      <section className="section final-callout-section">
-        <div className="container">
-          <div className="final-callout-box">
-            <span className="callout-badge">KONSULTASI LANGSUNG</span>
-            <h2 className="callout-title">
-              Punya materi yang ingin <span className="accent-text">kami bedah visualnya?</span>
-            </h2>
-            <p className="callout-desc">
-              Kirimkan draf slide mentahan atau rencana website kamu ke WhatsApp Min Cham. Konsultasi awal 100% gratis dan santai.
-            </p>
-
-            <div className="callout-actions">
-              <a
-                href={waUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="btn btn-primary btn-lg"
-                onClick={() => playClick()}
-                data-cursor="Chat"
-              >
-                <IconWhatsApp size={18} />
-                <span>Konsultasi via WhatsApp</span>
-              </a>
-
+        <div className="figma-services-rows-container">
+          {/* ROW 1: Desain Presentasi */}
+          <div className="figma-service-row">
+            <div className="figma-service-col-num">01</div>
+            <div className="figma-service-col-title">
+              <h3 className="figma-service-title-text">Desain presentasi (PPT)</h3>
+            </div>
+            <div className="figma-service-col-desc">
+              Pitch deck, company profile, sidang, dan proposal yang alurnya jelas.
+            </div>
+            <div className="figma-service-col-action">
               <Link
-                to="/harga"
-                className="btn btn-secondary btn-lg"
+                to="/layanan/desain-ppt"
+                className="figma-pill-action-btn"
                 onClick={() => playClick()}
               >
-                <span>Hitung Estimasi Biaya</span>
-                <IconArrowRight size={15} />
+                Lihat detail
               </Link>
             </div>
+          </div>
+
+          {/* ROW 2: Pembuatan Website (Expandable State) */}
+          <div className={`figma-service-row ${row2Expanded ? 'is-expanded' : ''}`}>
+            <div className="figma-service-col-num">02</div>
+            <div className="figma-service-col-title">
+              <h3 className="figma-service-title-text">Pembuatan website</h3>
+              <span className="figma-service-badge">[PAKET PALING SERING DIAMBIL]</span>
+            </div>
+            <div className="figma-service-col-desc">
+              Company profile, portofolio, toko online, atau landing page yang enak dibuka di HP.
+            </div>
+            <div className="figma-service-col-action">
+              <button
+                type="button"
+                className={`figma-pill-action-btn ${row2Expanded ? 'is-active' : ''}`}
+                onClick={() => {
+                  playClick();
+                  setRow2Expanded(!row2Expanded);
+                }}
+              >
+                {row2Expanded ? 'Tutup detail ↑' : 'Buka detail ↓'}
+              </button>
+            </div>
+
+            {/* Expanded Features & Mockup Preview */}
+            {row2Expanded && (
+              <div className="figma-service-expanded-content">
+                <div className="figma-expanded-features">
+                  <div className="figma-feature-item">
+                    <span className="figma-tag-dot" />
+                    <span className="figma-feature-text">File PPTX dan PDF</span>
+                    <span className="figma-feature-sub">(bisa diedit sendiri dengan mudah)</span>
+                  </div>
+                  <div className="figma-feature-item">
+                    <span className="figma-tag-dot" />
+                    <span className="figma-feature-text">Revisi [jumlah] kali</span>
+                    <span className="figma-feature-sub">(sampai lo puas dan yakin)</span>
+                  </div>
+                  <div className="figma-feature-item">
+                    <span className="figma-tag-dot" />
+                    <span className="figma-feature-text">Estimasi [x] hari</span>
+                    <span className="figma-feature-sub">(rata-rata 3–7 hari kerja)</span>
+                  </div>
+                </div>
+
+                <div className="figma-expanded-mockup">
+                  <div
+                    style={{
+                      width: '360px',
+                      height: '160px',
+                      backgroundColor: 'var(--figma-card-elevated)',
+                      border: '1px solid var(--figma-border)',
+                      borderRadius: '6px',
+                      padding: '13px',
+                      display: 'flex',
+                      flexDirection: 'column',
+                      justifyContent: 'space-between',
+                      boxSizing: 'border-box',
+                    }}
+                  >
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderBottom: '1px solid var(--figma-border)', paddingBottom: '7px' }}>
+                      <div style={{ display: 'flex', gap: '6px' }}>
+                        <span style={{ width: '8px', height: '8px', borderRadius: '9999px', backgroundColor: 'var(--figma-bg)', border: '1px solid var(--figma-border)' }} />
+                        <span style={{ width: '8px', height: '8px', borderRadius: '9999px', backgroundColor: 'var(--figma-bg)', border: '1px solid var(--figma-border)' }} />
+                        <span style={{ width: '8px', height: '8px', borderRadius: '9999px', backgroundColor: 'var(--figma-bg)', border: '1px solid var(--figma-border)' }} />
+                      </div>
+                      <span style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', color: 'var(--figma-text-muted)' }}>
+                        pratinjau: responsive-web.html
+                      </span>
+                      <span style={{ width: '8px', height: '8px', borderRadius: '9999px', backgroundColor: 'var(--figma-orange)' }} />
+                    </div>
+
+                    <div style={{ border: '1px solid var(--figma-border)', borderRadius: '4px', backgroundColor: 'var(--figma-bg)', padding: '12px', textAlign: 'center' }}>
+                      <span style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: 'var(--figma-text-muted)' }}>
+                        [ganti: screenshot tampilan mobile]
+                      </span>
+                    </div>
+
+                    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                      <span style={{ fontFamily: 'var(--font-mono)', fontSize: '9px', color: 'var(--figma-text-muted)' }}>
+                        100% RESPONSIVE
+                      </span>
+                      <span style={{ fontFamily: 'var(--font-mono)', fontSize: '9px', color: 'var(--figma-text-muted)' }}>
+                        CLEAN CODE
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* ROW 3: Produk Digital */}
+          <div className="figma-service-row">
+            <div className="figma-service-col-num">03</div>
+            <div className="figma-service-col-title">
+              <h3 className="figma-service-title-text">Produk digital</h3>
+            </div>
+            <div className="figma-service-col-desc">
+              Template PPT dan website, e-book, UI kit, dan desain sosmed yang tinggal pakai.
+            </div>
+            <div className="figma-service-col-action">
+              <Link
+                to="/produk-digital"
+                className="figma-pill-action-btn"
+                onClick={() => playClick()}
+              >
+                Lihat detail
+              </Link>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* =========================================================================
+          SECTION 3: CONTOH KARYA (PORTFOLIO) (Figma 2001:223)
+          ========================================================================= */}
+      <section className="figma-portfolio-section" id="portofolio" data-name="Section 03 - CONTOH KARYA">
+        <div className="figma-portfolio-header-split">
+          <div>
+            <div className="figma-mono-tag">
+              <span className="figma-tag-dot" />
+              <span className="figma-tag-text">03</span>
+            </div>
+            <h2 className="figma-section-h2">Contoh karya.</h2>
+            <div className="figma-portfolio-sub">
+              Sebagian masih konsep. Yang konsep ditandai jelas.
+            </div>
+          </div>
+
+          <Link
+            to="/portofolio"
+            className="figma-all-works-link"
+            onClick={() => playClick()}
+          >
+            <span>Lihat semua karya</span>
+            <img src="/figma-assets/arrow-right.svg" alt="" width="16" height="16" />
+          </Link>
+        </div>
+
+        <div className="figma-portfolio-asymmetric-grid">
+          {/* Big Card (7 Columns, 520px high) */}
+          <div className="figma-portfolio-big-card">
+            <div className="figma-card-tags-row">
+              <span className="figma-mono-tag-chip">PPT</span>
+              <span className="figma-status-badge">Proyek asli</span>
+            </div>
+
+            <div className="figma-card-wireframe-box">
+              <span>[ganti: screenshot proyek deck investasi]</span>
+              <span style={{ fontFamily: 'var(--font-display)', fontWeight: 800, fontSize: '20px', color: 'var(--figma-text-primary)' }}>
+                Pitch Deck Seed Round — Agrotech Indonesia
+              </span>
+            </div>
+
+            <div className="figma-card-footer-info">
+              <div>
+                <h4 className="figma-card-title">Deck Investasi UMKM Sayur Segar</h4>
+                <span className="figma-card-meta">18 SLIDES // SELESAI DALAM 5 HARI</span>
+              </div>
+              <span style={{ width: '10px', height: '10px', borderRadius: '9999px', backgroundColor: 'var(--figma-orange)' }} />
+            </div>
+          </div>
+
+          {/* 2 Stacked Cards (5 Columns, 248px each) */}
+          <div className="figma-portfolio-stack-col">
+            {/* Card 1: Top (Web) */}
+            <div className="figma-portfolio-small-card">
+              <div className="figma-card-tags-row">
+                <span className="figma-mono-tag-chip">WEB</span>
+                <span className="figma-status-badge is-concept">Contoh karya</span>
+              </div>
+
+              <div className="figma-card-wireframe-box">
+                [ganti: screenshot website studio foto]
+              </div>
+
+              <div className="figma-card-footer-info">
+                <div>
+                  <h4 className="figma-card-title">Landing Page Studio Foto Analog</h4>
+                  <span className="figma-card-meta">JAMBI // CONCEPT DESIGN</span>
+                </div>
+                <span style={{ color: 'var(--figma-orange)', fontSize: '16px' }}>&rarr;</span>
+              </div>
+            </div>
+
+            {/* Card 2: Bottom (Produk) */}
+            <div className="figma-portfolio-small-card">
+              <div className="figma-card-tags-row">
+                <span className="figma-mono-tag-chip">PRODUK</span>
+                <span className="figma-status-badge">Proyek asli</span>
+              </div>
+
+              <div className="figma-card-wireframe-box">
+                [ganti: screenshot template notion]
+              </div>
+
+              <div className="figma-card-footer-info">
+                <div>
+                  <h4 className="figma-card-title">Notion Freelance Operating System</h4>
+                  <span className="figma-card-meta">140+ DOWNLOAD // TEMPLATE</span>
+                </div>
+                <span style={{ color: 'var(--figma-orange)', fontSize: '16px' }}>&rarr;</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* =========================================================================
+          SECTION 4: KUIS SINGKAT (EDITORIAL LIGHT LINEN) (Figma 2001:293)
+          ========================================================================= */}
+      <section className="figma-quiz-section" id="kuis" data-name="Section 04 - KUIS SINGKAT">
+        <div className="figma-quiz-inner-wrapper">
+          <div className="figma-quiz-top-status">
+            <div className="figma-mono-tag" style={{ marginBottom: 0 }}>
+              <span className="figma-tag-dot" style={{ backgroundColor: 'var(--figma-orange-light)' }} />
+              <span className="figma-tag-text" style={{ color: 'var(--figma-orange-light)' }}>
+                KUIS SINGKAT
+              </span>
+            </div>
+            <span
+              style={{
+                backgroundColor: '#e8e2d8',
+                borderRadius: '999px',
+                padding: '4px 12px',
+                fontFamily: 'var(--font-mono)',
+                fontSize: '12px',
+                letterSpacing: '0.96px',
+                textTransform: 'uppercase',
+                color: 'var(--figma-text-quiz-dark)',
+              }}
+            >
+              LANGKAH 1/3
+            </span>
+          </div>
+
+          <h2 className="figma-quiz-h2">Lo butuh yang mana?</h2>
+          <p className="figma-quiz-sub">
+            Pilih salah satu, biar gue bisa kasih estimasi dan arahan yang pas tanpa muter-muter.
+          </p>
+
+          <div className="figma-quiz-card-box">
+            <span className="figma-quiz-step-tag">PERTANYAAN:</span>
+            <h3 className="figma-quiz-q-title">Lo mau bikin apa?</h3>
+
+            <div className="figma-quiz-chips-wrap">
+              {quizOptions.map((opt) => (
+                <button
+                  key={opt.id}
+                  type="button"
+                  className={`figma-quiz-chip ${selectedQuizOption === opt.id ? 'is-selected' : ''}`}
+                  onClick={() => {
+                    playClick();
+                    setSelectedQuizOption(opt.id);
+                  }}
+                >
+                  {selectedQuizOption === opt.id && <span className="figma-quiz-chip-dot" />}
+                  <span>{opt.label}</span>
+                </button>
+              ))}
+            </div>
+
+            <div className="figma-quiz-result-row">
+              <div>
+                <span className="figma-quiz-rec-label">REKOMENDASI BUAT LO:</span>
+                <h4 className="figma-quiz-rec-title">{currentRec.recommendation}</h4>
+              </div>
+
+              {currentRec.isExternal ? (
+                <a
+                  href={currentRec.link}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="figma-quiz-action-btn"
+                  onClick={() => playClick()}
+                >
+                  <span>{currentRec.btnLabel}</span>
+                  <img src="/figma-assets/arrow-quiz.svg" alt="" width="14" height="14" />
+                </a>
+              ) : (
+                <Link
+                  to={currentRec.link}
+                  className="figma-quiz-action-btn"
+                  onClick={() => playClick()}
+                >
+                  <span>{currentRec.btnLabel}</span>
+                  <img src="/figma-assets/arrow-quiz.svg" alt="" width="14" height="14" />
+                </Link>
+              )}
+            </div>
+          </div>
+
+          <div className="figma-quiz-handwritten-note">
+            <img src="/figma-assets/arrow-handwritten.svg" alt="" width="24" height="24" />
+            <span className="figma-quiz-handwritten-text">bisa langsung lanjut konsultasi gratis</span>
+          </div>
+        </div>
+      </section>
+
+      {/* =========================================================================
+          SECTION 5: CARA KERJA (TIMELINE) (Figma 2001:343)
+          ========================================================================= */}
+      <section className="figma-process-section" id="proses" data-name="Section 05 - CARA KERJA">
+        <div className="figma-section-header">
+          <div className="figma-mono-tag">
+            <span className="figma-tag-dot" />
+            <span className="figma-tag-text">04 — CARA KERJA</span>
+          </div>
+          <h2 className="figma-section-h2">Alurnya.</h2>
+        </div>
+
+        <div className="figma-process-timeline-wrap">
+          {/* Progress Track Line with Nova Dots */}
+          <div className="figma-process-track">
+            <div className="figma-process-track-active" />
+            <span className="figma-process-dot is-active" style={{ left: 0 }} />
+            <span className="figma-process-dot is-active" style={{ left: '33%' }} />
+            <span className="figma-process-dot" style={{ left: '66%' }} />
+            <span className="figma-process-dot" style={{ right: 0 }} />
+          </div>
+
+          {/* 4 Step Cards */}
+          <div className="figma-process-steps-grid">
+            <div className="figma-step-card is-active">
+              <span className="figma-step-num-title">01 NGOBROL</span>
+              <p className="figma-step-desc">
+                Lo ceritain ide lo, bahan yang udah ada, dan deadline yang lo kejar.
+              </p>
+            </div>
+
+            <div className="figma-step-card is-active">
+              <span className="figma-step-num-title">02 PENAWARAN</span>
+              <p className="figma-step-desc">
+                Gue kirim rincian biaya pasti [Rp XXX.000] dan jadwal pengerjaan jelas.
+              </p>
+            </div>
+
+            <div className="figma-step-card">
+              <span className="figma-step-num-title">03 DIKERJAIN</span>
+              <p className="figma-step-desc">
+                Gue kerjain dari konsep draft sampai jadi tanpa lo perlu nanya-nanya mulu.
+              </p>
+            </div>
+
+            <div className="figma-step-card">
+              <span className="figma-step-num-title">04 REVISI DAN SELESAI</span>
+              <p className="figma-step-desc">
+                Poles bareng sesuai jatah revisi sampai lo puas, serah terima file rapi.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* =========================================================================
+          SECTION 6: CLOSING HERO CTA BANNER (Figma 2001:383)
+          ========================================================================= */}
+      <section className="figma-cta-banner-section" data-name="Section 06 - MULAI SEKARANG">
+        {/* Giant Dark flat circle cut-off on right edge */}
+        <div className="figma-cta-giant-dark-circle" aria-hidden="true" />
+
+        <div className="figma-cta-content-box">
+          <div className="figma-cta-mono-tag">
+            // MULAI SEKARANG
+          </div>
+
+          <h2 className="figma-cta-h2">
+            Punya ide yang masih berantakan?<br />
+            Bawa aja ke sini.
+          </h2>
+
+          <div className="figma-cta-actions-row">
+            <a
+              href={waClosingUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="figma-cta-dark-btn"
+              onClick={() => playClick()}
+            >
+              <span>Chat lewat WhatsApp</span>
+              <img src="/figma-assets/arrow-right.svg" alt="" width="16" height="16" />
+            </a>
+
+            <span className="figma-cta-subtag">
+              RESPON CEPAT // MIN CHAM
+            </span>
           </div>
         </div>
       </section>

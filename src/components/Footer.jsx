@@ -1,90 +1,119 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { IconCheck, IconShield, IconWhatsApp } from './Icons';
-import { STUDIO_CONFIG } from '../config/studioConfig';
+import { playClick } from '../utils/sound';
 
 export default function Footer() {
   return (
-    <footer className="site-footer">
-      <div className="container footer-container">
-        <div className="footer-top">
-          <div className="footer-brand">
-            <Link to="/" className="footer-wordmark">
-              <span>SUPERNOVA</span>
-              <span className="footer-dot" />
-            </Link>
-            <p className="footer-tagline">
-              Studio desain &amp; digital independen milik Min Cham. Kami membantu UMKM, founder, dan mahasiswa merapikan slide presentasi, membangun website kilat, dan menyediakan aset digital siap pakai.
-            </p>
-            <div className="footer-badges">
-              <span className="footer-guarantee-badge">
-                <IconShield size={13} color="#f59e0b" />
-                <span>100% Hak Milik Master File</span>
-              </span>
-              <span className="footer-guarantee-badge">
-                <IconCheck size={13} color="#10b981" />
-                <span>Garansi Revisi Fleksibel</span>
-              </span>
-            </div>
+    <footer className="figma-footer" data-name="Footer (Figma 2001:400)">
+      <div className="figma-footer-container">
+        {/* Col 1: Wordmark & Bio */}
+        <div className="figma-footer-col-1">
+          <div className="figma-brand-link">
+            <span className="figma-brand-title">Supernova</span>
+            <span className="figma-brand-studio">STUDIO</span>
+            <span className="figma-brand-dot" />
           </div>
+          <p className="figma-footer-bio">
+            Studio kreatif digital kecil. Presentasi, website, dan produk digital buat bisnis kecil, freelancer, dan mahasiswa.
+          </p>
+          <div className="figma-footer-location">
+            Jakarta &amp; Jambi, Indonesia
+          </div>
+        </div>
 
-          <div className="footer-nav-group">
-            <span className="footer-col-title">Navigasi</span>
-            <ul>
-              <li><Link to="/">Beranda</Link></li>
-              <li><Link to="/layanan">Layanan</Link></li>
-              <li><Link to="/portofolio">Portofolio</Link></li>
-              <li><Link to="/produk-digital">Produk Digital</Link></li>
-              <li><Link to="/harga">Harga &amp; Estimasi</Link></li>
-              <li><Link to="/tentang">Tentang Studio</Link></li>
-              <li><Link to="/kontak">Kontak</Link></li>
+        {/* Col 2: Navigation Links */}
+        <div className="figma-footer-col-2">
+          <div className="figma-footer-nav-col">
+            <div className="figma-footer-col-title">NAVIGASI</div>
+            <ul className="figma-footer-links-list">
+              <li>
+                <Link to="/" className="figma-footer-link" onClick={() => playClick()}>
+                  Beranda
+                </Link>
+              </li>
+              <li>
+                <Link to="/layanan" className="figma-footer-link" onClick={() => playClick()}>
+                  Layanan
+                </Link>
+              </li>
+              <li>
+                <Link to="/portofolio" className="figma-footer-link" onClick={() => playClick()}>
+                  Portofolio
+                </Link>
+              </li>
+              <li>
+                <Link to="/produk-digital" className="figma-footer-link" onClick={() => playClick()}>
+                  Produk
+                </Link>
+              </li>
             </ul>
           </div>
 
-          <div className="footer-nav-group">
-            <span className="footer-col-title">Spesialisasi</span>
-            <ul>
-              <li><Link to="/layanan/desain-ppt">Desain Slide Presentasi (PPT)</Link></li>
-              <li><Link to="/layanan/website">Pembuatan Website &amp; Landing Page</Link></li>
-              <li><Link to="/produk-digital">Template Pitch Deck &amp; Kit Sosmed</Link></li>
-              <li><Link to="/harga">Kalkulator Biaya Proyek</Link></li>
-            </ul>
-          </div>
-
-          <div className="footer-nav-group">
-            <span className="footer-col-title">Kontak Langsung</span>
-            <ul className="footer-contact-links">
+          <div className="figma-footer-nav-col">
+            <div className="figma-footer-col-title">EKSPLOR</div>
+            <ul className="figma-footer-links-list">
               <li>
-                <a
-                  href={`https://wa.me/${STUDIO_CONFIG.whatsappNumber}?text=Halo%20Min%20Cham,%20saya%20mau%20konsultasi`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="footer-wa-link"
-                >
-                  <IconWhatsApp size={14} color="#10b981" />
-                  <span>{STUDIO_CONFIG.phone} (WhatsApp)</span>
+                <Link to="/harga" className="figma-footer-link" onClick={() => playClick()}>
+                  Harga
+                </Link>
+              </li>
+              <li>
+                <Link to="/tentang" className="figma-footer-link" onClick={() => playClick()}>
+                  Tentang Min
+                </Link>
+              </li>
+              <li>
+                <a href="#kuis" className="figma-footer-link" onClick={() => playClick()}>
+                  Kuis Kebutuhan
                 </a>
               </li>
               <li>
-                <a href={`mailto:${STUDIO_CONFIG.email}`}>
-                  {STUDIO_CONFIG.email}
-                </a>
-              </li>
-              <li>
-                <span className="footer-work-hours">{STUDIO_CONFIG.operatingHours}</span>
+                <Link to="/kontak" className="figma-footer-link" onClick={() => playClick()}>
+                  Kontak
+                </Link>
               </li>
             </ul>
           </div>
         </div>
 
-        <div className="footer-bottom">
-          <p className="copyright-text">
-            &copy; 2026 Studio Supernova &bull; Dirancang &amp; dikerjakan langsung oleh Min Cham.
-          </p>
-          <div className="footer-bottom-links">
-            <Link to="/admin" className="admin-portal-link">
-              Portal CMS
-            </Link>
+        {/* Col 3: Social & Copyright */}
+        <div className="figma-footer-col-3">
+          <div className="figma-footer-col-title">SOSIAL</div>
+          <div className="figma-social-chips-grid">
+            <a
+              href="https://instagram.com/supernova.studio"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="figma-social-chip"
+            >
+              Instagram
+            </a>
+            <a
+              href="https://tiktok.com/@supernova.studio"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="figma-social-chip"
+            >
+              TikTok
+            </a>
+            <a
+              href="https://wa.me/6285714521584"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="figma-social-chip"
+            >
+              WhatsApp
+            </a>
+            <a
+              href="mailto:studio@supernova.id"
+              className="figma-social-chip"
+            >
+              Email
+            </a>
+          </div>
+
+          <div className="figma-footer-copyright">
+            &copy; 2026 Supernova Studio.
           </div>
         </div>
       </div>
