@@ -11228,3 +11228,247 @@ a {
   color: var(--text-muted);
   text-align: center;
 }
+
+/* =============================================================================
+   STREAMLINED VISUAL-FIRST SECTIONS & COMPONENTS
+   ============================================================================= */
+
+/* 1. Hero Compact Specimen & Assurance Strip */
+.sheet-body-compact {
+  padding: 16px 20px;
+}
+.sheet-title-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+.sheet-title-row .sheet-title {
+  margin: 0;
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: var(--text-primary);
+}
+.sheet-pill-tag {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  color: var(--color-accent);
+  background: var(--color-accent-soft);
+  padding: 3px 8px;
+  border-radius: 4px;
+  white-space: nowrap;
+}
+
+.studio-assurance-strip {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  padding: 14px 20px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: 999px;
+  box-shadow: var(--shadow-card);
+  max-width: 800px;
+  margin: 40px auto 0;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+  flex-wrap: wrap;
+}
+.assurance-item {
+  color: var(--text-primary);
+  font-weight: 500;
+}
+.assurance-sep {
+  color: var(--border-strong);
+}
+
+/* 2. 3 Services Compact Cards Grid */
+.section-header-compact {
+  margin-bottom: 32px;
+}
+.services-three-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+.service-compact-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 28px 24px;
+  box-shadow: var(--shadow-card);
+  display: flex;
+  flex-direction: column;
+  transition: all 0.25s ease;
+}
+.service-compact-card:hover {
+  transform: translateY(-4px);
+  border-color: var(--color-accent);
+  box-shadow: var(--shadow-card-hover);
+}
+.card-index-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 14px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border-subtle);
+}
+.card-index-no {
+  font-family: var(--font-display);
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: var(--color-accent);
+  line-height: 1;
+}
+.card-tag-mono {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  color: var(--text-muted);
+  letter-spacing: 0.06em;
+}
+.service-compact-card .card-title {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  margin-bottom: 10px;
+  line-height: 1.35;
+}
+.service-compact-card .card-desc {
+  font-size: 0.88rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin-bottom: 20px;
+  flex: 1;
+}
+.card-action-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--color-accent);
+  transition: gap 0.2s ease;
+}
+.card-action-link:hover {
+  gap: 10px;
+}
+
+/* 3. Streamlined About Min Cham Card */
+.about-mincham-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: 36px 40px;
+  box-shadow: var(--shadow-card);
+  display: grid;
+  grid-template-columns: 240px 1fr;
+  gap: 36px;
+  align-items: center;
+}
+.mincham-profile-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 12px;
+  border-right: 1px solid var(--border-subtle);
+  padding-right: 28px;
+}
+.avatar-initial-badge {
+  width: 64px;
+  height: 64px;
+  border-radius: 999px;
+  background: var(--text-primary);
+  color: var(--text-inverse);
+  font-family: var(--font-display);
+  font-size: 1.6rem;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.mincham-name {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  margin-bottom: 2px;
+}
+.mincham-role {
+  font-size: 0.82rem;
+  color: var(--color-accent);
+  font-weight: 600;
+  display: block;
+}
+.mincham-loc {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  display: block;
+  margin-top: 4px;
+}
+.mincham-quote-col {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.mincham-lead-quote {
+  font-size: 1.05rem;
+  line-height: 1.65;
+  color: var(--text-primary);
+  font-weight: 500;
+  margin: 0;
+}
+.mincham-quick-facts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+}
+.fact-item {
+  background: var(--bg-subtle);
+  padding: 4px 12px;
+  border-radius: 4px;
+  border: 1px solid var(--border-subtle);
+}
+.mincham-cta-wrap {
+  margin-top: 4px;
+}
+
+@media (max-width: 900px) {
+  .services-three-cards-grid {
+    grid-template-columns: 1fr;
+  }
+  .about-mincham-card {
+    grid-template-columns: 1fr;
+    text-align: center;
+    padding: 28px 20px;
+  }
+  .mincham-profile-col {
+    border-right: none;
+    border-bottom: 1px solid var(--border-subtle);
+    padding-right: 0;
+    padding-bottom: 20px;
+  }
+  .mincham-quick-facts {
+    justify-content: center;
+  }
+  .mincham-cta-wrap {
+    display: flex;
+    justify-content: center;
+  }
+  .studio-assurance-strip {
+    border-radius: var(--radius-md);
+    flex-direction: column;
+    gap: 8px;
+    text-align: center;
+  }
+  .assurance-sep {
+    display: none;
+  }
+}

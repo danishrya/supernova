@@ -2,11 +2,11 @@ import React from 'react';
 
 export default function TechRibbon() {
   const editorialNotes = [
-    '100% MASTER FILE .PPTX & KODE DISERAHKAN PENUH',
-    'NGOBROL LANGSUNG DENGAN MIN CHAM (TANPA SALES PERANTARA)',
-    'BUKAN TEMPLATE AI PASARAN',
-    'WEBSITE KILAT TERBUKA < 0.4 DETIK DI HP',
-    'GARANSI REVISI FLEKSIBEL SAMPAI SIAP TAMPIL',
+    '100% Hak Milik Master File',
+    'Bicara Langsung dengan Desainer',
+    'Karya Kustom Orisinal',
+    'Website Kilat < 0.4s di HP',
+    'Garansi Revisi Sampai Puas',
   ];
 
   return (
