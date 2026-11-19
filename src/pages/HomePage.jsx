@@ -5,14 +5,12 @@ import { STUDIO_CONFIG } from '../config/studioConfig';
 import BeforeAfterSlider from '../components/BeforeAfterSlider';
 import AboutMinCham from '../components/AboutMinCham';
 import DraggableTestimonials from '../components/DraggableTestimonials';
-import TechRibbon from '../components/TechRibbon';
 import { IconArrowRight, IconWhatsApp } from '../components/Icons';
 import { playClick } from '../utils/sound';
 
 export default function HomePage({ onOpenProjectModal }) {
   const caseStudies = PROJECTS_DATA.slice(0, 3);
   const heroCase = caseStudies[0]; // Nexus Capital
-  const sideCases = caseStudies.slice(0, 3); // Top 3 projects
 
   const waUrl = `https://wa.me/${STUDIO_CONFIG.whatsappNumber}?text=${encodeURIComponent(
     'Halo Min Cham! Kami tertarik untuk konsultasi santai mengenai kebutuhan desain presentasi/website di Studio Supernova.'
@@ -21,38 +19,34 @@ export default function HomePage({ onOpenProjectModal }) {
   return (
     <div className="page-home human-page-wrap">
       {/* =========================================================================
-          HERO: EDITORIAL, VISUAL & PUNCHY (ANTI-TEXT BLOAT)
+          HERO SECTION: CLEAN, BOLD & AUTHENTIC STUDIO HERO
           ========================================================================= */}
-      <section className="hero-editorial-broadsheet" id="hero">
+      <section className="hero-studio-section" id="hero">
         <div className="container">
-          {/* Top Ledger Strip */}
-          <div className="hero-ledger-top">
-            <span className="ledger-item">STUDIO DESAIN &bull; MIN CHAM</span>
-            <span className="ledger-dot">&bull;</span>
-            <span className="ledger-item">JAKARTA, INDONESIA</span>
-            <span className="ledger-badge">BUKAN TEMPLATE AI</span>
+          <div className="hero-top-meta">
+            <span className="studio-pill-tag">STUDIO DESAIN &bull; JAKARTA</span>
+            <span className="studio-status-live">
+              <span className="live-dot" /> Siap Terima Proyek Baru
+            </span>
           </div>
 
-          {/* Main Hero Grid */}
-          <div className="hero-broadsheet-grid">
-            {/* Left Column: Bold, Scannable Statement */}
-            <div className="hero-main-column">
-              <h1 className="hero-bricolage-headline">
-                Desain berkarakter untuk <span className="headline-accent">bisnis kamu.</span>
+          <div className="hero-grid-layout">
+            {/* Left Column: Clear Value Proposition */}
+            <div className="hero-content-col">
+              <h1 className="hero-studio-title">
+                Desain berkarakter untuk <span className="accent-text">bisnis kamu.</span>
               </h1>
 
-              {/* Concise 1-sentence Value Proposition */}
-              <p className="hero-hanken-lead">
+              <p className="hero-studio-sub">
                 Slide pitch deck tajam, website kilat ramah smartphone, dan aset digital siap pakai — dikerjakan langsung oleh Min Cham tanpa sales perantara.
               </p>
 
-              {/* Direct CTAs */}
-              <div className="hero-actions-row">
+              <div className="hero-cta-buttons">
                 <a
                   href={waUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="btn btn-hero-wa"
+                  className="btn btn-primary btn-lg"
                   id="homeHeroWaBtn"
                   onClick={() => playClick()}
                   data-cursor="Chat"
@@ -63,8 +57,8 @@ export default function HomePage({ onOpenProjectModal }) {
 
                 <Link
                   to="/portofolio"
-                  className="btn btn-hero-calc"
-                  id="homeHeroCalcBtn"
+                  className="btn btn-secondary btn-lg"
+                  id="homeHeroWorksBtn"
                   onClick={() => playClick()}
                   data-cursor="Karya"
                 >
@@ -74,86 +68,90 @@ export default function HomePage({ onOpenProjectModal }) {
               </div>
             </div>
 
-            {/* Right Column: Visual Showcase Specimen Card */}
-            <div className="hero-specimen-column">
-              <div className="specimen-physical-sheet">
-                <div className="sheet-header">
-                  <span className="sheet-id">SPECIMEN #01</span>
-                  <span className="sheet-category">PITCH DECK PRESENTATION</span>
-                </div>
-
+            {/* Right Column: Clean Project Showcase Frame */}
+            <div className="hero-showcase-col">
+              <div className="hero-featured-project-card">
                 <div
-                  className="sheet-preview-frame"
+                  className="project-cover-wrap"
                   onClick={() => onOpenProjectModal && onOpenProjectModal(heroCase)}
                   style={{ cursor: 'pointer' }}
                 >
                   <img
                     src={heroCase.image}
                     alt={heroCase.title}
-                    className="sheet-preview-img"
+                    className="project-cover-img"
                   />
-                  <div className="sheet-preview-overlay">
-                    <span>Lihat Contoh Studi Kasus &rarr;</span>
+                  <div className="project-cover-overlay">
+                    <span>Lihat Rincian Studi Kasus &rarr;</span>
                   </div>
                 </div>
 
-                <div className="sheet-body-compact">
-                  <div className="sheet-title-row">
-                    <h3 className="sheet-title">{heroCase.title}</h3>
-                    <span className="sheet-pill-tag">18 SLIDE &bull; PPTX</span>
+                <div className="project-card-footer">
+                  <div className="project-info">
+                    <span className="project-cat-tag">PRESENTASI PITCH DECK</span>
+                    <h3 className="project-name">{heroCase.title}</h3>
                   </div>
                   <Link
                     to={`/portofolio/${heroCase.id}`}
-                    className="sheet-link"
+                    className="project-action-link"
                     onClick={() => playClick()}
                   >
-                    Buka Rincian Proyek &rarr;
+                    Buka Rincian &rarr;
                   </Link>
                 </div>
               </div>
             </div>
           </div>
 
-          {/* Minimalist Studio Assurance Strip */}
-          <div className="studio-assurance-strip">
-            <span className="assurance-item">✦ 100% Master File .PPTX &amp; Source Code</span>
-            <span className="assurance-sep">&bull;</span>
-            <span className="assurance-item">✦ Bicara Langsung dengan Min Cham</span>
-            <span className="assurance-sep">&bull;</span>
-            <span className="assurance-item">✦ Garansi Revisi Fleksibel Sampai Puas</span>
+          {/* Minimalist 3-Point Guarantee Strip */}
+          <div className="studio-trust-strip">
+            <div className="trust-item">
+              <span className="trust-icon">✦</span>
+              <span>100% Master File .PPTX &amp; Kode Milik Klien</span>
+            </div>
+            <div className="trust-divider" />
+            <div className="trust-item">
+              <span className="trust-icon">✦</span>
+              <span>Bicara Langsung dengan Desainer</span>
+            </div>
+            <div className="trust-divider" />
+            <div className="trust-item">
+              <span className="trust-icon">✦</span>
+              <span>Garansi Revisi Fleksibel Sampai Puas</span>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* Editorial Dateline Strip */}
-      <TechRibbon />
-
       {/* =========================================================================
-          SECTION 01: 3 PILAR LAYANAN (CLEAN VISUAL CARDS)
+          SECTION 01: 3 LAYANAN UTAMA
           ========================================================================= */}
-      <section className="section services-roster-section" id="layanan">
+      <section className="section services-summary-section" id="layanan">
         <div className="container">
-          <div className="section-header-compact">
-            <span className="section-index-stamp">01 &bull; SPESIALISASI KAMI</span>
-            <h2 className="roster-main-title">
-              Tiga layanan utama yang kami kerjakan <span className="title-quirk">dengan teliti.</span>
+          <div className="section-title-wrap">
+            <span className="section-badge">SPESIALISASI KAMI</span>
+            <h2 className="section-headline">
+              Tiga layanan utama yang kami kerjakan <span className="accent-text">dengan teliti.</span>
             </h2>
+            <p className="section-subheadline">
+              Fokus pada 3 disiplin yang terbukti langsung meningkatkan kredibilitas dan penjualan bisnis kamu.
+            </p>
           </div>
 
-          <div className="services-three-cards-grid">
-            {/* Card 01: Desain PPT */}
-            <article className="service-compact-card">
-              <div className="card-index-row">
-                <span className="card-index-no">01</span>
-                <span className="card-tag-mono">PRESENTASI &bull; DECK</span>
+          <div className="services-grid-three">
+            {/* Service 01: PPT */}
+            <article className="service-card-item">
+              <div className="service-card-top">
+                <span className="service-num">01</span>
+                <span className="service-tag">PRESENTASI &bull; DECK</span>
               </div>
-              <h3 className="card-title">Desain Slide Presentasi &amp; Pitch Deck</h3>
-              <p className="card-desc">
-                Rombak alur cerita dan grafik materi bisnis jadi slide visual berkelas yang siap memikat investor dan klien.
+              <h3 className="service-card-title">Desain Slide Presentasi &amp; Pitch Deck (PPT)</h3>
+              <p className="service-card-desc">
+                Rombak narasi slide bisnis dan data tabel jadi alur visual berkelas yang nyaman dibaca dan siap memikat investor.
               </p>
               <Link
                 to="/layanan/desain-ppt"
-                className="card-action-link"
+                className="service-card-link"
                 onClick={() => playClick()}
               >
                 <span>Lihat Layanan PPT</span>
@@ -161,19 +159,19 @@ export default function HomePage({ onOpenProjectModal }) {
               </Link>
             </article>
 
-            {/* Card 02: Website */}
-            <article className="service-compact-card">
-              <div className="card-index-row">
-                <span className="card-index-no">02</span>
-                <span className="card-tag-mono">DIGITAL &bull; WEB</span>
+            {/* Service 02: Website */}
+            <article className="service-card-item">
+              <div className="service-card-top">
+                <span className="service-num">02</span>
+                <span className="service-tag">DIGITAL &bull; WEB</span>
               </div>
-              <h3 className="card-title">Pembuatan Website &amp; Landing Page Kilat</h3>
-              <p className="card-desc">
-                Website modern berkecepatan tinggi yang ringan diakses di smartphone dan mengalirkan traffic langsung ke WhatsApp.
+              <h3 className="service-card-title">Pembuatan Website &amp; Landing Page Kilat</h3>
+              <p className="service-card-desc">
+                Website modern berkecepatan tinggi yang ringan dibuka di smartphone calon pelanggan dan langsung terhubung ke WhatsApp.
               </p>
               <Link
                 to="/layanan/website"
-                className="card-action-link"
+                className="service-card-link"
                 onClick={() => playClick()}
               >
                 <span>Lihat Layanan Website</span>
@@ -181,19 +179,19 @@ export default function HomePage({ onOpenProjectModal }) {
               </Link>
             </article>
 
-            {/* Card 03: Template */}
-            <article className="service-compact-card">
-              <div className="card-index-row">
-                <span className="card-index-no">03</span>
-                <span className="card-tag-mono">SIAP PAKAI &bull; TEMPLATE</span>
+            {/* Service 03: Produk Digital */}
+            <article className="service-card-item">
+              <div className="service-card-top">
+                <span className="service-num">03</span>
+                <span className="service-tag">SIAP PAKAI &bull; TEMPLATE</span>
               </div>
-              <h3 className="card-title">Katalog Template &amp; Produk Digital</h3>
-              <p className="card-desc">
-                Aset template slide presentasi, kit media sosial, dan draf kontrak freelance siap unduh detik ini juga.
+              <h3 className="service-card-title">Katalog Template &amp; Produk Digital</h3>
+              <p className="service-card-desc">
+                Template slide presentasi, kit feed media sosial, dan draf kontrak freelance siap unduh detik ini juga untuk kebutuhan cepat.
               </p>
               <Link
                 to="/produk-digital"
-                className="card-action-link"
+                className="service-card-link"
                 onClick={() => playClick()}
               >
                 <span>Buka Katalog Produk</span>
@@ -205,79 +203,72 @@ export default function HomePage({ onOpenProjectModal }) {
       </section>
 
       {/* =========================================================================
-          SECTION 02: BUKTI NYATA SEBELUM & SESUDAH (BEFORE / AFTER)
+          SECTION 02: BUKTI NYATA (BEFORE / AFTER INTERAKTIF)
           ========================================================================= */}
-      <section className="section py-small">
+      <section className="section before-after-section">
         <div className="container">
-          <div className="craft-ruler-header">
-            <span className="ruler-stamp">02 &bull; PERBANDINGAN TATA LETAK</span>
-            <h2 className="ruler-title">Perbedaan Slide Mentah vs Sentuhan Studio:</h2>
-            <p className="ruler-sub">Geser tuas pembanding untuk melihat langsung kerapian alur visual dan keterbacaan data.</p>
+          <div className="section-title-wrap text-center">
+            <span className="section-badge">HASIL NYATA</span>
+            <h2 className="section-headline">
+              Perbedaan Slide Mentahan vs Sentuhan Studio
+            </h2>
+            <p className="section-subheadline mx-auto">
+              Geser tuas pembanding ke kiri dan kanan untuk melihat perbedaan struktur visual materi dan keterbacaan data.
+            </p>
           </div>
           <BeforeAfterSlider />
         </div>
       </section>
 
       {/* =========================================================================
-          SECTION 03: 3 CONTOH KARYA PILIHAN (VISUAL SHOWCASE GRID)
+          SECTION 03: 3 CONTOH KARYA PILIHAN
           ========================================================================= */}
-      <section className="section curated-cases-spread-section" id="portofolio">
+      <section className="section curated-works-section" id="portofolio">
         <div className="container">
-          <div className="cases-header-row">
+          <div className="section-head-split">
             <div>
-              <span className="section-index-stamp">03 &bull; CONTOH KARYA PILIHAN</span>
-              <h2 className="cases-main-title">
-                Koleksi karya nyata, <span className="title-quirk">bukan sekadar pajangan.</span>
+              <span className="section-badge">CONTOH KARYA PILIHAN</span>
+              <h2 className="section-headline">
+                Koleksi karya nyata, <span className="accent-text">bukan sekadar pajangan mockup.</span>
               </h2>
             </div>
-            <Link to="/portofolio" className="btn btn-editorial-outline" onClick={() => playClick()}>
+            <Link to="/portofolio" className="btn btn-secondary" onClick={() => playClick()}>
               <span>Semua Portofolio &rarr;</span>
             </Link>
           </div>
 
-          <div className="portfolio-cards-grid">
-            {sideCases.map((project, idx) => (
-              <article key={project.id} className="portfolio-zine-card">
-                <div className="zine-card-top">
-                  <span className="card-item-no">#{String(idx + 1).padStart(2, '0')}</span>
-                  <span className="card-item-badge">{project.categoryLabel}</span>
-                </div>
-
-                <div
-                  className="zine-card-media"
-                  onClick={() => onOpenProjectModal && onOpenProjectModal(project)}
-                  style={{ cursor: 'pointer' }}
-                >
+          <div className="works-grid-three">
+            {caseStudies.map((project, idx) => (
+              <article key={project.id} className="work-card-clean">
+                <div className="work-card-media" onClick={() => onOpenProjectModal && onOpenProjectModal(project)}>
                   <img
                     src={project.image}
                     alt={project.title}
-                    className="zine-card-img"
+                    className="work-card-img"
                     loading="lazy"
                   />
-                  <div className="zine-card-badge-overlay">
-                    <span>Lihat Rincian Studi Kasus</span>
-                  </div>
+                  <span className="work-category-pill">{project.categoryLabel}</span>
                 </div>
 
-                <div className="zine-card-body">
-                  <h3 className="card-project-title">{project.title}</h3>
-                  <p className="card-project-overview">{project.overview}</p>
+                <div className="work-card-body">
+                  <h3 className="work-card-title">{project.title}</h3>
+                  <p className="work-card-desc">{project.overview}</p>
 
-                  <div className="card-bottom-actions">
+                  <div className="work-card-footer">
                     <Link
                       to={`/portofolio/${project.id}`}
-                      className="card-detail-link"
+                      className="work-link"
                       onClick={() => playClick()}
                     >
-                      <span>Studi Kasus</span>
+                      <span>Lihat Studi Kasus</span>
                       <IconArrowRight size={14} />
                     </Link>
                     <button
                       type="button"
-                      className="card-preview-btn"
+                      className="work-preview-btn"
                       onClick={() => onOpenProjectModal && onOpenProjectModal(project)}
                     >
-                      Preview Cepat
+                      Preview
                     </button>
                   </div>
                 </div>
@@ -288,7 +279,7 @@ export default function HomePage({ onOpenProjectModal }) {
       </section>
 
       {/* =========================================================================
-          SECTION 04: CERITA PERSONAL MIN CHAM (RINGKAS & HUMAN)
+          SECTION 04: CERITA PERSONAL MIN CHAM
           ========================================================================= */}
       <AboutMinCham />
 
@@ -298,30 +289,25 @@ export default function HomePage({ onOpenProjectModal }) {
       <DraggableTestimonials />
 
       {/* =========================================================================
-          SECTION 06: AJAKAN DISKUSI (PUNCHY FINAL CTA)
+          SECTION 06: CALL TO ACTION PENUTUP
           ========================================================================= */}
-      <section className="section final-memo-section">
+      <section className="section final-callout-section">
         <div className="container">
-          <div className="studio-invitation-memo">
-            <div className="memo-header-line">
-              <span className="memo-stamp">KONSULTASI LANGSUNG</span>
-              <span className="memo-date">SENIN – SABTU (09:00 – 18:00 WIB)</span>
-            </div>
-
-            <h2 className="memo-title">
-              Punya materi yang ingin <span className="headline-accent">kami bedah visualnya?</span>
+          <div className="final-callout-box">
+            <span className="callout-badge">KONSULTASI LANGSUNG</span>
+            <h2 className="callout-title">
+              Punya materi yang ingin <span className="accent-text">kami bedah visualnya?</span>
             </h2>
-
-            <p className="memo-desc">
-              Kirimkan draf slide atau rencana website kamu ke WhatsApp Min Cham. Konsultasi awal 100% gratis dan tanpa ikatan.
+            <p className="callout-desc">
+              Kirimkan draf slide mentahan atau rencana website kamu ke WhatsApp Min Cham. Konsultasi awal 100% gratis dan santai.
             </p>
 
-            <div className="memo-actions">
+            <div className="callout-actions">
               <a
                 href={waUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="btn btn-hero-wa"
+                className="btn btn-primary btn-lg"
                 onClick={() => playClick()}
                 data-cursor="Chat"
               >
@@ -331,7 +317,7 @@ export default function HomePage({ onOpenProjectModal }) {
 
               <Link
                 to="/harga"
-                className="btn btn-hero-calc"
+                className="btn btn-secondary btn-lg"
                 onClick={() => playClick()}
               >
                 <span>Hitung Estimasi Biaya</span>
