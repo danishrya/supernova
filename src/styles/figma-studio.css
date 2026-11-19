@@ -577,7 +577,7 @@ main.main-content-flow {
   font-weight: 600;
   font-size: 14px;
   line-height: 21px;
-  color: var(--figma-text-dark);
+  color: var(--figma-bg); /* inverse of the pill background, readable in both themes */
   white-space: nowrap;
 }
 
