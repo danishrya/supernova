@@ -417,7 +417,7 @@
 [data-reveal='right'] { transform: translateX(28px); }
 [data-reveal='scale'] { transform: scale(0.96); }
 
-[data-reveal].is-revealed {
+[data-reveal][data-revealed] {
   opacity: 1;
   transform: none;
 }
@@ -1016,7 +1016,7 @@
 .cs-cash__labels { display: flex; justify-content: space-between; gap: 12px; font-family: var(--font-space); font-size: 12px; color: var(--sn-text); }
 .cs-cash__bar { height: 8px; border: 1px solid var(--sn-border); border-radius: 2px; background: var(--sn-bg); overflow: hidden; }
 .cs-cash__bar i { display: block; height: 100%; width: 0; transition: width 1.2s cubic-bezier(0.2, 0.8, 0.2, 1) 0.2s; }
-.cs-cash.is-revealed .cs-cash__bar i { width: var(--w); }
+.cs-cash[data-revealed] .cs-cash__bar i { width: var(--w); }
 
 .cs-result { display: flex; flex-direction: column; justify-content: space-between; gap: 22px; padding: 25px; }
 .cs-result__big { display: block; font-family: var(--font-space); font-weight: 700; font-size: 36px; line-height: 40px; color: var(--sn-text); }
@@ -2555,3 +2555,224 @@
 
 /* Keep row padding identical open/closed so titles don't jump sideways on toggle */
 .svc-row.is-expanded { padding: 32px 24px; }
+
+/* ==========================================================================
+   BERANDA — "Contoh karya" live showcase (WorkShowcase.jsx)
+   ========================================================================== */
+.ws-card { position: relative; overflow: hidden; text-decoration: none; color: inherit; transition: border-color 0.3s ease, transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.4s ease; }
+.ws-card > * { position: relative; z-index: 1; }
+.ws-card:hover { border-color: var(--figma-orange); box-shadow: 0 30px 60px -36px rgba(255, 107, 31, 0.45); }
+.ws-grid .figma-portfolio-small-card { gap: 14px; }
+.ws-arrow { color: var(--figma-orange); font-size: 16px; transition: transform 0.3s ease; }
+.ws-card:hover .ws-arrow { transform: translateX(6px); }
+.ws-dot { display: inline-block; width: 7px; height: 7px; border-radius: 99px; background: var(--figma-orange); }
+.ws-red { color: #ffb4ab !important; }
+.ws-peach { color: #ffb597 !important; }
+.ws-gold { color: #f9bc55 !important; }
+.theme-light .ws-red { color: #b42318 !important; }
+.theme-light .ws-peach { color: #b8430a !important; }
+.theme-light .ws-gold { color: #a15c07 !important; }
+
+/* ---- Deck card ---- */
+.ws-deck { gap: 20px; }
+.ws-deck .figma-card-tags-row { gap: 12px; }
+.ws-live { display: inline-flex; align-items: center; gap: 8px; margin-right: auto; font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.1em; color: var(--figma-text-muted); }
+.ws-live__dot { width: 7px; height: 7px; border-radius: 99px; background: #e5484d; animation: ws-rec 1.2s ease-in-out infinite; }
+.ws-deck.is-paused .ws-live__dot { animation: none; background: var(--figma-text-muted); }
+@keyframes ws-rec { 50% { opacity: 0.25; } }
+
+.ws-stage { flex: 1; display: flex; flex-direction: column; gap: 10px; min-height: 0; }
+
+.ws-stage__screen {
+  position: relative;
+  flex: 1;
+  min-height: 250px;
+  border: 1px solid var(--figma-border);
+  border-radius: 4px;
+  background: var(--figma-bg);
+  overflow: hidden;
+  box-shadow: inset 0 0 0 6px var(--figma-card-elevated);
+}
+
+.ws-stage__slide {
+  position: absolute;
+  inset: 6px;
+  opacity: 0;
+  transform: translateX(24px) scale(0.98);
+  transition: opacity 0.5s ease, transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+  pointer-events: none;
+}
+
+.ws-stage__slide.is-active { opacity: 1; transform: none; }
+.ws-stage__counter { position: absolute; right: 16px; bottom: 12px; z-index: 2; font-family: var(--font-mono); font-size: 10px; color: var(--figma-text-muted); }
+
+.ws-slide { position: relative; display: flex; flex-direction: column; justify-content: space-between; gap: 12px; height: 100%; padding: 22px 26px; overflow: hidden; }
+.ws-slide__kicker { display: inline-flex; align-items: center; gap: 8px; font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.08em; color: #f9bc55; }
+.ws-slide__title { margin: 0; max-width: 78%; font-family: var(--font-display) !important; font-weight: 800; font-size: clamp(22px, 2.4vw, 32px); line-height: 1.1; letter-spacing: -0.02em; color: var(--figma-text-primary); }
+.ws-slide__title em { font-style: normal; color: var(--figma-orange); }
+.ws-slide__foot { font-family: var(--font-mono); font-size: 10px; color: var(--figma-text-muted); }
+.ws-slide__caption { font-family: var(--font-mono); font-size: 11px; color: var(--figma-text-muted); }
+.ws-slide__caption b { color: var(--figma-text-primary); font-weight: 600; }
+
+.ws-slide__orb { position: absolute; right: -40px; top: 50%; width: 180px; height: 180px; margin-top: -90px; border-radius: 50%; background: var(--figma-orange); opacity: 0.9; }
+.is-active .ws-slide__orb { animation: ws-orb 2.8s cubic-bezier(0.2, 0.8, 0.2, 1) both; }
+@keyframes ws-orb { from { transform: translateX(60px) scale(0.6); } }
+
+.ws-slide__big { display: flex; align-items: flex-end; gap: 16px; }
+.ws-big-num { font-family: var(--font-display); font-weight: 800; font-size: clamp(56px, 7vw, 92px); line-height: 0.85; letter-spacing: -0.04em; color: var(--figma-orange); }
+.is-active .ws-big-num { animation: ws-pop 0.7s cubic-bezier(0.3, 1.5, 0.5, 1) both 0.15s; }
+@keyframes ws-pop { from { transform: scale(0.6); opacity: 0; } }
+.ws-big-copy { max-width: 220px; padding-bottom: 6px; font-family: var(--font-body); font-size: 15px; line-height: 1.35; color: var(--figma-text-secondary); }
+
+.ws-chain { display: flex; align-items: center; gap: 6px; }
+.ws-chain span { padding: 4px 8px; border: 1px dashed var(--figma-border); border-radius: 2px; font-family: var(--font-mono); font-size: 9px; color: var(--figma-text-muted); }
+.ws-chain span.is-end { border-style: solid; border-color: var(--figma-orange); color: var(--figma-orange); }
+.ws-chain i { flex: 1; height: 1px; background: var(--figma-border); }
+.is-active .ws-chain span { animation: ws-fadeup 0.4s ease both; }
+.is-active .ws-chain span:nth-child(3) { animation-delay: 0.1s; }
+.is-active .ws-chain span:nth-child(5) { animation-delay: 0.2s; }
+.is-active .ws-chain span:nth-child(7) { animation-delay: 0.3s; }
+@keyframes ws-fadeup { from { opacity: 0; transform: translateY(6px); } }
+
+.ws-chart { flex: 1; display: flex; align-items: flex-end; gap: 8px; padding: 8px 0; border-bottom: 1px solid var(--figma-border); }
+.ws-chart span { flex: 1; height: var(--h); border-radius: 2px 2px 0 0; background: linear-gradient(to top, var(--figma-orange), color-mix(in srgb, var(--figma-orange) 55%, transparent)); transform-origin: bottom; }
+.ws-chart span:last-child { box-shadow: 0 0 18px rgba(255, 107, 31, 0.5); }
+.is-active .ws-chart span { animation: ws-grow 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) both; animation-delay: calc(var(--i) * 70ms); }
+@keyframes ws-grow { from { transform: scaleY(0); } }
+
+.ws-slide--ask { justify-content: center; }
+.ws-ask { font-family: var(--font-mono); font-weight: 700; font-size: clamp(40px, 5.5vw, 68px); line-height: 1; letter-spacing: -0.03em; color: var(--figma-text-primary); }
+.ws-stamp { position: absolute; right: 28px; top: 26px; padding: 6px 14px; border: 2px solid var(--figma-orange); border-radius: 4px; font-family: var(--font-mono); font-weight: 700; font-size: 14px; letter-spacing: 0.2em; color: var(--figma-orange); transform: rotate(-10deg); }
+.is-active .ws-stamp { animation: ws-stamp 0.5s cubic-bezier(0.3, 1.6, 0.5, 1) both 0.5s; }
+@keyframes ws-stamp { from { transform: rotate(-10deg) scale(2.4); opacity: 0; } }
+
+.ws-thumbs { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; }
+
+.ws-thumb {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 10px;
+  border: 1px solid var(--figma-border);
+  border-radius: 4px;
+  background: var(--figma-card-elevated);
+  overflow: hidden;
+  cursor: pointer;
+  text-align: left;
+  transition: border-color 0.2s ease, transform 0.2s ease;
+}
+
+.ws-thumb:hover { border-color: var(--figma-text-muted); transform: translateY(-2px); }
+.ws-thumb.is-active { border-color: var(--figma-orange); }
+.ws-thumb__num { font-family: var(--font-mono); font-size: 10px; color: var(--figma-orange); }
+.ws-thumb__label { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.06em; color: var(--figma-text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ws-thumb.is-active .ws-thumb__label { color: var(--figma-text-primary); }
+.ws-thumb__progress { position: absolute; left: 0; bottom: 0; height: 2px; width: 0; background: var(--figma-orange); }
+.ws-thumb.is-active .ws-thumb__progress { animation: ws-progress linear forwards; }
+.ws-deck.is-paused .ws-thumb.is-active .ws-thumb__progress { animation: none; width: 100%; opacity: 0.4; }
+@keyframes ws-progress { to { width: 100%; } }
+
+.ws-cta { display: inline-flex; align-items: center; gap: 6px; height: 36px; padding: 0 16px; border-radius: 999px; background: var(--figma-orange); color: #14110f; font-family: var(--font-body); font-weight: 600; font-size: 13px; text-decoration: none; white-space: nowrap; transition: transform 0.2s ease, box-shadow 0.2s ease; }
+.ws-cta:hover { transform: translateY(-2px); box-shadow: 0 10px 24px -10px rgba(255, 107, 31, 0.8); }
+
+/* ---- Web card: page auto-scrolls inside the mini browser on hover ---- */
+.ws-browser { flex: 1; display: flex; flex-direction: column; min-height: 0; border: 1px solid var(--figma-border); border-radius: 4px; background: var(--figma-bg); overflow: hidden; }
+.ws-browser__bar { display: flex; align-items: center; gap: 10px; padding: 6px 10px; border-bottom: 1px solid var(--figma-border); background: var(--figma-card-elevated); }
+.ws-browser__lights { display: flex; gap: 4px; }
+.ws-browser__lights i { width: 6px; height: 6px; border-radius: 99px; background: var(--figma-border); }
+.ws-browser__url { flex: 1; padding: 2px 8px; border-radius: 99px; background: var(--figma-bg); font-family: var(--font-mono); font-size: 9px; color: var(--figma-text-muted); }
+.ws-browser__hint { font-family: var(--font-mono); font-size: 9px; color: var(--figma-orange); transition: opacity 0.3s ease; }
+.ws-web:hover .ws-browser__hint { opacity: 0; }
+
+.ws-browser__viewport { position: relative; flex: 1; min-height: 84px; overflow: hidden; }
+.ws-browser__page { display: flex; flex-direction: column; gap: 10px; padding: 12px; transform: translateY(0); transition: transform 3.2s cubic-bezier(0.45, 0, 0.2, 1); }
+.ws-web:hover .ws-browser__page { transform: translateY(calc(-100% + 84px)); }
+
+.ws-page-hero { display: flex; flex-direction: column; gap: 4px; }
+.ws-page-hero__kicker { font-family: var(--font-mono); font-size: 8px; letter-spacing: 0.2em; color: var(--figma-text-muted); }
+.ws-page-hero__title { font-family: Georgia, 'Times New Roman', serif; font-style: italic; font-size: 20px; line-height: 1.05; color: var(--figma-text-primary); }
+
+.ws-film { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; padding: 5px 4px; border-radius: 2px; background: #0b0908; }
+.ws-film span {
+  aspect-ratio: 4 / 3;
+  border-radius: 1px;
+  background:
+    radial-gradient(circle at calc(30% + var(--i) * 9%) 35%, rgba(255, 255, 255, 0.22), transparent 45%),
+    linear-gradient(calc(120deg + var(--i) * 25deg), #3a342e, #1a1613 60%, #57483c);
+  filter: grayscale(1) contrast(1.15);
+  transition: filter 0.6s ease;
+}
+
+.ws-web:hover .ws-film span { filter: grayscale(0.2) sepia(0.5) contrast(1.1); }
+.ws-film--b { grid-template-columns: 1.4fr 1fr 1fr; }
+.ws-page-row { display: flex; justify-content: space-between; font-family: var(--font-mono); font-size: 8px; letter-spacing: 0.15em; color: var(--figma-text-muted); }
+.ws-page-cta { align-self: flex-start; padding: 5px 10px; border: 1px solid var(--figma-text-primary); border-radius: 99px; font-family: var(--font-mono); font-size: 8px; color: var(--figma-text-primary); }
+
+.ws-grain {
+  position: absolute;
+  inset: -50%;
+  pointer-events: none;
+  opacity: 0.18;
+  background-image: url('/figma-assets/grain.svg');
+  background-size: 200px;
+  animation: ws-grain 0.8s steps(4) infinite;
+}
+
+@keyframes ws-grain { 25% { transform: translate(-6%, 4%); } 50% { transform: translate(4%, -6%); } 75% { transform: translate(-3%, -2%); } }
+
+/* ---- Notion OS card: checklist ticks itself, kanban chip moves ---- */
+.ws-os { flex: 1; display: grid; grid-template-columns: 1.1fr 1fr; gap: 12px; min-height: 0; }
+.ws-checklist { display: flex; flex-direction: column; justify-content: center; gap: 6px; margin: 0; padding: 0; list-style: none; }
+.ws-checklist li { display: flex; align-items: center; gap: 8px; font-family: var(--font-body); font-size: 12px; color: var(--figma-text-secondary); }
+
+.ws-check { position: relative; flex: none; width: 13px; height: 13px; border: 1px solid var(--figma-border); border-radius: 3px; animation: ws-check-box 6s infinite; animation-delay: calc(var(--i) * 0.8s); }
+.ws-check::after { content: ''; position: absolute; left: 3px; top: 0; width: 4px; height: 8px; border: solid #14110f; border-width: 0 2px 2px 0; transform: rotate(45deg) scale(0); animation: ws-check-tick 6s infinite; animation-delay: calc(var(--i) * 0.8s); }
+.ws-check__text { position: relative; }
+.ws-check__text::after { content: ''; position: absolute; left: 0; top: 50%; height: 1px; width: 100%; background: var(--figma-text-muted); transform: scaleX(0); transform-origin: left; animation: ws-strike 6s infinite; animation-delay: calc(var(--i) * 0.8s); }
+
+@keyframes ws-check-box { 0%, 8% { background: transparent; border-color: var(--figma-border); } 12%, 80% { background: var(--figma-orange); border-color: var(--figma-orange); } 88%, 100% { background: transparent; border-color: var(--figma-border); } }
+@keyframes ws-check-tick { 0%, 8% { transform: rotate(45deg) scale(0); } 14%, 80% { transform: rotate(45deg) scale(1); } 88%, 100% { transform: rotate(45deg) scale(0); } }
+@keyframes ws-strike { 0%, 10% { transform: scaleX(0); } 16%, 80% { transform: scaleX(1); } 88%, 100% { transform: scaleX(0); } }
+
+.ws-kanban { display: flex; flex-direction: column; justify-content: center; gap: 8px; padding: 10px; border: 1px solid var(--figma-border); border-radius: 4px; background: var(--figma-bg); }
+.ws-kanban__cols { display: grid; grid-template-columns: repeat(3, 1fr); font-family: var(--font-mono); font-size: 7px; letter-spacing: 0.08em; color: var(--figma-text-muted); }
+.ws-kanban__track { position: relative; height: 22px; border-radius: 3px; background: repeating-linear-gradient(90deg, transparent 0 calc(33.33% - 1px), var(--figma-border) calc(33.33% - 1px) 33.33%); }
+.ws-kanban__chip { position: absolute; top: 2px; left: 2px; width: calc(33.33% - 4px); height: 18px; display: flex; align-items: center; justify-content: center; border-radius: 3px; background: var(--figma-card-elevated); border: 1px solid var(--figma-orange); font-family: var(--font-mono); font-size: 7px; color: var(--figma-text-primary); white-space: nowrap; animation: ws-kanban 6s cubic-bezier(0.6, 0, 0.3, 1) infinite; }
+@keyframes ws-kanban { 0%, 20% { transform: translateX(0); } 35%, 55% { transform: translateX(100%); } 70%, 92% { transform: translateX(200%); background: var(--figma-orange); color: #14110f; } 100% { transform: translateX(0); } }
+.ws-kanban__stat { font-family: var(--font-mono); font-size: 9px; color: var(--figma-text-muted); }
+.ws-kanban__stat b { font-size: 16px; color: var(--figma-orange); }
+
+@media (max-width: 1024px) {
+  .ws-stage__screen { min-height: 230px; }
+}
+
+@media (max-width: 640px) {
+  .ws-deck .figma-card-tags-row { flex-wrap: wrap; }
+  .ws-live { order: 3; width: 100%; }
+  .ws-slide { padding: 16px; }
+  .ws-thumbs { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .ws-deck .figma-card-footer-info { flex-direction: column; align-items: flex-start; gap: 12px; }
+  .ws-os { grid-template-columns: 1fr; }
+  .figma-portfolio-small-card.ws-card { height: auto; min-height: 248px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ws-check, .ws-check::after, .ws-check__text::after, .ws-kanban__chip, .ws-grain, .ws-live__dot { animation: none !important; }
+  .ws-browser__page { transition: none; }
+}
+
+/* Showcase sizing: give the live demos room (big card 620px, two stacked cards share it) */
+.ws-grid .figma-portfolio-big-card { height: 620px; }
+.ws-grid .figma-portfolio-small-card { height: 298px; }
+.ws-browser__viewport { flex: none; height: 128px; }
+.ws-web:hover .ws-browser__page { transform: translateY(calc(-100% + 128px)); }
+
+@media (max-width: 1024px) {
+  .ws-grid .figma-portfolio-big-card { height: auto; min-height: 560px; }
+  .ws-grid .figma-portfolio-stack-col { margin-top: 24px; }
+}
+
+@media (max-width: 640px) {
+  .ws-grid .figma-portfolio-small-card { height: auto; min-height: 298px; }
+}

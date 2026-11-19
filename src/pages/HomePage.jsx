@@ -1,6 +1,7 @@
 import React, { useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { playClick } from '../utils/sound';
+import WorkShowcase from '../components/WorkShowcase';
 
 // Service rows (Figma 2001:136). Bracketed values are placeholders to fill in.
 const SERVICE_ROWS = [
@@ -442,73 +443,7 @@ export default function HomePage() {
           </Link>
         </div>
 
-        <div className="figma-portfolio-asymmetric-grid">
-          {/* Big Card (7 Columns, 520px high) */}
-          <div className="figma-portfolio-big-card">
-            <div className="figma-card-tags-row">
-              <span className="figma-mono-tag-chip">PPT</span>
-              <span className="figma-status-badge">Proyek asli</span>
-            </div>
-
-            <div className="figma-card-wireframe-box">
-              <span>[ganti: screenshot proyek deck investasi]</span>
-              <span style={{ fontFamily: 'var(--font-display)', fontWeight: 800, fontSize: '20px', color: 'var(--figma-text-primary)' }}>
-                Pitch Deck Seed Round — Agrotech Indonesia
-              </span>
-            </div>
-
-            <div className="figma-card-footer-info">
-              <div>
-                <h4 className="figma-card-title">Deck Investasi UMKM Sayur Segar</h4>
-                <span className="figma-card-meta">18 SLIDES // SELESAI DALAM 5 HARI</span>
-              </div>
-              <span style={{ width: '10px', height: '10px', borderRadius: '9999px', backgroundColor: 'var(--figma-orange)' }} />
-            </div>
-          </div>
-
-          {/* 2 Stacked Cards (5 Columns, 248px each) */}
-          <div className="figma-portfolio-stack-col">
-            {/* Card 1: Top (Web) */}
-            <div className="figma-portfolio-small-card">
-              <div className="figma-card-tags-row">
-                <span className="figma-mono-tag-chip">WEB</span>
-                <span className="figma-status-badge is-concept">Contoh karya</span>
-              </div>
-
-              <div className="figma-card-wireframe-box">
-                [ganti: screenshot website studio foto]
-              </div>
-
-              <div className="figma-card-footer-info">
-                <div>
-                  <h4 className="figma-card-title">Landing Page Studio Foto Analog</h4>
-                  <span className="figma-card-meta">JAMBI // CONCEPT DESIGN</span>
-                </div>
-                <span style={{ color: 'var(--figma-orange)', fontSize: '16px' }}>&rarr;</span>
-              </div>
-            </div>
-
-            {/* Card 2: Bottom (Produk) */}
-            <div className="figma-portfolio-small-card">
-              <div className="figma-card-tags-row">
-                <span className="figma-mono-tag-chip">PRODUK</span>
-                <span className="figma-status-badge">Proyek asli</span>
-              </div>
-
-              <div className="figma-card-wireframe-box">
-                [ganti: screenshot template notion]
-              </div>
-
-              <div className="figma-card-footer-info">
-                <div>
-                  <h4 className="figma-card-title">Notion Freelance Operating System</h4>
-                  <span className="figma-card-meta">140+ DOWNLOAD // TEMPLATE</span>
-                </div>
-                <span style={{ color: 'var(--figma-orange)', fontSize: '16px' }}>&rarr;</span>
-              </div>
-            </div>
-          </div>
-        </div>
+        <WorkShowcase />
       </section>
 
       {/* =========================================================================
