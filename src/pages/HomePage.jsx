@@ -2,9 +2,114 @@ import React, { useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { playClick } from '../utils/sound';
 
+// Service rows (Figma 2001:136). Bracketed values are placeholders to fill in.
+const SERVICE_ROWS = [
+  {
+    no: '01',
+    title: 'Desain presentasi (PPT)',
+    desc: 'Pitch deck, company profile, sidang, dan proposal yang alurnya jelas.',
+    features: [
+      ['File PPTX dan PDF', '(bisa diedit sendiri dengan mudah)'],
+      ['Revisi [jumlah] kali', '(sampai lo puas dan yakin)'],
+      ['Estimasi [x] hari', '(rata-rata 3–7 hari kerja)'],
+    ],
+    link: '/layanan/desain-ppt',
+    linkLabel: 'Lihat paket presentasi',
+    preview: 'deck',
+  },
+  {
+    no: '02',
+    title: 'Pembuatan website',
+    badge: '[PAKET PALING SERING DIAMBIL]',
+    desc: 'Company profile, portofolio, toko online, atau landing page yang enak dibuka di HP.',
+    features: [
+      ['Responsif di HP & desktop', '(dicek di layar asli)'],
+      ['Domain & hosting dibantu', '(setup sampai online)'],
+      ['Estimasi [x] hari', '(rata-rata 7–10 hari kerja)'],
+    ],
+    link: '/layanan/website',
+    linkLabel: 'Lihat paket website',
+    preview: 'web',
+  },
+  {
+    no: '03',
+    title: 'Produk digital',
+    desc: 'Template PPT dan website, e-book, UI kit, dan desain sosmed yang tinggal pakai.',
+    features: [
+      ['File master siap edit', '(Figma, PPTX, Canva)'],
+      ['Langsung dikirim ke email', '(tanpa nunggu dikerjain)'],
+      ['Mulai Rp 89.000', '(lihat semua di katalog)'],
+    ],
+    link: '/produk-digital',
+    linkLabel: 'Buka katalog produk',
+    preview: 'product',
+  },
+];
+
+function ServicePreview({ kind }) {
+  if (kind === 'deck') {
+    return (
+      <div className="svc-preview svc-preview--deck">
+        <div className="svc-preview__bar">
+          <span className="svc-preview__label">PPT // SLIDE 16:9</span>
+          <span className="svc-preview__dot" />
+        </div>
+        <div className="svc-preview__slides">
+          <span className="is-on">01</span>
+          <span>02</span>
+          <span>03</span>
+          <span>04</span>
+        </div>
+        <div className="svc-preview__foot">
+          <span>PITCH DECK</span>
+          <span>16:9 FULL-HD</span>
+        </div>
+      </div>
+    );
+  }
+  if (kind === 'product') {
+    return (
+      <div className="svc-preview svc-preview--product">
+        <div className="svc-preview__bar">
+          <span className="svc-preview__label svc-preview__label--accent">TEMPLATE</span>
+          <span className="svc-preview__label">FIGMA / CANVA</span>
+        </div>
+        <div className="svc-preview__product">
+          <span className="svc-preview__swatch" />
+          <span className="svc-preview__swatch svc-preview__swatch--2" />
+          <span className="svc-preview__swatch svc-preview__swatch--3" />
+          <span className="svc-preview__name">Brand Kit UMKM v1.2</span>
+        </div>
+        <div className="svc-preview__foot">
+          <span>RP 189.000</span>
+          <span>INSTANT DL</span>
+        </div>
+      </div>
+    );
+  }
+  return (
+    <div className="svc-preview svc-preview--web">
+      <div className="svc-preview__bar">
+        <span className="svc-preview__lights">
+          <i />
+          <i />
+          <i />
+        </span>
+        <span className="svc-preview__label">pratinjau: responsive-web.html</span>
+        <span className="svc-preview__dot" />
+      </div>
+      <div className="svc-preview__screen">[ganti: screenshot tampilan mobile]</div>
+      <div className="svc-preview__foot">
+        <span>100% RESPONSIVE</span>
+        <span>CLEAN CODE</span>
+      </div>
+    </div>
+  );
+}
+
 export default function HomePage() {
-  // Service Row 02 (Website) expanded state (from Figma 2001:167)
-  const [row2Expanded, setRow2Expanded] = useState(true);
+  // Service rows accordion — row 02 (Website) open by default as in Figma 2001:167
+  const [openServiceRow, setOpenServiceRow] = useState('02');
 
   // Quiz state (from Figma 2001:311)
   const [selectedQuizOption, setSelectedQuizOption] = useState('presentasi');
@@ -254,136 +359,60 @@ export default function HomePage() {
         </div>
 
         <div className="figma-services-rows-container">
-          {/* ROW 1: Desain Presentasi */}
-          <div className="figma-service-row">
-            <div className="figma-service-col-num">01</div>
-            <div className="figma-service-col-title">
-              <h3 className="figma-service-title-text">Desain presentasi (PPT)</h3>
-            </div>
-            <div className="figma-service-col-desc">
-              Pitch deck, company profile, sidang, dan proposal yang alurnya jelas.
-            </div>
-            <div className="figma-service-col-action">
-              <Link
-                to="/layanan/desain-ppt"
-                className="figma-pill-action-btn"
-                onClick={() => playClick()}
-              >
-                Lihat detail
-              </Link>
-            </div>
-          </div>
-
-          {/* ROW 2: Pembuatan Website (Expandable State) */}
-          <div className={`figma-service-row ${row2Expanded ? 'is-expanded' : ''}`}>
-            <div className="figma-service-col-num">02</div>
-            <div className="figma-service-col-title">
-              <h3 className="figma-service-title-text">Pembuatan website</h3>
-              <span className="figma-service-badge">[PAKET PALING SERING DIAMBIL]</span>
-            </div>
-            <div className="figma-service-col-desc">
-              Company profile, portofolio, toko online, atau landing page yang enak dibuka di HP.
-            </div>
-            <div className="figma-service-col-action">
-              <button
-                type="button"
-                className={`figma-pill-action-btn ${row2Expanded ? 'is-active' : ''}`}
-                onClick={() => {
-                  playClick();
-                  setRow2Expanded(!row2Expanded);
-                }}
-              >
-                {row2Expanded ? 'Tutup detail ↑' : 'Buka detail ↓'}
-              </button>
-            </div>
-
-            {/* Expanded Features & Mockup Preview */}
-            {row2Expanded && (
-              <div className="figma-service-expanded-content">
-                <div className="figma-expanded-features">
-                  <div className="figma-feature-item">
-                    <span className="figma-tag-dot" />
-                    <span className="figma-feature-text">File PPTX dan PDF</span>
-                    <span className="figma-feature-sub">(bisa diedit sendiri dengan mudah)</span>
-                  </div>
-                  <div className="figma-feature-item">
-                    <span className="figma-tag-dot" />
-                    <span className="figma-feature-text">Revisi [jumlah] kali</span>
-                    <span className="figma-feature-sub">(sampai lo puas dan yakin)</span>
-                  </div>
-                  <div className="figma-feature-item">
-                    <span className="figma-tag-dot" />
-                    <span className="figma-feature-text">Estimasi [x] hari</span>
-                    <span className="figma-feature-sub">(rata-rata 3–7 hari kerja)</span>
-                  </div>
+          {SERVICE_ROWS.map((row) => {
+            const open = openServiceRow === row.no;
+            return (
+              <div key={row.no} className={`figma-service-row svc-row ${open ? 'is-expanded' : ''}`}>
+                <div className="figma-service-col-num">{row.no}</div>
+                <div className="figma-service-col-title">
+                  <h3 className="figma-service-title-text">{row.title}</h3>
+                  {row.badge && <span className="figma-service-badge">{row.badge}</span>}
                 </div>
-
-                <div className="figma-expanded-mockup">
-                  <div
-                    style={{
-                      width: '360px',
-                      height: '160px',
-                      backgroundColor: 'var(--figma-card-elevated)',
-                      border: '1px solid var(--figma-border)',
-                      borderRadius: '6px',
-                      padding: '13px',
-                      display: 'flex',
-                      flexDirection: 'column',
-                      justifyContent: 'space-between',
-                      boxSizing: 'border-box',
+                <div className="figma-service-col-desc">{row.desc}</div>
+                <div className="figma-service-col-action">
+                  <button
+                    type="button"
+                    className={`figma-pill-action-btn ${open ? 'is-active' : ''}`}
+                    aria-expanded={open}
+                    aria-controls={`svc-detail-${row.no}`}
+                    onClick={() => {
+                      playClick();
+                      setOpenServiceRow(open ? null : row.no);
                     }}
                   >
-                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderBottom: '1px solid var(--figma-border)', paddingBottom: '7px' }}>
-                      <div style={{ display: 'flex', gap: '6px' }}>
-                        <span style={{ width: '8px', height: '8px', borderRadius: '9999px', backgroundColor: 'var(--figma-bg)', border: '1px solid var(--figma-border)' }} />
-                        <span style={{ width: '8px', height: '8px', borderRadius: '9999px', backgroundColor: 'var(--figma-bg)', border: '1px solid var(--figma-border)' }} />
-                        <span style={{ width: '8px', height: '8px', borderRadius: '9999px', backgroundColor: 'var(--figma-bg)', border: '1px solid var(--figma-border)' }} />
+                    {open ? 'Tutup detail ↑' : 'Buka detail ↓'}
+                  </button>
+                </div>
+
+                <div className="svc-expand" id={`svc-detail-${row.no}`} aria-hidden={!open}>
+                  <div className="svc-expand__inner">
+                    <div className="figma-service-expanded-content">
+                      <div className="figma-expanded-features">
+                        {row.features.map(([text, sub]) => (
+                          <div className="figma-feature-item" key={text}>
+                            <span className="figma-tag-dot" />
+                            <span className="figma-feature-text">{text}</span>
+                            <span className="figma-feature-sub">{sub}</span>
+                          </div>
+                        ))}
+                        <Link
+                          to={row.link}
+                          className="svc-more-link"
+                          tabIndex={open ? 0 : -1}
+                          onClick={() => playClick()}
+                        >
+                          {row.linkLabel} <span aria-hidden="true">→</span>
+                        </Link>
                       </div>
-                      <span style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', color: 'var(--figma-text-muted)' }}>
-                        pratinjau: responsive-web.html
-                      </span>
-                      <span style={{ width: '8px', height: '8px', borderRadius: '9999px', backgroundColor: 'var(--figma-orange)' }} />
-                    </div>
-
-                    <div style={{ border: '1px solid var(--figma-border)', borderRadius: '4px', backgroundColor: 'var(--figma-bg)', padding: '12px', textAlign: 'center' }}>
-                      <span style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: 'var(--figma-text-muted)' }}>
-                        [ganti: screenshot tampilan mobile]
-                      </span>
-                    </div>
-
-                    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                      <span style={{ fontFamily: 'var(--font-mono)', fontSize: '9px', color: 'var(--figma-text-muted)' }}>
-                        100% RESPONSIVE
-                      </span>
-                      <span style={{ fontFamily: 'var(--font-mono)', fontSize: '9px', color: 'var(--figma-text-muted)' }}>
-                        CLEAN CODE
-                      </span>
+                      <div className="figma-expanded-mockup">
+                        <ServicePreview kind={row.preview} />
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
-            )}
-          </div>
-
-          {/* ROW 3: Produk Digital */}
-          <div className="figma-service-row">
-            <div className="figma-service-col-num">03</div>
-            <div className="figma-service-col-title">
-              <h3 className="figma-service-title-text">Produk digital</h3>
-            </div>
-            <div className="figma-service-col-desc">
-              Template PPT dan website, e-book, UI kit, dan desain sosmed yang tinggal pakai.
-            </div>
-            <div className="figma-service-col-action">
-              <Link
-                to="/produk-digital"
-                className="figma-pill-action-btn"
-                onClick={() => playClick()}
-              >
-                Lihat detail
-              </Link>
-            </div>
-          </div>
+            );
+          })}
         </div>
       </section>
 
