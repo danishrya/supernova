@@ -6,38 +6,16 @@ import { playClick } from '../utils/sound';
 export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
-  const [navVisible, setNavVisible] = useState(true);
-  const lastScrollY = useRef(0);
   const navRef = useRef(null);
   const [pillStyle, setPillStyle] = useState({ left: 0, width: 0, opacity: 0 });
 
   const { theme, toggleTheme } = useTheme();
   const location = useLocation();
 
-  // Directional scroll listener & dynamic island elevation
+  // Scroll listener: smoothly contract height & increase glass shadow when scrolled down
   useEffect(() => {
     const handleScroll = () => {
-      const currentScrollY = window.scrollY;
-
-      // Scrolled threshold (becomes floating island)
-      if (currentScrollY > 25) {
-        setIsScrolled(true);
-      } else {
-        setIsScrolled(false);
-      }
-
-      // Smart hide on fast scroll down, reveal on scroll up
-      if (currentScrollY > 120) {
-        if (currentScrollY > lastScrollY.current + 8) {
-          setNavVisible(false);
-        } else if (currentScrollY < lastScrollY.current - 8) {
-          setNavVisible(true);
-        }
-      } else {
-        setNavVisible(true);
-      }
-
-      lastScrollY.current = currentScrollY;
+      setIsScrolled(window.scrollY > 20);
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
@@ -83,6 +61,18 @@ export default function Navbar() {
     };
   }, [mobileOpen]);
 
+  // Click handler that removes focus and smoothly returns to top if already on that page
+  const handleNavItemClick = (e, targetPath) => {
+    playClick();
+    if (e.currentTarget) {
+      e.currentTarget.blur();
+    }
+    if (location.pathname === targetPath) {
+      e.preventDefault();
+      window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
+    }
+  };
+
   const navItems = [
     { label: 'Beranda', path: '/' },
     { label: 'Layanan', path: '/layanan' },
@@ -96,9 +86,7 @@ export default function Navbar() {
   return (
     <>
       <header
-        className={`figma-navbar ${isScrolled ? 'is-scrolled' : ''} ${
-          navVisible || mobileOpen ? 'is-visible' : 'is-hidden'
-        }`}
+        className={`figma-navbar ${isScrolled ? 'is-scrolled' : ''}`}
         data-name="Header - DYNAMIC SMART NAVBAR"
       >
         <div className="figma-navbar-container">
@@ -106,7 +94,7 @@ export default function Navbar() {
           <Link
             to="/"
             className="figma-brand-link"
-            onClick={() => playClick()}
+            onClick={(e) => handleNavItemClick(e, '/')}
             data-name="Link - Brand Logo Left"
           >
             <span className="figma-brand-title">Supernova</span>
@@ -140,7 +128,7 @@ export default function Navbar() {
                 className={({ isActive }) =>
                   `figma-nav-item ${isActive ? 'is-active' : ''}`
                 }
-                onClick={() => playClick()}
+                onClick={(e) => handleNavItemClick(e, item.path)}
               >
                 <span>{item.label}</span>
               </NavLink>

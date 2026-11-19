@@ -191,7 +191,7 @@ main.main-content-flow {
 }
 
 /* ==========================================================================
-   DYNAMIC SMART NAVBAR (Figma 2001:10) — Floating Pill Island & Motion
+   DYNAMIC SMART NAVBAR (Figma 2001:10) — Glitch-Free & Smooth Transition
    ========================================================================== */
 .figma-navbar {
   position: fixed;
@@ -208,44 +208,20 @@ main.main-content-flow {
   display: flex;
   align-items: center;
   box-sizing: border-box;
-  transform: translateY(0);
-  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
-              height 0.35s cubic-bezier(0.16, 1, 0.3, 1),
-              top 0.35s cubic-bezier(0.16, 1, 0.3, 1),
-              width 0.35s cubic-bezier(0.16, 1, 0.3, 1),
-              max-width 0.35s cubic-bezier(0.16, 1, 0.3, 1),
-              border-radius 0.35s cubic-bezier(0.16, 1, 0.3, 1),
-              box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+  transition: height 0.25s cubic-bezier(0.16, 1, 0.3, 1),
               background-color 0.25s ease,
-              border-color 0.25s ease;
+              border-color 0.25s ease,
+              box-shadow 0.25s ease;
 }
 
-.figma-navbar.is-hidden {
-  transform: translateY(-115%);
-}
-
-/* Scrolled Dynamic Floating Island on Desktop */
-@media (min-width: 960px) {
-  .figma-navbar.is-scrolled {
-    top: 14px;
-    left: 50%;
-    transform: translateX(-50%) translateY(0);
-    width: calc(100% - 64px);
-    max-width: 1220px;
-    height: 60px;
-    border-radius: 9999px;
-    border: 1px solid var(--figma-border);
-    box-shadow: 0 16px 36px -8px rgba(0, 0, 0, 0.35),
-                0 0 0 1px rgba(255, 107, 31, 0.12);
-  }
-
-  .figma-navbar.is-scrolled.is-hidden {
-    transform: translateX(-50%) translateY(-130%);
-  }
-
-  .figma-navbar.is-scrolled .figma-navbar-container {
-    padding: 0 28px;
-  }
+/* Scrolled Compact Dynamic Navbar */
+.figma-navbar.is-scrolled {
+  height: 60px;
+  background-color: var(--figma-nav-bg);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.4);
+  border-bottom: 1px solid var(--figma-border);
 }
 
 .figma-navbar-container {
@@ -257,7 +233,7 @@ main.main-content-flow {
   align-items: center;
   justify-content: space-between;
   box-sizing: border-box;
-  transition: padding 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: padding 0.25s ease;
 }
 
 .figma-brand-link {
@@ -384,13 +360,10 @@ main.main-content-flow {
   font-weight: 600;
 }
 
-.figma-nav-item:focus {
-  outline: none;
-}
-
+.figma-nav-item:focus,
 .figma-nav-item:focus-visible {
-  outline: 2px solid var(--figma-orange);
-  outline-offset: 2px;
+  outline: none !important;
+  box-shadow: none !important;
 }
 
 /* Theme Switcher Toggle */
