@@ -109,7 +109,7 @@ export default function ServicesPage() {
                 position: 'absolute',
                 width: '85%',
                 height: '60%',
-                backgroundColor: '#161311',
+                backgroundColor: 'var(--figma-card-elevated)',
                 border: '1px solid var(--figma-border)',
                 borderRadius: '2px',
                 transform: 'rotate(-4deg)',
@@ -130,7 +130,7 @@ export default function ServicesPage() {
                 display: 'flex',
                 flexDirection: 'column',
                 gap: '8px',
-                boxShadow: '0 10px 30px rgba(0,0,0,0.5)',
+                boxShadow: 'var(--figma-shadow-card)',
               }}
             >
               {/* Slide Header Bar */}
@@ -312,7 +312,7 @@ export default function ServicesPage() {
                 flexDirection: 'column',
               }}
             >
-              <div style={{ height: '32px', backgroundColor: '#1a1613', borderBottom: '1px solid var(--figma-border)', display: 'flex', alignItems: 'center', gap: '8px', padding: '0 12px' }}>
+              <div style={{ height: '32px', backgroundColor: 'var(--figma-card-elevated)', borderBottom: '1px solid var(--figma-border)', display: 'flex', alignItems: 'center', gap: '8px', padding: '0 12px' }}>
                 <div style={{ display: 'flex', gap: '6px' }}>
                   <span style={{ width: '8px', height: '8px', borderRadius: '9999px', backgroundColor: 'var(--figma-border)' }} />
                   <span style={{ width: '8px', height: '8px', borderRadius: '9999px', backgroundColor: 'var(--figma-border)' }} />
@@ -357,13 +357,13 @@ export default function ServicesPage() {
                 right: '32px',
                 width: '120px',
                 height: '220px',
-                backgroundColor: '#221f1d',
+                backgroundColor: 'var(--figma-card-elevated)',
                 border: '2px solid var(--figma-border)',
                 borderRadius: '8px',
                 padding: '8px',
                 display: 'flex',
                 flexDirection: 'column',
-                boxShadow: '0 10px 25px rgba(0,0,0,0.6)',
+                boxShadow: 'var(--figma-shadow-card)',
               }}
             >
               <div style={{ height: '8px', display: 'flex', justifyContent: 'center', marginBottom: '8px' }}>
@@ -399,7 +399,7 @@ export default function ServicesPage() {
                 width: '200px',
                 height: '280px',
                 left: '60px',
-                backgroundColor: '#161311',
+                backgroundColor: 'var(--figma-card)',
                 border: '1px solid var(--figma-border)',
                 borderRadius: '6px',
                 transform: 'rotate(-8deg)',
@@ -437,7 +437,7 @@ export default function ServicesPage() {
                 width: '200px',
                 height: '280px',
                 right: '60px',
-                backgroundColor: '#1e1b19',
+                backgroundColor: 'var(--figma-card-elevated)',
                 border: '1px solid var(--figma-border)',
                 borderRadius: '6px',
                 transform: 'rotate(8deg)',
@@ -483,7 +483,7 @@ export default function ServicesPage() {
                 flexDirection: 'column',
                 justifyContent: 'space-between',
                 boxSizing: 'border-box',
-                boxShadow: '0 15px 35px rgba(0,0,0,0.5)',
+                boxShadow: 'var(--figma-shadow-card)',
               }}
             >
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid var(--figma-border)', paddingBottom: '8px' }}>
