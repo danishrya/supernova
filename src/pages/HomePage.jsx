@@ -2,6 +2,7 @@ import React, { useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { playClick } from '../utils/sound';
 import WorkShowcase from '../components/WorkShowcase';
+import { QuizSection, ProcessSection, ClosingCta } from '../components/HomeSections';
 
 // Service rows (Figma 2001:136). Bracketed values are placeholders to fill in.
 const SERVICE_ROWS = [
@@ -112,41 +113,6 @@ export default function HomePage() {
   // Service rows accordion — row 02 (Website) open by default as in Figma 2001:167
   const [openServiceRow, setOpenServiceRow] = useState('02');
 
-  // Quiz state (from Figma 2001:311)
-  const [selectedQuizOption, setSelectedQuizOption] = useState('presentasi');
-
-  const quizOptions = [
-    {
-      id: 'presentasi',
-      label: 'Presentasi',
-      recommendation: 'Desain presentasi',
-      link: '/layanan/desain-ppt',
-      btnLabel: 'Lihat paketnya',
-    },
-    {
-      id: 'website',
-      label: 'Website',
-      recommendation: 'Pembuatan website',
-      link: '/layanan/website',
-      btnLabel: 'Lihat paketnya',
-    },
-    {
-      id: 'template',
-      label: 'Template siap pakai',
-      recommendation: 'Katalog template digital',
-      link: '/produk-digital',
-      btnLabel: 'Buka katalog',
-    },
-    {
-      id: 'belum-tau',
-      label: 'Belum tau',
-      recommendation: 'Konsultasi gratis & bedah ide',
-      link: 'https://wa.me/6285714521584?text=Halo%20Min%20Cham,%20saya%20punya%20ide%20tapi%20belum%20tau%20format%20yang%20paling%20pas',
-      isExternal: true,
-      btnLabel: 'Tanya Min Cham via WA',
-    },
-  ];
-
   // Hero mockup stack: scatters apart on hover/tap, each layer drifts with the pointer
   const heroStackRef = useRef(null);
   const [stackScattered, setStackScattered] = useState(false);
@@ -164,12 +130,6 @@ export default function HomePage() {
     el.style.setProperty('--py', '0');
     setStackScattered(false);
   };
-
-  const currentRec =
-    quizOptions.find((opt) => opt.id === selectedQuizOption) || quizOptions[0];
-
-  const waClosingUrl =
-    'https://wa.me/6285714521584?text=Halo%20Min%20Cham,%20saya%20punya%20ide%20yang%20mau%20dibikin%20tampilannya%20jadi%20profesional.';
 
   return (
     <div className="figma-main-wrapper" data-name="Supernova Studio — Beranda Website Desktop">
@@ -446,187 +406,9 @@ export default function HomePage() {
         <WorkShowcase />
       </section>
 
-      {/* =========================================================================
-          SECTION 4: KUIS SINGKAT (EDITORIAL LIGHT LINEN) (Figma 2001:293)
-          ========================================================================= */}
-      <section className="figma-quiz-section" id="kuis" data-name="Section 04 - KUIS SINGKAT">
-        <div className="figma-quiz-inner-wrapper">
-          <div className="figma-quiz-top-status">
-            <div className="figma-mono-tag" style={{ marginBottom: 0 }}>
-              <span className="figma-tag-dot" style={{ backgroundColor: 'var(--figma-orange-light)' }} />
-              <span className="figma-tag-text" style={{ color: 'var(--figma-orange-light)' }}>
-                KUIS SINGKAT
-              </span>
-            </div>
-            <span
-              style={{
-                backgroundColor: '#e8e2d8',
-                borderRadius: '999px',
-                padding: '4px 12px',
-                fontFamily: 'var(--font-mono)',
-                fontSize: '12px',
-                letterSpacing: '0.96px',
-                textTransform: 'uppercase',
-                color: 'var(--figma-text-quiz-dark)',
-              }}
-            >
-              LANGKAH 1/3
-            </span>
-          </div>
-
-          <h2 className="figma-quiz-h2">Lo butuh yang mana?</h2>
-          <p className="figma-quiz-sub">
-            Pilih salah satu, biar gue bisa kasih estimasi dan arahan yang pas tanpa muter-muter.
-          </p>
-
-          <div className="figma-quiz-card-box">
-            <span className="figma-quiz-step-tag">PERTANYAAN:</span>
-            <h3 className="figma-quiz-q-title">Lo mau bikin apa?</h3>
-
-            <div className="figma-quiz-chips-wrap">
-              {quizOptions.map((opt) => (
-                <button
-                  key={opt.id}
-                  type="button"
-                  className={`figma-quiz-chip ${selectedQuizOption === opt.id ? 'is-selected' : ''}`}
-                  onClick={() => {
-                    playClick();
-                    setSelectedQuizOption(opt.id);
-                  }}
-                >
-                  {selectedQuizOption === opt.id && <span className="figma-quiz-chip-dot" />}
-                  <span>{opt.label}</span>
-                </button>
-              ))}
-            </div>
-
-            <div className="figma-quiz-result-row">
-              <div>
-                <span className="figma-quiz-rec-label">REKOMENDASI BUAT LO:</span>
-                <h4 className="figma-quiz-rec-title">{currentRec.recommendation}</h4>
-              </div>
-
-              {currentRec.isExternal ? (
-                <a
-                  href={currentRec.link}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="figma-quiz-action-btn"
-                  onClick={() => playClick()}
-                >
-                  <span>{currentRec.btnLabel}</span>
-                  <img src="/figma-assets/arrow-quiz.svg" alt="" width="14" height="14" />
-                </a>
-              ) : (
-                <Link
-                  to={currentRec.link}
-                  className="figma-quiz-action-btn"
-                  onClick={() => playClick()}
-                >
-                  <span>{currentRec.btnLabel}</span>
-                  <img src="/figma-assets/arrow-quiz.svg" alt="" width="14" height="14" />
-                </Link>
-              )}
-            </div>
-          </div>
-
-          <div className="figma-quiz-handwritten-note">
-            <img src="/figma-assets/arrow-handwritten.svg" alt="" width="24" height="24" />
-            <span className="figma-quiz-handwritten-text">bisa langsung lanjut konsultasi gratis</span>
-          </div>
-        </div>
-      </section>
-
-      {/* =========================================================================
-          SECTION 5: CARA KERJA (TIMELINE) (Figma 2001:343)
-          ========================================================================= */}
-      <section className="figma-process-section" id="proses" data-name="Section 05 - CARA KERJA">
-        <div className="figma-section-header">
-          <div className="figma-mono-tag">
-            <span className="figma-tag-dot" />
-            <span className="figma-tag-text">04 — CARA KERJA</span>
-          </div>
-          <h2 className="figma-section-h2">Alurnya.</h2>
-        </div>
-
-        <div className="figma-process-timeline-wrap">
-          {/* Progress Track Line with Nova Dots */}
-          <div className="figma-process-track">
-            <div className="figma-process-track-active" />
-            <span className="figma-process-dot is-active" style={{ left: 0 }} />
-            <span className="figma-process-dot is-active" style={{ left: '33%' }} />
-            <span className="figma-process-dot" style={{ left: '66%' }} />
-            <span className="figma-process-dot" style={{ right: 0 }} />
-          </div>
-
-          {/* 4 Step Cards */}
-          <div className="figma-process-steps-grid">
-            <div className="figma-step-card is-active">
-              <span className="figma-step-num-title">01 NGOBROL</span>
-              <p className="figma-step-desc">
-                Lo ceritain ide lo, bahan yang udah ada, dan deadline yang lo kejar.
-              </p>
-            </div>
-
-            <div className="figma-step-card is-active">
-              <span className="figma-step-num-title">02 PENAWARAN</span>
-              <p className="figma-step-desc">
-                Gue kirim rincian biaya pasti [Rp XXX.000] dan jadwal pengerjaan jelas.
-              </p>
-            </div>
-
-            <div className="figma-step-card">
-              <span className="figma-step-num-title">03 DIKERJAIN</span>
-              <p className="figma-step-desc">
-                Gue kerjain dari konsep draft sampai jadi tanpa lo perlu nanya-nanya mulu.
-              </p>
-            </div>
-
-            <div className="figma-step-card">
-              <span className="figma-step-num-title">04 REVISI DAN SELESAI</span>
-              <p className="figma-step-desc">
-                Poles bareng sesuai jatah revisi sampai lo puas, serah terima file rapi.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* =========================================================================
-          SECTION 6: CLOSING HERO CTA BANNER (Figma 2001:383)
-          ========================================================================= */}
-      <section className="figma-cta-banner-section" data-name="Section 06 - MULAI SEKARANG">
-        {/* Giant Dark flat circle cut-off on right edge */}
-        <div className="figma-cta-giant-dark-circle" aria-hidden="true" />
-
-        <div className="figma-cta-content-box">
-          <div className="figma-cta-mono-tag">
-            // MULAI SEKARANG
-          </div>
-
-          <h2 className="figma-cta-h2">
-            Punya ide yang masih berantakan?<br />
-            Bawa aja ke sini.
-          </h2>
-
-          <div className="figma-cta-actions-row">
-            <a
-              href={waClosingUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="figma-cta-dark-btn"
-              onClick={() => playClick()}
-            >
-              <span>Chat lewat WhatsApp</span>
-              <img src="/figma-assets/arrow-right.svg" alt="" width="16" height="16" />
-            </a>
-
-            <span className="figma-cta-subtag">
-              RESPON CEPAT // MIN CHAM
-            </span>
-          </div>
-        </div>
-      </section>
+      <QuizSection />
+      <ProcessSection />
+      <ClosingCta />
     </div>
   );
 }
