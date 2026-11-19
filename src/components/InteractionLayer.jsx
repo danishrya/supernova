@@ -1,5 +1,4 @@
 import { useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
 
 /**
  * Global interaction layer.
@@ -48,52 +47,73 @@ function runCount(el) {
 }
 
 export default function InteractionLayer() {
-  const location = useLocation();
 
-  // Scroll reveal + count-up, re-scanned on every route change
+  // Scroll reveal + count-up. A MutationObserver picks up elements React adds
+  // later (filtered/sorted grids, accordions, new routes), not just on route change.
   useEffect(() => {
     const reduced = prefersReducedMotion();
-    let observer;
+    const supportsIO = 'IntersectionObserver' in window;
+    const watched = new WeakSet();
+
+    const reveal = (el) => {
+      const step = parseInt(el.dataset.revealDelay || '0', 10);
+      el.style.transitionDelay = `${step * 80}ms`;
+      // An attribute, not a class: React rewrites className on re-render and
+      // would wipe a class added here, hiding the element again.
+      el.setAttribute('data-revealed', '');
+      // Drop the stagger delay afterwards so hover transitions stay instant
+      window.setTimeout(() => {
+        el.style.transitionDelay = '';
+      }, step * 80 + 800);
+    };
+
+    const io = supportsIO && !reduced
+      ? new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              if (!entry.isIntersecting) return;
+              const el = entry.target;
+              if (el.hasAttribute('data-reveal') && !el.hasAttribute('data-revealed')) reveal(el);
+              if (el.hasAttribute('data-count') && !el.dataset.counted) {
+                el.dataset.counted = '1';
+                runCount(el);
+              }
+              io.unobserve(el);
+            });
+          },
+          { rootMargin: '0px 0px -8% 0px', threshold: 0.12 }
+        )
+      : null;
+
     const scan = () => {
-      const revealEls = document.querySelectorAll('[data-reveal]:not(.is-revealed)');
-      const countEls = document.querySelectorAll('[data-count]:not([data-counted])');
-      if (reduced || !('IntersectionObserver' in window)) {
-        revealEls.forEach((el) => el.classList.add('is-revealed'));
-        countEls.forEach((el) => {
+      document.querySelectorAll('[data-reveal]:not([data-revealed]), [data-count]:not([data-counted])').forEach((el) => {
+        if (watched.has(el)) return;
+        watched.add(el);
+        if (io) {
+          io.observe(el);
+          return;
+        }
+        if (el.hasAttribute('data-reveal')) el.setAttribute('data-revealed', '');
+        if (el.hasAttribute('data-count')) {
           el.dataset.counted = '1';
           runCount(el);
-        });
-        return;
-      }
-      observer = new IntersectionObserver(
-        (entries) => {
-          entries.forEach((entry) => {
-            if (!entry.isIntersecting) return;
-            const el = entry.target;
-            if (el.hasAttribute('data-reveal')) {
-              const step = parseInt(el.dataset.revealDelay || '0', 10);
-              el.style.transitionDelay = `${step * 80}ms`;
-              el.classList.add('is-revealed');
-            }
-            if (el.hasAttribute('data-count') && !el.dataset.counted) {
-              el.dataset.counted = '1';
-              runCount(el);
-            }
-            observer.unobserve(el);
-          });
-        },
-        { rootMargin: '0px 0px -8% 0px', threshold: 0.12 }
-      );
-      revealEls.forEach((el) => observer.observe(el));
-      countEls.forEach((el) => observer.observe(el));
+        }
+      });
     };
-    // Wait one frame so the new route has rendered
-    const raf = requestAnimationFrame(scan);
+
+    let raf = requestAnimationFrame(scan);
+    const mo = new MutationObserver(() => {
+      cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(scan);
+    });
+    mo.observe(document.body, { childList: true, subtree: true });
+
     return () => {
       cancelAnimationFrame(raf);
-      if (observer) observer.disconnect();
+      mo.disconnect();
+      if (io) io.disconnect();
     };
-  }, [location.pathname]);
+  }, []);
 
   // Pointer-driven effects via event delegation (one listener for the whole app)
   useEffect(() => {
