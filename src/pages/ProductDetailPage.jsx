@@ -1,118 +1,127 @@
-import React from 'react';
-import { useParams, Link } from 'react-router-dom';
-import Breadcrumb from '../components/Breadcrumb';
-import { STUDIO_CONFIG } from '../config/studioConfig';
-import { IconArrowRight, IconWhatsApp, IconCheck } from '../components/Icons';
+import React, { useState } from 'react';
+import { Link, useParams } from 'react-router-dom';
+import { PRODUCTS, rupiah, waLink } from '../data/products';
+import Mock from '../components/ProductMock';
+import { ArrowLeft, ArrowRight, ArrowUpRight, CheckGlyph } from '../components/sn/Glyphs';
 import { playClick } from '../utils/sound';
+
+const STEPS = [
+  ['Chat via WhatsApp', 'Klik tombol beli, pesannya udah otomatis terisi nama produk.'],
+  ['Transfer & konfirmasi', 'Gue kirim detail pembayaran. Kirim bukti transfer di chat.'],
+  ['File dikirim ke email', 'Link download file master langsung masuk ke email lo.'],
+];
 
 export default function ProductDetailPage() {
   const { slug } = useParams();
-  const product = STUDIO_CONFIG.digitalProducts.find((p) => p.slug === slug);
+  const product = PRODUCTS.find((p) => p.id === slug);
+  const [zoom, setZoom] = useState(false);
 
   if (!product) {
     return (
-      <div className="page-product-detail human-page-wrap">
-        <div className="container" style={{ padding: '80px 20px', textAlign: 'center' }}>
-          <h1 className="notfound-title">Produk Tidak Ditemukan</h1>
-          <p className="notfound-desc">
-            Produk digital yang Anda cari tidak tersedia atau tautannya sudah diperbarui.
-          </p>
-          <Link to="/produk-digital" className="btn btn-primary" onClick={() => playClick()}>
-            <span>Kembali ke Katalog Produk Digital &rarr;</span>
+      <div className="sn-page pd-page">
+        <section className="sn-container pd-missing" data-reveal>
+          <span className="sn-overline"><span className="sn-dot" /> PRODUK TIDAK DITEMUKAN</span>
+          <h1 className="sn-display pd-missing__title">Produk ini udah nggak ada di rak.</h1>
+          <p className="sn-body sn-body--lg">Mungkin namanya berubah atau udah ditarik. Cek katalog terbaru aja.</p>
+          <Link to="/produk-digital" className="sn-btn sn-btn--primary sn-btn--lg" data-magnetic onClick={playClick}>
+            Balik ke katalog <ArrowRight size={13} />
           </Link>
-        </div>
+        </section>
       </div>
     );
   }
 
-  const formatRupiah = (val) => {
-    return new Intl.NumberFormat('id-ID', {
-      style: 'currency',
-      currency: 'IDR',
-      maximumFractionDigits: 0,
-    }).format(val);
-  };
-
-  const waBuyUrl = `https://wa.me/${STUDIO_CONFIG.whatsappNumber}?text=${encodeURIComponent(
-    `Halo Min Cham! Saya ingin membeli produk digital "${product.title}" (${formatRupiah(product.priceRp)}). Mohon arahan nomor rekening dan akses unduhnya.`
-  )}`;
+  const related = PRODUCTS.filter((p) => p.id !== product.id)
+    .sort((a, b) => (b.cat === product.cat) - (a.cat === product.cat))
+    .slice(0, 3);
 
   return (
-    <div className="page-product-detail human-page-wrap">
-      <div className="container">
-        <Breadcrumb
-          items={[
-            { label: 'Produk Digital', path: '/produk-digital' },
-            { label: product.title },
-          ]}
-        />
-      </div>
-
-      {/* Hero Showcase */}
-      <section className="product-detail-hero">
-        <div className="container">
-          <div className="product-detail-layout">
-            {/* Left: Media Preview */}
-            <div className="product-media-column">
-              <div className="product-image-frame">
-                <img
-                  src={product.image}
-                  alt={product.title}
-                  className="product-main-img"
-                />
-                <span className="product-corner-badge">{product.badge}</span>
+    <div className="sn-page pd-page" data-name={`Produk — ${product.title}`}>
+      <section className="sn-container pd-hero">
+        <div className="pd-hero__visual" data-reveal="left">
+          <button
+            type="button"
+            className={`pd-stage${zoom ? ' is-zoom' : ''}${product.featured ? ' dp-mock--stacked' : ''}`}
+            onClick={() => { playClick(); setZoom((z) => !z); }}
+            aria-label={zoom ? 'Perkecil pratinjau' : 'Perbesar pratinjau'}
+            data-tilt="6"
+          >
+            <div className="dp-mock__plane pd-stage__plane">
+              <div className="dp-mock__head">
+                <span>{product.tag}</span>
+                {product.isNew ? <span className="dp-badge-new">BARU</span> : <span className="sn-dot" />}
               </div>
+              <Mock p={product} />
             </div>
+          </button>
+          <span className="pd-hero__hint sn-caveat">{zoom ? 'klik lagi buat kecilin' : 'klik buat zoom pratinjau'}</span>
+        </div>
 
-            {/* Right: Info & Purchase Action */}
-            <div className="product-info-column">
-              <span className="product-meta-category">{product.category}</span>
-              <h1 className="product-title-fraunces">{product.title}</h1>
-              <p className="product-lead-desc">{product.desc}</p>
+        <div className="pd-hero__info">
+          <nav className="cs-crumb" aria-label="Breadcrumb" data-reveal>
+            <Link to="/produk-digital">PRODUK DIGITAL</Link>
+            <span aria-hidden="true">/</span>
+            <span className="cs-crumb__current">{product.catLabel}</span>
+          </nav>
+          <h1 className="sn-display pd-title" data-reveal data-reveal-delay="1">{product.title}</h1>
+          <p className="sn-body sn-body--lg pd-desc" data-reveal data-reveal-delay="1">{product.desc}</p>
 
-              <div className="product-price-box">
-                <span className="price-tag-label">INVESTASI SEKALI:</span>
-                <span className="price-tag-amount">{formatRupiah(product.priceRp)}</span>
-                <span className="price-tag-sub">✦ Tanpa langganan bulanan &bull; Akses selamanya</span>
-              </div>
-
-              <div className="product-specs-box">
-                <h3 className="specs-title">Apa Saja yang Anda Dapatkan?</h3>
-                <ul className="specs-items-list">
-                  {product.specs.map((sp, idx) => (
-                    <li key={idx}>
-                      <IconCheck size={16} color="#10b981" />
-                      <span>{sp}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-
-              <div className="product-context-row">
-                <div className="context-item">
-                  <span className="context-label">Cocok Untuk:</span>
-                  <span className="context-val">{product.suitableFor}</span>
-                </div>
-                <div className="context-item">
-                  <span className="context-label">Format File:</span>
-                  <span className="context-val">{product.fileFormat}</span>
-                </div>
-              </div>
-
-              <div className="product-actions-bar">
-                <a
-                  href={waBuyUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="btn btn-primary btn-lg btn-full"
-                  onClick={() => playClick()}
-                >
-                  <IconWhatsApp size={18} />
-                  <span>Beli Sekarang via WhatsApp ({formatRupiah(product.priceRp)})</span>
-                </a>
-              </div>
-            </div>
+          <div className="pd-price" data-reveal data-reveal-delay="2">
+            <span className="pd-price__value">{rupiah(product.price)}</span>
+            <span className="pd-price__note">Bayar sekali · file milik lo selamanya</span>
           </div>
+
+          <ul className="pd-includes" data-reveal data-reveal-delay="2">
+            {product.includes.map((it) => (
+              <li key={it}><CheckGlyph size={13} /> {it}</li>
+            ))}
+          </ul>
+
+          <div className="pd-actions" data-reveal data-reveal-delay="3">
+            <a href={waLink(product)} target="_blank" rel="noopener noreferrer" className="sn-btn sn-btn--primary sn-btn--lg" data-magnetic onClick={playClick}>
+              Beli via WhatsApp <ArrowRight size={13} />
+            </a>
+            <span className="pd-format">{product.format}</span>
+          </div>
+        </div>
+      </section>
+
+      <section className="pd-how">
+        <div className="sn-container">
+          <span className="sn-mono sn-mono--12" data-reveal>CARA BELINYA</span>
+          <ol className="pd-steps">
+            {STEPS.map(([t, d], i) => (
+              <li key={t} className="pd-step" data-reveal data-reveal-delay={i}>
+                <span className="pd-step__no">{String(i + 1).padStart(2, '0')}</span>
+                <strong>{t}</strong>
+                <span>{d}</span>
+              </li>
+            ))}
+          </ol>
+        </div>
+      </section>
+
+      <section className="sn-container pd-related">
+        <div className="pd-related__head" data-reveal>
+          <h2 className="sn-display pd-related__title">Mungkin lo juga butuh.</h2>
+          <Link to="/produk-digital" className="sn-link-underline" onClick={playClick}>
+            <ArrowLeft size={12} /> Semua produk
+          </Link>
+        </div>
+        <div className="pd-related__grid">
+          {related.map((p, i) => (
+            <Link key={p.id} to={`/produk-digital/${p.id}`} className="sn-card pd-rel" onClick={playClick} data-tilt="5" data-spotlight data-reveal data-reveal-delay={i}>
+              <div className="dp-mock">
+                <div className="dp-mock__plane">
+                  <div className="dp-mock__head"><span>{p.tag}</span></div>
+                  <Mock p={p} />
+                </div>
+              </div>
+              <span className="sn-mono">{p.catLabel}</span>
+              <span className="sn-display pd-rel__title">{p.title}</span>
+              <span className="pd-rel__foot"><b>{rupiah(p.price)}</b> <ArrowUpRight size={12} /></span>
+            </Link>
+          ))}
         </div>
       </section>
     </div>

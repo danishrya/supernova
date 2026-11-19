@@ -1,20 +1,9 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { STUDIO_CONFIG } from '../config/studioConfig';
+import { PRODUCTS, rupiah, waLink } from '../data/products';
+import Mock from '../components/ProductMock';
 import { ArrowRight, ArrowUpRight, ChevronDown, CheckGlyph } from '../components/sn/Glyphs';
 import { playClick } from '../utils/sound';
-
-// Products & copy from Figma frame 2001:1808 (Produk Digital).
-const PRODUCTS = [
-  { id: 'pitch-deck-blueprint', order: 8, cat: 'ppt', catLabel: 'TEMPLATE PPT', title: 'Pitch Deck Blueprint v2.0', desc: 'Format teruji buat pitching investor & demo day.', format: 'PPTX • 24 SLIDE', price: 149000, mock: 'deck', tag: 'PPTX // V2.0', isNew: true },
-  { id: 'brand-kit-umkm', order: 7, cat: 'sosmed', catLabel: 'DESAIN SOSMED', title: 'Brand Kit UMKM Pack', desc: 'Panduan visual komplit: palet warna, logo, dan aset sosmed.', format: 'FIGMA + CANVA', price: 189000, mock: 'brand', tag: 'FIGMA + CANVA', featured: true },
-  { id: 'notion-freelance-os', order: 6, cat: 'uikit', catLabel: 'PRODUCTIVITY / OS', title: 'Notion Freelance OS', desc: 'Sistem kerja terintegrasi: CRM klien, invoice, dan pipeline.', format: 'NOTION TEMPLATE', price: 129000, mock: 'notion', tag: 'WORKSPACE // OS' },
-  { id: 'portfolio-dark-html', order: 5, cat: 'web', catLabel: 'TEMPLATE WEB', title: 'Portfolio Dark HTML', desc: 'Website portofolio monokromatik yang ringan dan responsif.', format: 'HTML + TAILWIND', price: 199000, mock: 'web', tag: 'DEV // TAILWIND' },
-  { id: 'katalog-produk-ecommerce', order: 4, cat: 'sosmed', catLabel: 'DESAIN SOSMED', title: 'Katalog Produk E-Commerce', desc: 'Layout editorial buat katalog PDF dan versi cetak.', format: 'CANVA + INDESIGN', price: 159000, mock: 'catalog', tag: 'STORE // PRINT' },
-  { id: 'panduan-negosiasi-klien', order: 3, cat: 'ebook', catLabel: 'E-BOOK', title: 'Panduan Negosiasi Klien', desc: 'Skrip obrolan, handling komplain, dan cara jaga scope kerja.', format: 'PDF GUIDE', price: 89000, mock: 'ebook', tag: 'E-BOOK // ESSAY' },
-  { id: 'social-media-carousel-kit', order: 2, cat: 'sosmed', catLabel: 'DESAIN SOSMED', title: 'Social Media Carousel Kit', desc: 'Template konten edukasi Instagram & LinkedIn.', format: 'CANVA + FIGMA', price: 119000, mock: 'carousel', tag: 'CAROUSEL // FEED' },
-  { id: 'saas-wireframe-system', order: 1, cat: 'uikit', catLabel: 'UI KIT', title: 'SaaS Wireframe System', desc: 'Pondasi wireframing cepat untuk dashboard dan aplikasi SaaS.', format: 'FIGMA COMPONENT', price: 219000, mock: 'wireframe', tag: 'UI SYSTEM // V1' },
-];
 
 const TABS = [
   { key: 'all', label: 'SEMUA' },
@@ -31,136 +20,6 @@ const SORTS = [
   { key: 'pricey', label: 'HARGA TERTINGGI' },
 ];
 
-const rupiah = (n) => `Rp ${n.toLocaleString('id-ID')}`;
-const waLink = (p) =>
-  `https://wa.me/${STUDIO_CONFIG.whatsappNumber}?text=${encodeURIComponent(
-    `Halo Min Cham, gue tertarik sama "${p.title}" (${rupiah(p.price)}). Masih tersedia?`
-  )}`;
-
-function Mock({ p }) {
-  switch (p.mock) {
-    case 'deck':
-      return (
-        <div className="dp-mock__art dp-art-deck">
-          <i className="bar accent" style={{ width: '32%' }} />
-          <i className="bar" />
-          <i className="bar" style={{ width: '78%' }} />
-          <div className="dp-art-deck__slides">
-            <span>01/SLIDE</span>
-            <span>02/DATA</span>
-            <span>03/EXIT</span>
-          </div>
-          <span className="dp-mock__foot">16:9 FULL-HD</span>
-        </div>
-      );
-    case 'brand':
-      return (
-        <div className="dp-mock__art dp-art-brand">
-          <div className="dp-art-brand__row">
-            <span className="dp-art-brand__aa">Aa</span>
-            <i className="bar" style={{ width: 80, height: 8, background: 'var(--sn-meta)' }} />
-          </div>
-          <div className="dp-art-brand__swatches">
-            <i style={{ background: 'var(--sn-orange)' }} />
-            <i style={{ background: 'var(--sn-gold)' }} />
-            <i style={{ background: '#e9e1dd' }} />
-            <i style={{ background: '#100e0c', borderColor: 'var(--sn-border-warm)' }} />
-          </div>
-          <div className="dp-mock__foot dp-mock__foot--split">
-            <span>LOGO / GUIDELINE</span>
-            <span>40+ ASSETS</span>
-          </div>
-        </div>
-      );
-    case 'notion':
-      return (
-        <div className="dp-mock__art dp-art-notion">
-          <span className="dp-art-notion__row">
-            <i className="sn-dot" style={{ background: 'var(--sn-gold)' }} /> Active Pipeline (6)
-          </span>
-          <span className="dp-art-notion__row">
-            <i className="sn-dot" style={{ background: 'var(--sn-green)' }} /> Invoice Paid (12)
-          </span>
-          <span className="dp-mock__foot">AUTO REVENUE TRACKER</span>
-        </div>
-      );
-    case 'web':
-      return (
-        <div className="dp-mock__art dp-art-web">
-          <div className="dp-art-web__browser">
-            <div className="dp-art-web__chrome">
-              <i style={{ background: 'var(--sn-red)' }} />
-              <i style={{ background: 'var(--sn-gold)' }} />
-              <i style={{ background: 'var(--sn-green)' }} />
-            </div>
-            <i className="bar accent" style={{ width: '60%', height: 8 }} />
-            <i className="bar" style={{ width: '40%', background: 'var(--sn-meta)' }} />
-          </div>
-          <div className="dp-mock__foot dp-mock__foot--split">
-            <span>RESPONSIVE</span>
-            <span>NO JS RUNTIME</span>
-          </div>
-        </div>
-      );
-    case 'catalog':
-      return (
-        <div className="dp-mock__art dp-art-catalog">
-          <div className="dp-art-catalog__grid">
-            {[0, 1].map((k) => (
-              <div key={k}>
-                <i style={{ width: '70%', background: 'var(--sn-meta)' }} />
-                <i style={{ width: '35%', background: 'var(--sn-orange)' }} />
-              </div>
-            ))}
-          </div>
-          <span className="dp-mock__foot">32 HALAMAN SIAP CETAK</span>
-        </div>
-      );
-    case 'ebook':
-      return (
-        <div className="dp-mock__art dp-art-ebook">
-          <div className="dp-art-ebook__page">
-            <span className="tone-gold">BAB IV: SKRIP DEALING</span>
-            <em>“Cara tolak revisi tanpa batas tanpa bikin klien kabur...”</em>
-          </div>
-          <div className="dp-mock__foot dp-mock__foot--split">
-            <span>96 HALAMAN</span>
-            <span>EPUB + PDF</span>
-          </div>
-        </div>
-      );
-    case 'carousel':
-      return (
-        <div className="dp-mock__art dp-art-carousel">
-          <div className="dp-art-carousel__row">
-            <span>#1 HOOK</span>
-            <span>#2 VALUE</span>
-            <span>#3 CTA</span>
-          </div>
-          <span className="dp-mock__foot">50 SLIDE SIAP PAKAI</span>
-        </div>
-      );
-    case 'wireframe':
-    default:
-      return (
-        <div className="dp-mock__art dp-art-wire">
-          <i className="bar" style={{ height: 8, background: 'var(--sn-border-warm)' }} />
-          <div className="dp-art-wire__grid">
-            <span />
-            <span />
-            <span />
-            <span />
-          </div>
-          <span className="dp-art-wire__input" />
-          <div className="dp-mock__foot dp-mock__foot--split">
-            <span>120+ BLOK KOMPONEN</span>
-            <span>WCAG 2.1</span>
-          </div>
-        </div>
-      );
-  }
-}
-
 function ProductCard({ p, index }) {
   return (
     <article
@@ -170,6 +29,7 @@ function ProductCard({ p, index }) {
       data-reveal
       data-reveal-delay={index % 4}
     >
+      <Link to={`/produk-digital/${p.id}`} className="dp-card__link" onClick={playClick} aria-label={`Lihat detail ${p.title}`}>
       <div className={`dp-mock${p.featured ? ' dp-mock--stacked' : ''}`}>
         <div className="dp-mock__plane">
           <div className="dp-mock__head">
@@ -195,6 +55,8 @@ function ProductCard({ p, index }) {
         <h4 className="sn-display dp-card__title">{p.title}</h4>
         <p className="dp-card__desc">{p.desc}</p>
       </div>
+
+      </Link>
 
       <div className="dp-card__foot">
         <div className="dp-card__price-row">
