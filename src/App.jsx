@@ -9,6 +9,7 @@ import CustomCursor from './components/CustomCursor';
 import ScrollProgressBar from './components/ScrollProgressBar';
 import SmartWhatsAppButton from './components/SmartWhatsAppButton';
 import CommandPalette from './components/CommandPalette';
+import InteractionLayer from './components/InteractionLayer';
 
 // Multi-Page Routes
 import HomePage from './pages/HomePage';
@@ -69,6 +70,7 @@ function AppContent() {
   return (
     <div className="supernova-app">
       <ScrollToTop />
+      <InteractionLayer />
 
       {/* Global Interactive Elements (Hidden on Admin) */}
       {!isAdminRoute && (
