@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { playClick } from '../utils/sound';
 
@@ -40,6 +40,24 @@ export default function HomePage() {
       btnLabel: 'Tanya Min Cham via WA',
     },
   ];
+
+  // Hero mockup stack: scatters apart on hover/tap, each layer drifts with the pointer
+  const heroStackRef = useRef(null);
+  const [stackScattered, setStackScattered] = useState(false);
+  const onStackMove = (e) => {
+    const el = heroStackRef.current;
+    if (!el || e.pointerType === 'touch') return;
+    const r = el.getBoundingClientRect();
+    el.style.setProperty('--px', ((e.clientX - r.left) / r.width - 0.5).toFixed(3));
+    el.style.setProperty('--py', ((e.clientY - r.top) / r.height - 0.5).toFixed(3));
+  };
+  const onStackLeave = () => {
+    const el = heroStackRef.current;
+    if (!el) return;
+    el.style.setProperty('--px', '0');
+    el.style.setProperty('--py', '0');
+    setStackScattered(false);
+  };
 
   const currentRec =
     quizOptions.find((opt) => opt.id === selectedQuizOption) || quizOptions[0];
@@ -109,7 +127,17 @@ export default function HomePage() {
         </div>
 
         {/* Right Column: Layered Editorial Mockups (5 Columns) */}
-        <div className="figma-hero-right" data-name="Right Column with flat layered mockups">
+        <div
+          ref={heroStackRef}
+          className={`figma-hero-right hero-stack${stackScattered ? ' is-scattered' : ''}`}
+          data-name="Right Column with flat layered mockups"
+          onPointerEnter={(e) => {
+            if (e.pointerType !== 'touch') setStackScattered(true);
+          }}
+          onPointerMove={onStackMove}
+          onPointerLeave={onStackLeave}
+          onClick={() => setStackScattered((v) => !v)}
+        >
           {/* Mockup 1: PPT Slide 16:9 (-4 deg) */}
           <div className="figma-mockup-slide">
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderBottom: '1px solid var(--figma-border)', paddingBottom: '9px' }}>
@@ -205,7 +233,9 @@ export default function HomePage() {
 
           {/* Handwritten Caveat Note with curved hand-drawn arrow */}
           <div className="figma-handwritten-note">
-            <span className="figma-handwritten-text">ini contoh tampilannya</span>
+            <span className="figma-handwritten-text">
+              {stackScattered ? 'nah, keliatan semua kan' : 'ini contoh tampilannya'}
+            </span>
             <img src="/figma-assets/arrow-caveat.svg" alt="" width="48" height="40" />
           </div>
         </div>
