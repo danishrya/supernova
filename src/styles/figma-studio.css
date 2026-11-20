@@ -11,56 +11,61 @@
 :root,
 [data-theme="dark"],
 .theme-dark {
+  /* Palette from the brand banner: deep navy-indigo + warm cream gold,
+     violet only as a faint accent (selection, focus, concept badges). */
   --theme-name: 'dark';
-  --figma-bg: #14110f;
-  --figma-bg-alt: #1a1613;
-  --figma-orange: #ff6b1f;
-  --figma-orange-hover: #e55a12;
-  --figma-orange-light: #e85a0f;
-  --figma-yellow: #ffc15a;
+  --figma-bg: #17152f;
+  --figma-bg-alt: #1b1938;
+  --figma-orange: #e9b766; /* accent FILL (name kept for compatibility) */
+  --figma-orange-hover: #f3c97f;
+  --figma-orange-light: #8a5f18; /* accent on the cream quiz/closing panels */
+  --figma-orange-light-ink: #ffffff;
+  --figma-accent-text: #e9b766; /* accent used as TEXT colour */
+  --figma-violet: #8f7cf2;
+  --figma-yellow: #f8d8a0;
   --figma-green: #6fcf97;
-  
-  --figma-card: #1d1a17;
-  --figma-card-elevated: #26221e;
-  --figma-border: #3a342e;
-  --figma-border-dashed: #3a342e;
-  
-  --figma-text-primary: #f3ede4;
-  --figma-text-secondary: #b9b0a4;
-  --figma-text-muted: #857c70;
-  --figma-text-dark: #14110f;
-  --figma-text-quiz-dark: #1a1613;
-  --figma-text-quiz-sub: #6a6258;
 
-  --figma-caveat-color: #ffc15a;
-  --figma-nav-bg: rgba(20, 17, 15, 0.94);
-  --figma-nav-border: #2e2823;
+  --figma-card: #1e1c3b;
+  --figma-card-elevated: #272449;
+  --figma-border: #353158;
+  --figma-border-dashed: #353158;
+
+  --figma-text-primary: #f7eedf;
+  --figma-text-secondary: #c4bdd4;
+  --figma-text-muted: #9893b3;
+  --figma-text-dark: #17152f;
+  --figma-text-quiz-dark: #17152f;
+  --figma-text-quiz-sub: #57536e;
+
+  --figma-caveat-color: #f8d8a0;
+  --figma-nav-bg: rgba(23, 21, 47, 0.94);
+  --figma-nav-border: #2d2a4e;
   --figma-grain-opacity: 0.04;
-  
-  --figma-quiz-bg: #f6f1e9;
-  --figma-quiz-card-box-bg: #ffffff;
-  --figma-quiz-card-box-border: #ded7cb;
-  --figma-quiz-text: #1a1613;
-  --figma-quiz-sub: #6a6258;
-  
-  --figma-closing-bg: #f6f1e9;
-  --figma-closing-text: #1a1613;
-  --figma-closing-desc: #432c00;
-  --figma-closing-border: #ded7cb;
-  --figma-shadow-card: 0 10px 30px rgba(0, 0, 0, 0.5);
 
-  /* Legacy variables synchronization so other pages don't clash */
-  --bg-base: #14110f;
-  --bg-canvas: #14110f;
-  --bg-surface: #1d1a17;
-  --bg-card: #1d1a17;
-  --text-primary: #f3ede4;
-  --text-secondary: #b9b0a4;
-  --text-muted: #857c70;
-  --border-subtle: #3a342e;
-  --border-strong: #4a423a;
-  --color-accent: #ff6b1f;
-  
+  --figma-quiz-bg: #f6f2ea;
+  --figma-quiz-card-box-bg: #ffffff;
+  --figma-quiz-card-box-border: #e2dccf;
+  --figma-quiz-text: #17152f;
+  --figma-quiz-sub: #57536e;
+
+  --figma-closing-bg: #f6f2ea;
+  --figma-closing-text: #17152f;
+  --figma-closing-desc: #4c4866;
+  --figma-closing-border: #e2dccf;
+  --figma-shadow-card: 0 10px 30px rgba(8, 7, 20, 0.45);
+
+  /* Legacy variables (preloader, command palette, older components) */
+  --bg-base: #17152f;
+  --bg-canvas: #17152f;
+  --bg-surface: #1e1c3b;
+  --bg-card: #1e1c3b;
+  --text-primary: #f7eedf;
+  --text-secondary: #c4bdd4;
+  --text-muted: #9893b3;
+  --border-subtle: #353158;
+  --border-strong: #46416c;
+  --color-accent: #e9b766;
+
   --font-display: 'Bricolage Grotesque', -apple-system, sans-serif;
   --font-body: 'Hanken Grotesk', -apple-system, sans-serif;
   --font-mono: 'IBM Plex Mono', monospace;
@@ -70,54 +75,56 @@
 [data-theme="light"],
 .theme-light {
   --theme-name: 'light';
-  --figma-bg: #fbf9f5; /* Warm architectural paper white */
-  --figma-bg-alt: #f1ebd8;
-  --figma-orange: #ff6b1f;
-  --figma-orange-hover: #e55a12;
-  --figma-orange-light: #e85a0f;
-  --figma-yellow: #b45309; /* Deep warm amber for 100% contrast on white */
+  --figma-bg: #faf7f0; /* ivory paper */
+  --figma-bg-alt: #efe9db;
+  --figma-orange: #dca54e; /* fill; navy text on it stays > 7:1 */
+  --figma-orange-hover: #e9b766;
+  --figma-orange-light: #e9b766; /* quiz/closing panels are navy in light theme */
+  --figma-orange-light-ink: #17152f;
+  --figma-accent-text: #8a5f18; /* dark gold for text on ivory (5.3:1) */
+  --figma-violet: #5b47c9;
+  --figma-yellow: #8a5f18;
   --figma-green: #15803d;
-  
+
   --figma-card: #ffffff;
-  --figma-card-elevated: #f5efe6;
-  --figma-border: #ded7cb;
-  --figma-border-dashed: #ded7cb;
-  
-  --figma-text-primary: #14110f; /* Deep obsidian carbon ink */
-  --figma-text-secondary: #524a3e; /* Warm graphite */
-  --figma-text-muted: #786f62; /* Refined caption */
-  --figma-text-dark: #14110f;
-  --figma-text-quiz-dark: #14110f;
-  --figma-text-quiz-sub: #524a3e;
+  --figma-card-elevated: #f3eee4;
+  --figma-border: #e2dccf;
+  --figma-border-dashed: #e2dccf;
 
-  --figma-caveat-color: #b45309; /* Warm dark amber handwriting */
-  --figma-nav-bg: rgba(251, 249, 245, 0.94);
-  --figma-nav-border: #ded7cb;
+  --figma-text-primary: #17152f;
+  --figma-text-secondary: #4c4866;
+  --figma-text-muted: #67627f;
+  --figma-text-dark: #17152f;
+  --figma-text-quiz-dark: #17152f;
+  --figma-text-quiz-sub: #4c4866;
+
+  --figma-caveat-color: #8a5f18;
+  --figma-nav-bg: rgba(250, 247, 240, 0.94);
+  --figma-nav-border: #e2dccf;
   --figma-grain-opacity: 0.025;
-  
-  --figma-quiz-bg: #14110f; /* High contrast inverted focal block */
-  --figma-quiz-card-box-bg: #1d1a17;
-  --figma-quiz-card-box-border: #3a342e;
-  --figma-quiz-text: #f3ede4;
-  --figma-quiz-sub: #b9b0a4;
-  
-  --figma-closing-bg: #1d1a17;
-  --figma-closing-text: #f3ede4;
-  --figma-closing-desc: #b9b0a4;
-  --figma-closing-border: #3a342e;
-  --figma-shadow-card: 0 8px 24px rgba(20, 17, 15, 0.08);
 
-  /* Legacy variables synchronization so other pages don't clash */
-  --bg-base: #fbf9f5;
-  --bg-canvas: #fbf9f5;
+  --figma-quiz-bg: #17152f; /* inverted focal block (unchanged behaviour) */
+  --figma-quiz-card-box-bg: #1e1c3b;
+  --figma-quiz-card-box-border: #353158;
+  --figma-quiz-text: #f7eedf;
+  --figma-quiz-sub: #c4bdd4;
+
+  --figma-closing-bg: #1e1c3b;
+  --figma-closing-text: #f7eedf;
+  --figma-closing-desc: #c4bdd4;
+  --figma-closing-border: #353158;
+  --figma-shadow-card: 0 8px 24px rgba(23, 21, 47, 0.08);
+
+  --bg-base: #faf7f0;
+  --bg-canvas: #faf7f0;
   --bg-surface: #ffffff;
   --bg-card: #ffffff;
-  --text-primary: #14110f;
-  --text-secondary: #524a3e;
-  --text-muted: #786f62;
-  --border-subtle: #ded7cb;
-  --border-strong: #c8bfb1;
-  --color-accent: #ff6b1f;
+  --text-primary: #17152f;
+  --text-secondary: #4c4866;
+  --text-muted: #67627f;
+  --border-subtle: #e2dccf;
+  --border-strong: #cfc8b9;
+  --color-accent: #8a5f18;
 
   --font-display: 'Bricolage Grotesque', -apple-system, sans-serif;
   --font-body: 'Hanken Grotesk', -apple-system, sans-serif;
@@ -351,7 +358,7 @@ main.main-content-flow {
 .figma-theme-toggle:hover {
   background-color: var(--figma-card-elevated);
   border-color: var(--figma-orange);
-  color: var(--figma-orange);
+  color: var(--figma-accent-text);
 }
 
 .figma-theme-toggle:focus,
@@ -492,7 +499,7 @@ main.main-content-flow {
 .figma-mobile-link-row:hover,
 .figma-mobile-link-row:active {
   padding-left: 8px;
-  color: var(--figma-orange);
+  color: var(--figma-accent-text);
 }
 
 .figma-mobile-link-left {
@@ -504,7 +511,7 @@ main.main-content-flow {
 .figma-mobile-link-idx {
   font-family: var(--font-mono);
   font-size: 13px;
-  color: var(--figma-orange);
+  color: var(--figma-accent-text);
 }
 
 .figma-mobile-link-title {
@@ -647,7 +654,7 @@ main.main-content-flow {
   line-height: 18px;
   letter-spacing: 0.96px;
   text-transform: uppercase;
-  color: var(--figma-orange);
+  color: var(--figma-accent-text);
 }
 
 .figma-hero-h1 {
@@ -662,7 +669,7 @@ main.main-content-flow {
 }
 
 .figma-hero-h1 .highlight {
-  color: var(--figma-orange);
+  color: var(--figma-accent-text);
 }
 
 .figma-hero-body {
@@ -726,7 +733,7 @@ main.main-content-flow {
 }
 
 .figma-btn-secondary:hover {
-  background-color: rgba(243, 237, 228, 0.08);
+  background-color: rgba(247, 238, 223, 0.08);
 }
 
 .figma-hero-microcopy {
@@ -894,7 +901,7 @@ main.main-content-flow {
 }
 
 .figma-service-row.is-expanded .figma-service-col-num {
-  color: var(--figma-orange);
+  color: var(--figma-accent-text);
 }
 
 .figma-service-col-title {
@@ -915,7 +922,7 @@ main.main-content-flow {
   font-size: 11px;
   letter-spacing: 0.88px;
   text-transform: uppercase;
-  color: var(--figma-orange);
+  color: var(--figma-accent-text);
   margin-top: 4px;
   display: block;
 }
@@ -1092,7 +1099,7 @@ main.main-content-flow {
   font-size: 12px;
   letter-spacing: 0.96px;
   text-transform: uppercase;
-  color: var(--figma-orange);
+  color: var(--figma-accent-text);
 }
 
 .figma-status-badge {
@@ -1261,7 +1268,7 @@ main.main-content-flow {
 .figma-quiz-chip.is-selected {
   background-color: var(--figma-orange);
   border-color: var(--figma-orange);
-  color: #14110f;
+  color: #17152f;
   font-weight: 600;
 }
 
@@ -1269,7 +1276,7 @@ main.main-content-flow {
   width: 8px;
   height: 8px;
   border-radius: 9999px;
-  background-color: #14110f;
+  background-color: #17152f;
 }
 
 .figma-quiz-result-row {
@@ -1302,7 +1309,7 @@ main.main-content-flow {
   padding: 0 24px;
   border-radius: 9999px;
   background-color: var(--figma-orange-light);
-  color: #ffffff;
+  color: var(--figma-orange-light-ink);
   font-family: var(--font-body);
   font-weight: 600;
   font-size: 16px;
@@ -1315,7 +1322,7 @@ main.main-content-flow {
 }
 
 .figma-quiz-action-btn:hover {
-  background-color: #d14f0b;
+  background-color: #c99240;
 }
 
 .figma-quiz-handwritten-note {
@@ -1405,7 +1412,7 @@ main.main-content-flow {
 }
 
 .figma-step-card.is-active .figma-step-num-title {
-  color: var(--figma-orange);
+  color: var(--figma-accent-text);
 }
 
 .figma-step-desc {
@@ -1854,7 +1861,7 @@ main.main-content-flow {
   font-size: 12px;
   letter-spacing: 1.2px;
   text-transform: uppercase;
-  color: var(--figma-orange);
+  color: var(--figma-accent-text);
 }
 
 .figma-tracker-meta {
@@ -1981,7 +1988,7 @@ main.main-content-flow {
   font-size: 12px;
   letter-spacing: 2.4px;
   text-transform: uppercase;
-  color: var(--figma-orange);
+  color: var(--figma-accent-text);
   margin-bottom: 8px;
 }
 
@@ -2035,7 +2042,7 @@ main.main-content-flow {
 }
 
 .figma-block-meta-row .dot-sep {
-  color: var(--figma-orange);
+  color: var(--figma-accent-text);
   margin: 0 4px;
 }
 
@@ -2148,7 +2155,7 @@ main.main-content-flow {
   font-size: 11px;
   letter-spacing: 0.55px;
   text-transform: uppercase;
-  color: var(--figma-orange);
+  color: var(--figma-accent-text);
 }
 
 .figma-step-5-tag.is-pending {
@@ -2239,7 +2246,7 @@ main.main-content-flow {
   justify-content: center;
   font-family: var(--font-mono);
   font-size: 18px;
-  color: var(--figma-orange);
+  color: var(--figma-accent-text);
 }
 
 .figma-faq-answer-box {
@@ -2297,7 +2304,7 @@ main.main-content-flow {
   height: 50px;
   padding: 0 32px;
   background-color: var(--figma-orange);
-  color: #14110f;
+  color: #17152f;
   border-radius: 9999px;
   display: inline-flex;
   align-items: center;

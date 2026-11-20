@@ -242,7 +242,7 @@ export default function HomePage() {
               <span style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: 'var(--figma-text-muted)' }}>
                 Website // supernova.id
               </span>
-              <span style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: 'var(--figma-orange)' }}>
+              <span style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: 'var(--figma-accent-text)' }}>
                 1440px
               </span>
             </div>
@@ -269,7 +269,7 @@ export default function HomePage() {
           {/* Mockup 3: Template Book / Cover (-1 deg) */}
           <div className="figma-mockup-cover">
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderBottom: '1px solid var(--figma-border)', paddingBottom: '9px' }}>
-              <span style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: 'var(--figma-orange)', letterSpacing: '0.88px' }}>
+              <span style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: 'var(--figma-accent-text)', letterSpacing: '0.88px' }}>
                 TEMPLATE
               </span>
               <span style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', color: 'var(--figma-text-muted)' }}>
