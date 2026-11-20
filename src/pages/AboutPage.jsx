@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { STUDIO_CONFIG } from '../config/studioConfig';
 import { ArrowRight, ArrowUpRight } from '../components/sn/Glyphs';
@@ -41,6 +41,80 @@ const WA_URL = `https://wa.me/${STUDIO_CONFIG.whatsappNumber}?text=${encodeURICo
   'Halo Min Cham, gue cocok sama cara kerja Supernova. Yuk bikin sesuatu bareng!'
 )}`;
 
+// Admin character turnaround: front → side → back → side (mirrored), 90° apart.
+const SPIN_VIEWS = [
+  { src: '/admin-spin/front.webp', label: 'depan' },
+  { src: '/admin-spin/side.webp', label: 'samping kiri' },
+  { src: '/admin-spin/back.webp', label: 'belakang' },
+  { src: '/admin-spin/side-r.webp', label: 'samping kanan' },
+];
+
+/** Hover (mouse) or drag (touch) across the portrait to turn the character 360°. */
+function AdminSpin() {
+  const [angle, setAngle] = useState(0);
+  const [active, setActive] = useState(false);
+  const drag = useRef(null);
+
+  const norm = ((angle % 360) + 360) % 360;
+  const view = Math.round(norm / 90) % 4;
+  // squash toward the 45° midpoints so the swap between views reads as a turn
+  const squash = Math.max(0.35, Math.abs(Math.cos(((norm - view * 90) * Math.PI) / 180)));
+
+  const onMove = (e) => {
+    const r = e.currentTarget.getBoundingClientRect();
+    if (e.pointerType === 'mouse') {
+      setAngle(((e.clientX - r.left) / r.width) * 360);
+    } else if (drag.current !== null) {
+      setAngle(drag.current.angle + (e.clientX - drag.current.x) * 1.2);
+    }
+  };
+
+  return (
+    <div
+      className={`ab-portrait__photo ab-spin${active ? ' is-active' : ''}`}
+      role="img"
+      tabIndex={0}
+      aria-label={`Karakter admin Supernova, tampak ${SPIN_VIEWS[view].label}. Geser kursor atau pakai tombol panah untuk memutar.`}
+      onPointerEnter={() => setActive(true)}
+      onPointerMove={onMove}
+      onPointerDown={(e) => {
+        if (e.pointerType !== 'mouse') drag.current = { x: e.clientX, angle };
+      }}
+      onPointerUp={() => {
+        drag.current = null;
+      }}
+      onPointerLeave={() => {
+        drag.current = null;
+        setActive(false);
+        setAngle(norm > 180 ? 360 : 0); // settle back to the front view
+      }}
+      onKeyDown={(e) => {
+        if (e.key === 'ArrowRight') setAngle((a) => a + 90);
+        if (e.key === 'ArrowLeft') setAngle((a) => a - 90);
+      }}
+    >
+      {SPIN_VIEWS.map((v, i) => (
+        <img
+          key={v.src}
+          src={v.src}
+          alt=""
+          className={i === view ? 'is-current' : ''}
+          style={i === view ? { transform: `scaleX(${squash})` } : undefined}
+          width="720"
+          height="688"
+          draggable={false}
+        />
+      ))}
+      <span className="ab-spin__deg" aria-hidden="true">
+        {Math.round(norm)}°
+      </span>
+      <span className="ab-spin__hint" aria-hidden="true">
+        ↔ geser buat muter 360°
+      </span>
+    </div>
+  );
+}
+
 export default function AboutPage() {
   const [activeMilestone, setActiveMilestone] = useState(MILESTONES.length - 1);
 
@@ -56,15 +130,12 @@ export default function AboutPage() {
         <section className="ab-hero">
           <div className="ab-hero__visual" data-reveal="left">
             <span className="ab-hero__nova" aria-hidden="true" />
-            <figure className="ab-portrait" data-tilt="6">
+            <figure className="ab-portrait">
               <div className="ab-portrait__top">
                 <span>PORTRAIT_REF.01</span>
                 <span className="ab-portrait__iso">ISO 400</span>
               </div>
-              <div className="ab-portrait__photo">
-                <span className="ab-portrait__label">[ganti: foto]</span>
-                <span className="ab-portrait__scan" aria-hidden="true" />
-              </div>
+              <AdminSpin />
               <figcaption className="ab-portrait__bottom">
                 <span>FOUNDER</span>
                 <span>JKT, ID</span>
