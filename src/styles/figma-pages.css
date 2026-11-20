@@ -2762,3 +2762,5 @@
 .pd-gallery__thumbs button.is-active { opacity: 1; border-color: var(--sn-orange); }
 .pd-gallery__thumbs img { display: block; width: 100%; height: auto; aspect-ratio: 16 / 9; object-fit: cover; }
 .pd-gallery .pd-hero__hint { align-self: center; }
+/* Deck slide images: no drag-out or text-selection copy (watermarked previews) */
+.ws-slides__img, .svc-deck img, .pd-gallery img, .dp-art-slides__stack img { -webkit-user-drag: none; user-select: none; -webkit-touch-callout: none; }

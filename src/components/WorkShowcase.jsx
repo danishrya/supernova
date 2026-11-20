@@ -75,8 +75,7 @@ function DeckCard() {
             width="1280"
             height="720"
             loading="lazy"
-            decoding="async"
-          />
+            decoding="async" draggable={false} onContextMenu={(e) => e.preventDefault()} />
           <span className="ws-stage__counter">
             {String(index + 1).padStart(2, '0')} / {String(SLIDES.length).padStart(2, '0')}
           </span>

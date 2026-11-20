@@ -56,8 +56,7 @@ export default function ProductDetailPage() {
                 alt={`${product.title} — slide ${slide + 1}: ${product.slideLabels[slide]}`}
                 width="1280"
                 height="720"
-                decoding="async"
-              />
+                decoding="async" draggable={false} onContextMenu={(e) => e.preventDefault()} />
               <span className="pd-gallery__label">
                 {String(slide + 1).padStart(2, '0')} / {product.slideLabels.length} · {product.slideLabels[slide]}
               </span>
@@ -76,7 +75,7 @@ export default function ProductDetailPage() {
                     setSlide(i);
                   }}
                 >
-                  <img src={deckSlide(product.deck, i, true)} alt="" width="320" height="180" loading="lazy" decoding="async" />
+                  <img src={deckSlide(product.deck, i, true)} alt="" width="320" height="180" loading="lazy" decoding="async" draggable={false} onContextMenu={(e) => e.preventDefault()} />
                 </button>
               ))}
             </div>
