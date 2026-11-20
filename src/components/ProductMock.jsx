@@ -1,8 +1,20 @@
 import React from 'react';
+import { deckSlide } from '../data/products';
 
 // Small illustrated preview per product type (used on catalog cards and the detail page).
 export default function Mock({ p }) {
   switch (p.mock) {
+    case 'slides':
+      return (
+        <div className="dp-mock__art dp-art-slides">
+          <div className="dp-art-slides__stack">
+            <img src={deckSlide(p.deck, 3, true)} alt="" loading="lazy" decoding="async" />
+            <img src={deckSlide(p.deck, 1, true)} alt="" loading="lazy" decoding="async" />
+            <img src={deckSlide(p.deck, 0, true)} alt={`Pratinjau ${p.title}`} loading="lazy" decoding="async" />
+          </div>
+          <span className="dp-mock__foot">{p.slideLabels?.length || 10} SLIDE · PRATINJAU ASLI</span>
+        </div>
+      );
     case 'deck':
       return (
         <div className="dp-mock__art dp-art-deck">
