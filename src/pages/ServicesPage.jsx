@@ -63,7 +63,7 @@ export default function ServicesPage() {
             <div className="figma-tracker-meta">
               <span>SOLO PRACTICE</span>
               <span>•</span>
-              <span>YOGYAKARTA, ID</span>
+              <span>JAKARTA SELATAN, ID</span>
               <span>•</span>
               <span className="highlight-slot">SLOT AKTIF TERSEDIA</span>
             </div>

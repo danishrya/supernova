@@ -1328,7 +1328,7 @@
 @keyframes ab-scan { from { transform: translateY(-100%); } to { transform: translateY(400%); } }
 
 .ab-hero__note { position: absolute; left: 140px; bottom: -6px; display: flex; align-items: center; gap: 8px; transform: rotate(-3deg); }
-.ab-hero__note img { width: 44px; height: 38px; transform: scaleX(-1) rotate(10deg); }
+.ab-hero__note img { width: 44px; height: 38px; transform: rotate(180deg); } /* point up-left at the portrait */
 .ab-hero__note .sn-caveat { font-size: 24px; color: var(--sn-gold); white-space: nowrap; }
 
 .ab-hero__copy { grid-column: 6 / span 7; display: flex; flex-direction: column; gap: 24px; padding-left: 16px; }
