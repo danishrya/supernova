@@ -17,7 +17,7 @@ export default function Footer() {
             Studio kreatif digital kecil. Presentasi, website, dan produk digital buat bisnis kecil, freelancer, dan mahasiswa.
           </p>
           <div className="figma-footer-location">
-            Jakarta &amp; Jambi, Indonesia
+            Pasar Minggu, Jakarta Selatan
           </div>
         </div>
 

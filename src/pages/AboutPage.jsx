@@ -67,7 +67,7 @@ export default function AboutPage() {
               </div>
               <figcaption className="ab-portrait__bottom">
                 <span>FOUNDER</span>
-                <span>YK, ID</span>
+                <span>JKT, ID</span>
               </figcaption>
             </figure>
             <div className="ab-hero__note">
@@ -98,7 +98,7 @@ export default function AboutPage() {
             </div>
             <div className="ab-pills" data-reveal data-reveal-delay="3">
               <span className="ab-pill">
-                <b>KOTA:</b> Yogyakarta &amp; Jakarta
+                <b>KOTA:</b> Pasar Minggu, Jakarta Selatan
               </span>
               <span className="ab-pill">
                 <b>SPESIALISASI:</b> Deck &amp; Web Studio
