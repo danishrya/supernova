@@ -387,7 +387,7 @@ export default function ContactPage({ initialBrief = '', initialType = '' }) {
       <section className="kt-faq">
         <div className="sn-container">
           <div className="kt-faq__head" data-reveal>
-            <span className="sn-mono" style={{ color: 'var(--sn-orange)' }}>
+            <span className="sn-mono" style={{ color: 'var(--sn-accent-text)' }}>
               02 // PERTANYAAN SEPUTAR KONTAK
             </span>
             <h2 className="sn-display kt-faq__title">Sebelum lo kirim pesan.</h2>

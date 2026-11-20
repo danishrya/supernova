@@ -131,7 +131,7 @@ export default function Navbar() {
               <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
                 <path
                   d="M2.625 7H11.375M7.875 3.5L11.375 7L7.875 10.5"
-                  stroke="#14110F"
+                  stroke="#17152f"
                   strokeWidth="1.75"
                   strokeLinecap="round"
                   strokeLinejoin="round"
@@ -216,7 +216,7 @@ export default function Navbar() {
               <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
                 <path
                   d="M2.625 7H11.375M7.875 3.5L11.375 7L7.875 10.5"
-                  stroke="#14110F"
+                  stroke="#17152f"
                   strokeWidth="1.75"
                   strokeLinecap="round"
                   strokeLinejoin="round"

@@ -27,8 +27,8 @@ export default function Mock({ p }) {
           <div className="dp-art-brand__swatches">
             <i style={{ background: 'var(--sn-orange)' }} />
             <i style={{ background: 'var(--sn-gold)' }} />
-            <i style={{ background: '#e9e1dd' }} />
-            <i style={{ background: '#100e0c', borderColor: 'var(--sn-border-warm)' }} />
+            <i style={{ background: '#f1eaf0' }} />
+            <i style={{ background: '#121027', borderColor: 'var(--sn-border-warm)' }} />
           </div>
           <div className="dp-mock__foot dp-mock__foot--split">
             <span>LOGO / GUIDELINE</span>
