@@ -65,7 +65,7 @@ function PitchDeckPreview() {
   return (
     <div className="svc-deck" onMouseEnter={() => setHold(true)} onMouseLeave={() => setHold(false)}>
       <div className="svc-deck__screen">
-        <img key={i} src={fulanSrc(i)} alt={`Fulan Pitch Deck — slide ${i + 1}: ${FULAN[i]}`} width="1280" height="720" loading="lazy" decoding="async" />
+        <img key={i} src={fulanSrc(i)} alt={`Fulan Pitch Deck — slide ${i + 1}: ${FULAN[i]}`} width="1280" height="720" loading="lazy" decoding="async" draggable={false} onContextMenu={(e) => e.preventDefault()} />
         <span className="svc-deck__label">
           {String(i + 1).padStart(2, '0')} · {FULAN[i]}
         </span>
@@ -85,7 +85,7 @@ function PitchDeckPreview() {
               setI(k);
             }}
           >
-            <img src={fulanSrc(k, true)} alt="" width="320" height="180" loading="lazy" decoding="async" />
+            <img src={fulanSrc(k, true)} alt="" width="320" height="180" loading="lazy" decoding="async" draggable={false} onContextMenu={(e) => e.preventDefault()} />
           </button>
         ))}
       </div>
