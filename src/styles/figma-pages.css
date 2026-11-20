@@ -3109,3 +3109,24 @@
   .sd-compare__headline { max-width: 100%; }
   .sd-compare__handle, .sd-compare input { display: none; }
 }
+
+/* ==========================================================================
+   LAYANAN (/layanan) — service blocks had a 12-col grid but no column spans,
+   so each child collapsed into a single ~40px column. Split them 6/6.
+   ========================================================================== */
+@media (min-width: 1025px) {
+  .figma-layanan-block > :first-child { grid-column: 1 / span 6; }
+  .figma-layanan-block > :last-child { grid-column: 7 / span 6; }
+}
+
+.figma-layanan-block-content { gap: 16px; max-width: 560px; }
+.figma-layanan-block > .figma-layanan-block-content:last-child { justify-self: start; }
+.figma-layanan-block-visual { width: 100%; transition: transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1), border-color 0.3s ease, box-shadow 0.4s ease; }
+.figma-layanan-block:hover .figma-layanan-block-visual { transform: translateY(-6px); border-color: var(--figma-orange); box-shadow: 0 30px 60px -36px rgba(255, 107, 31, 0.45); }
+.figma-block-checklist { display: flex; flex-direction: column; gap: 10px; }
+.figma-block-check-item { display: flex; align-items: flex-start; gap: 12px; }
+.figma-block-check-item .figma-tag-dot { margin-top: 8px; flex: none; }
+.figma-block-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 20px; }
+.figma-block-cta-btn { white-space: nowrap; }
+/* Closing note sits on the cream panel: the yellow caveat colour was unreadable there */
+.figma-closing-handwritten-note { color: #c2410c; }
