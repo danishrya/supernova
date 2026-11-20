@@ -2855,3 +2855,9 @@
 .ab-spin:hover .ab-spin__hint { opacity: 0; }
 .ab-spin { cursor: grab; }
 @media (prefers-reduced-motion: reduce) { .ab-eye__lid { animation: none; } }
+
+/* Arrival wave: hand layer (cut from the drawing) rocks at the wrist, then the arm rests */
+.ab-spin__body img.ab-hand { position: absolute; inset: auto; left: 79.67%; top: 28.02%; width: 17.77%; height: 16.17%; opacity: 1; object-fit: fill; transform-origin: 45.6% 100%; animation: ab-wave 0.7s ease-in-out infinite alternate; }
+@keyframes ab-wave { from { transform: rotate(-12deg); } to { transform: rotate(10deg); } }
+.ab-spin .ab-spin__bubble { max-width: 72%; }
+@media (prefers-reduced-motion: reduce) { .ab-spin__body img.ab-hand { animation: none; } }
