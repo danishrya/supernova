@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { STUDIO_CONFIG } from '../config/studioConfig';
 import { ArrowRight, ArrowUpRight } from '../components/sn/Glyphs';
@@ -49,67 +49,158 @@ const SPIN_VIEWS = [
   { src: '/admin-spin/side-r.webp', label: 'samping kanan' },
 ];
 
-/** Hover (mouse) or drag (touch) across the portrait to turn the character 360°. */
+const BUBBLES = {
+  poke: ['eh? apa?', 'hm?', 'iya, kenapa?'],
+  pinched: ['aduh…', 'eh eh eh', 'sakit woy'],
+  angry: ['WOI! SAKIT!', 'udah dong!', 'lepasin ga!'],
+  calm: ['…iya iya, dimaafin', 'jangan diulang ya', 'hmph.'],
+};
+const pick = (list) => list[Math.floor(Math.random() * list.length)];
+
+/**
+ * Admin avatar.
+ * Hover: turn 360°. Press + drag: pinch (the drawing stretches toward the pull,
+ * springs back on release). Pinch hard or long enough and he gets angry.
+ */
 function AdminSpin() {
   const [angle, setAngle] = useState(0);
   const [active, setActive] = useState(false);
-  const drag = useRef(null);
+  const [mood, setMood] = useState('idle'); // idle | pinched | angry
+  const [bubble, setBubble] = useState('');
+  const [pull, setPull] = useState(null); // { ox, oy, dx, dy } while pinching
+  const press = useRef(null);
+  const timers = useRef([]);
+  const stageRef = useRef(null);
+
+  const later = (fn, ms) => timers.current.push(window.setTimeout(fn, ms));
+  useEffect(() => () => timers.current.forEach(window.clearTimeout), []);
 
   const norm = ((angle % 360) + 360) % 360;
-  const view = Math.round(norm / 90) % 4;
-  // squash toward the 45° midpoints so the swap between views reads as a turn
+  const view = pull ? 0 : Math.round(norm / 90) % 4;
   const squash = Math.max(0.35, Math.abs(Math.cos(((norm - view * 90) * Math.PI) / 180)));
 
+  const say = (text, ms = 1600) => {
+    setBubble(text);
+    timers.current.forEach(window.clearTimeout);
+    timers.current = [];
+    later(() => setBubble(''), ms);
+  };
+
+  const getAngry = () => {
+    setMood('angry');
+    say(pick(BUBBLES.angry), 2200);
+    later(() => {
+      setMood('idle');
+      say(pick(BUBBLES.calm), 1800);
+    }, 2400);
+  };
+
+  const onDown = (e) => {
+    const r = stageRef.current.getBoundingClientRect();
+    e.currentTarget.setPointerCapture?.(e.pointerId);
+    press.current = { x: e.clientX, y: e.clientY, t: performance.now(), travel: 0, w: r.width, h: r.height };
+    setAngle(0);
+    setPull({ ox: ((e.clientX - r.left) / r.width) * 100, oy: ((e.clientY - r.top) / r.height) * 100, dx: 0, dy: 0 });
+  };
+
   const onMove = (e) => {
-    const r = e.currentTarget.getBoundingClientRect();
+    const p = press.current;
+    if (p) {
+      const dx = Math.max(-90, Math.min(90, e.clientX - p.x));
+      const dy = Math.max(-90, Math.min(90, e.clientY - p.y));
+      p.travel = Math.max(p.travel, Math.hypot(dx, dy));
+      setPull((v) => v && { ...v, dx, dy });
+      if (p.travel > 18 && mood === 'idle') {
+        setMood('pinched');
+        say(pick(BUBBLES.pinched), 1200);
+      }
+      // a hard pull, or holding the pinch for a while, makes him angry
+      if (mood !== 'angry' && (p.travel > 75 || (p.travel > 25 && performance.now() - p.t > 1100))) getAngry();
+      return;
+    }
     if (e.pointerType === 'mouse') {
+      const r = e.currentTarget.getBoundingClientRect();
       setAngle(((e.clientX - r.left) / r.width) * 360);
-    } else if (drag.current !== null) {
-      setAngle(drag.current.angle + (e.clientX - drag.current.x) * 1.2);
     }
   };
 
+  const onUp = () => {
+    const p = press.current;
+    press.current = null;
+    setPull(null);
+    if (!p) return;
+    if (p.travel < 6 && mood === 'idle') say(pick(BUBBLES.poke), 1200);
+    else if (mood === 'pinched') {
+      setMood('idle');
+      say('fiuh…', 900);
+    }
+  };
+
+  const stretch = pull
+    ? {
+        transformOrigin: `${pull.ox}% ${pull.oy}%`,
+        transform: `translate(${pull.dx * 0.25}px, ${pull.dy * 0.25}px) skewX(${(pull.dx / 90) * 8}deg) scale(${1 + Math.abs(pull.dx) / 300 - Math.abs(pull.dy) / 900}, ${1 + Math.abs(pull.dy) / 300 - Math.abs(pull.dx) / 900})`,
+      }
+    : undefined;
+
   return (
     <div
-      className={`ab-portrait__photo ab-spin${active ? ' is-active' : ''}`}
+      className={`ab-portrait__photo ab-spin is-${mood}${active ? ' is-active' : ''}${pull ? ' is-pulling' : ''}`}
       role="img"
       tabIndex={0}
-      aria-label={`Karakter admin Supernova, tampak ${SPIN_VIEWS[view].label}. Geser kursor atau pakai tombol panah untuk memutar.`}
+      aria-label={`Avatar admin Supernova, tampak ${SPIN_VIEWS[view].label}. Geser kursor buat muter, klik tahan lalu tarik buat nyubit.`}
       onPointerEnter={() => setActive(true)}
+      onPointerDown={onDown}
       onPointerMove={onMove}
-      onPointerDown={(e) => {
-        if (e.pointerType !== 'mouse') drag.current = { x: e.clientX, angle };
-      }}
-      onPointerUp={() => {
-        drag.current = null;
-      }}
+      onPointerUp={onUp}
+      onPointerCancel={onUp}
       onPointerLeave={() => {
-        drag.current = null;
+        if (press.current) return;
         setActive(false);
-        setAngle(norm > 180 ? 360 : 0); // settle back to the front view
+        setAngle(norm > 180 ? 360 : 0);
       }}
       onKeyDown={(e) => {
         if (e.key === 'ArrowRight') setAngle((a) => a + 90);
         if (e.key === 'ArrowLeft') setAngle((a) => a - 90);
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          setAngle(0);
+          if (mood !== 'angry') getAngry();
+        }
       }}
     >
-      {SPIN_VIEWS.map((v, i) => (
-        <img
-          key={v.src}
-          src={v.src}
-          alt=""
-          className={i === view ? 'is-current' : ''}
-          style={i === view ? { transform: `scaleX(${squash})` } : undefined}
-          width="720"
-          height="688"
-          draggable={false}
-        />
-      ))}
+      <div className="ab-spin__stage" ref={stageRef} style={stretch}>
+        <div className="ab-spin__body">
+          {SPIN_VIEWS.map((v, i) => (
+            <img
+              key={v.src}
+              src={v.src}
+              alt=""
+              className={i === view ? 'is-current' : ''}
+              style={i === view && !pull ? { transform: `scaleX(${squash})` } : undefined}
+              width="720"
+              height="688"
+              draggable={false}
+            />
+          ))}
+          {/* anger overlays sit on the front-view face (percentages of the 720×688 frame) */}
+          <span className="ab-spin__blush ab-spin__blush--l" aria-hidden="true" />
+          <span className="ab-spin__blush ab-spin__blush--r" aria-hidden="true" />
+          <span className="ab-spin__vein" aria-hidden="true">💢</span>
+          <span className="ab-spin__steam ab-spin__steam--l" aria-hidden="true" />
+          <span className="ab-spin__steam ab-spin__steam--r" aria-hidden="true" />
+        </div>
+      </div>
+      {bubble && (
+        <span className="ab-spin__bubble" role="status" key={bubble}>
+          {bubble}
+        </span>
+      )}
       <span className="ab-spin__deg" aria-hidden="true">
         {Math.round(norm)}°
       </span>
       <span className="ab-spin__hint" aria-hidden="true">
-        ↔ geser buat muter 360°
+        ↔ geser buat muter · tahan &amp; tarik buat nyubit
       </span>
     </div>
   );

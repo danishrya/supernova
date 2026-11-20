@@ -2775,3 +2775,64 @@
 .ab-spin__hint { position: absolute; top: 10px; left: 10px; padding: 2px 8px; border-radius: 99px; background: rgba(23, 21, 47, 0.75); font-family: var(--font-space); font-size: 11px; color: #f7eedf; transition: opacity 0.2s ease; }
 .ab-spin.is-active .ab-spin__deg, .ab-spin:focus-visible .ab-spin__deg { opacity: 1; }
 .ab-spin.is-active .ab-spin__hint { opacity: 0; }
+
+/* ==========================================================================
+   TENTANG — avatar: pinch + spring back + anger (on top of the 360° turn)
+   ========================================================================== */
+.ab-spin { cursor: grab; user-select: none; -webkit-user-select: none; }
+.ab-spin.is-pulling { cursor: grabbing; }
+.ab-spin__stage { position: absolute; left: 0; right: 0; bottom: 0; transition: transform 0.55s cubic-bezier(0.34, 1.7, 0.5, 1); will-change: transform; }
+.ab-spin.is-pulling .ab-spin__stage { transition: none; }
+/* frame box matches the 720×688 images so overlay percentages land on the face */
+.ab-spin__body { position: relative; width: 100%; aspect-ratio: 720 / 688; animation: ab-breathe 3.6s ease-in-out infinite; transform-origin: 50% 100%; }
+.ab-spin__body img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; }
+@keyframes ab-breathe { 50% { transform: scaleY(1.012); } }
+
+.ab-spin__blush { position: absolute; top: 25%; width: 9%; aspect-ratio: 1.5; border-radius: 50%; background: radial-gradient(closest-side, rgba(229, 72, 77, 0.7), rgba(229, 72, 77, 0)); opacity: 0; transition: opacity 0.25s ease; pointer-events: none; }
+.ab-spin__blush--l { left: 37%; }
+.ab-spin__blush--r { left: 54%; }
+.ab-spin.is-pinched .ab-spin__blush { opacity: 0.55; }
+.ab-spin.is-angry .ab-spin__blush { opacity: 1; }
+
+.ab-spin__vein { position: absolute; left: 60%; top: 4%; font-size: clamp(18px, 2.6vw, 30px); line-height: 1; opacity: 0; transform: scale(0.3) rotate(-15deg); transition: opacity 0.2s ease, transform 0.35s cubic-bezier(0.3, 1.8, 0.5, 1); pointer-events: none; }
+.ab-spin.is-angry .ab-spin__vein { opacity: 1; transform: scale(1) rotate(0); animation: ab-vein 0.5s ease-in-out infinite alternate; }
+@keyframes ab-vein { to { transform: scale(1.18); } }
+
+.ab-spin__steam { position: absolute; top: 9%; width: 7%; aspect-ratio: 1; border-radius: 50%; background: radial-gradient(closest-side, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0)); opacity: 0; pointer-events: none; }
+.ab-spin__steam--l { left: 33%; }
+.ab-spin__steam--r { left: 60%; }
+.ab-spin.is-angry .ab-spin__steam { animation: ab-steam 0.9s ease-out infinite; }
+.ab-spin.is-angry .ab-spin__steam--r { animation-delay: 0.45s; }
+@keyframes ab-steam { 0% { opacity: 0; transform: translateY(0) scale(0.6); } 30% { opacity: 0.9; } 100% { opacity: 0; transform: translateY(-38px) scale(1.6); } }
+
+.ab-spin.is-angry .ab-spin__body { animation: ab-shake 0.12s linear infinite; }
+@keyframes ab-shake { 25% { transform: translateX(-2px) rotate(-0.6deg); } 75% { transform: translateX(2px) rotate(0.6deg); } }
+
+.ab-spin__bubble {
+  position: absolute;
+  top: 12%;
+  right: 6%;
+  z-index: 3;
+  max-width: 60%;
+  padding: 8px 12px;
+  border: 2px solid #17152f;
+  border-radius: 14px 14px 14px 4px;
+  background: #ffffff;
+  font-family: var(--font-caveat);
+  font-weight: 700;
+  font-size: 20px;
+  line-height: 1.1;
+  color: #17152f;
+  box-shadow: 3px 3px 0 #17152f;
+  animation: ab-pop 0.35s cubic-bezier(0.3, 1.8, 0.5, 1);
+  pointer-events: none;
+}
+.ab-spin.is-angry .ab-spin__bubble { background: #e5484d; color: #ffffff; font-size: 24px; }
+@keyframes ab-pop { from { transform: scale(0.4); opacity: 0; } }
+
+.ab-spin.is-active .ab-spin__hint, .ab-spin.is-pulling .ab-spin__hint { opacity: 0; }
+
+@media (prefers-reduced-motion: reduce) {
+  .ab-spin__body, .ab-spin.is-angry .ab-spin__body, .ab-spin.is-angry .ab-spin__vein, .ab-spin.is-angry .ab-spin__steam { animation: none; }
+  .ab-spin__stage { transition: none; }
+}
