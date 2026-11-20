@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { playClick } from '../utils/sound';
 
 // Beranda "Contoh karya" — three live cards that demo the kind of work instead
-// of static placeholders. Slugs match src/data/caseStudies.js.
+// of static placeholders.
 
 // Karhutla deck recording (public/media/karhutla-720.mp4). One file, split into
 // chapters by time: each chapter plays once and pauses on its last frame until
@@ -251,7 +251,7 @@ function DeckCard() {
 function WebCard() {
   return (
     <Link
-      to="/portofolio/landing-page-studio-foto-analog"
+      to="/layanan/website"
       className="figma-portfolio-small-card ws-card ws-web"
       onClick={() => playClick()}
       data-spotlight
@@ -315,7 +315,7 @@ function NotionCard() {
   const tasks = ['Brief klien masuk', 'Invoice DP terkirim', 'Revisi 2 beres', 'File final dikirim'];
   return (
     <Link
-      to="/portofolio/notion-freelance-os"
+      to="/produk-digital/notion-freelance-os"
       className="figma-portfolio-small-card ws-card ws-notion"
       onClick={() => playClick()}
       data-spotlight

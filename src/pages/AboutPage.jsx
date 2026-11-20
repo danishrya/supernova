@@ -229,8 +229,8 @@ export default function AboutPage() {
               >
                 Mulai ngobrol di WhatsApp <ArrowRight size={12} />
               </a>
-              <Link to="/portofolio" className="sn-btn sn-btn--md ab-cta__btn ab-cta__btn--outline" onClick={playClick}>
-                Lihat portofolio karya
+              <Link to="/#portofolio" className="sn-btn sn-btn--md ab-cta__btn ab-cta__btn--outline" onClick={playClick}>
+                Lihat contoh karya
               </Link>
             </div>
             <div className="ab-cta__note">

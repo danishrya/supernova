@@ -23,7 +23,6 @@ export const STUDIO_CONFIG = {
   navItems: [
     { label: 'Beranda', path: '/' },
     { label: 'Layanan', path: '/layanan' },
-    { label: 'Portofolio', path: '/portofolio' },
     { label: 'Produk', path: '/produk-digital' },
     { label: 'Harga', path: '/harga' },
     { label: 'Tentang', path: '/tentang' },
@@ -134,7 +133,7 @@ export const STUDIO_CONFIG = {
     { label: 'Semua Layanan', path: '/layanan', category: 'Halaman' },
     { label: 'Desain Presentasi & PPT', path: '/layanan/desain-ppt', category: 'Layanan' },
     { label: 'Pembuatan Website', path: '/layanan/website', category: 'Layanan' },
-    { label: 'Galeri Portofolio', path: '/portofolio', category: 'Halaman' },
+    { label: 'Contoh Karya', path: '/#portofolio', category: 'Halaman' },
     { label: 'Katalog Produk Digital', path: '/produk-digital', category: 'Halaman' },
     { label: 'Kalkulator Estimasi Biaya', path: '/harga', category: 'Alat' },
     { label: 'Tentang Min Cham & Studio', path: '/tentang', category: 'Halaman' },

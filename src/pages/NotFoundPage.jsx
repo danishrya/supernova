@@ -84,8 +84,8 @@ export default function NotFoundPage() {
           <Link to="/" className="sn-btn sn-btn--primary sn-btn--lg" data-magnetic onClick={playClick}>
             Balik ke beranda <ArrowRight size={13} />
           </Link>
-          <Link to="/portofolio" className="sn-link-underline" onClick={playClick}>
-            Atau lihat karya portofolio <ArrowUpRight size={11} />
+          <Link to="/#portofolio" className="sn-link-underline" onClick={playClick}>
+            Atau lihat contoh karya <ArrowUpRight size={11} />
           </Link>
         </div>
 

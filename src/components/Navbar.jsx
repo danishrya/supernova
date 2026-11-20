@@ -38,7 +38,6 @@ export default function Navbar() {
   const navItems = [
     { label: 'Beranda', path: '/' },
     { label: 'Layanan', path: '/layanan' },
-    { label: 'Portofolio', path: '/portofolio' },
     { label: 'Produk', path: '/produk-digital' },
     { label: 'Harga', path: '/harga' },
     { label: 'Tentang', path: '/tentang' },

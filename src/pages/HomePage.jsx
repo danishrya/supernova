@@ -174,7 +174,7 @@ export default function HomePage() {
             </Link>
 
             <Link
-              to="/portofolio"
+              to="/#portofolio"
               className="figma-btn-secondary"
               onClick={() => playClick()}
             >
@@ -394,11 +394,11 @@ export default function HomePage() {
           </div>
 
           <Link
-            to="/portofolio"
+            to="/layanan"
             className="figma-all-works-link"
             onClick={() => playClick()}
           >
-            <span>Lihat semua karya</span>
+            <span>Lihat semua layanan</span>
             <img src="/figma-assets/arrow-right.svg" alt="" width="16" height="16" />
           </Link>
         </div>

@@ -157,7 +157,7 @@ export default function ServicesPage() {
               </a>
 
               <Link
-                to="/portofolio"
+                to="/#portofolio"
                 className="figma-block-sublink"
                 onClick={() => playClick()}
               >
@@ -213,7 +213,7 @@ export default function ServicesPage() {
               </a>
 
               <Link
-                to="/portofolio"
+                to="/#portofolio"
                 className="figma-block-sublink"
                 onClick={() => playClick()}
               >
@@ -400,11 +400,11 @@ export default function ServicesPage() {
             </a>
 
             <Link
-              to="/portofolio"
+              to="/#portofolio"
               className="figma-closing-portfolio-btn"
               onClick={() => playClick()}
             >
-              <span>Lihat portofolio karya</span>
+              <span>Lihat contoh karya</span>
               <img src="/figma-assets/layanan-portfolio-icon.svg" alt="" width="12" height="12" />
             </Link>
 
