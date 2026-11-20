@@ -41,14 +41,6 @@ const WA_URL = `https://wa.me/${STUDIO_CONFIG.whatsappNumber}?text=${encodeURICo
   'Halo Min Cham, gue cocok sama cara kerja Supernova. Yuk bikin sesuatu bareng!'
 )}`;
 
-// Admin character turnaround: front → side → back → side (mirrored), 90° apart.
-const SPIN_VIEWS = [
-  { src: '/admin-spin/front.webp', label: 'depan' },
-  { src: '/admin-spin/side.webp', label: 'samping kiri' },
-  { src: '/admin-spin/back.webp', label: 'belakang' },
-  { src: '/admin-spin/side-r.webp', label: 'samping kanan' },
-];
-
 const BUBBLES = {
   poke: ['eh? apa?', 'hm?', 'iya, kenapa?'],
   pinched: ['aduh…', 'eh eh eh', 'sakit woy'],
@@ -57,83 +49,141 @@ const BUBBLES = {
 };
 const pick = (list) => list[Math.floor(Math.random() * list.length)];
 
+/** One open eye drawn over a lens of the (closed-eyed) drawing; the pupil follows --ex/--ey. */
+function AvatarEye({ side }) {
+  return (
+    <svg className={`ab-eye ab-eye--${side}`} viewBox="0 0 60 36" aria-hidden="true">
+      <defs>
+        <clipPath id={`ab-eye-clip-${side}`}>
+          <path d="M4 18 Q30 -2 56 18 Q30 38 4 18 Z" />
+        </clipPath>
+      </defs>
+      <g className="ab-eye__lid">
+        <path d="M4 18 Q30 -2 56 18 Q30 38 4 18 Z" fill="#fffdf8" />
+        <g clipPath={`url(#ab-eye-clip-${side})`}>
+          <g className="ab-eye__look">
+            <circle cx="30" cy="18" r="10" fill="#4a2e1c" />
+            <circle cx="30" cy="18" r="5" fill="#0f0a08" />
+            <circle cx="33" cy="15" r="2.2" fill="#ffffff" />
+          </g>
+        </g>
+        <path d="M4 18 Q30 -2 56 18 Q30 38 4 18 Z" fill="none" stroke="#17110f" strokeWidth="3" strokeLinejoin="round" />
+      </g>
+    </svg>
+  );
+}
+
 /**
- * Admin avatar.
- * Hover: turn 360°. Press + drag: pinch (the drawing stretches toward the pull,
- * springs back on release). Pinch hard or long enough and he gets angry.
+ * Admin avatar: stays still, eyes follow the cursor. Press + drag pinches it
+ * (stretches toward the pull, springs back); pinch hard or long and he gets angry.
  */
-function AdminSpin() {
-  const [angle, setAngle] = useState(0);
-  const [active, setActive] = useState(false);
+function AdminAvatar() {
   const [mood, setMood] = useState('idle'); // idle | pinched | angry
   const [bubble, setBubble] = useState('');
   const [pull, setPull] = useState(null); // { ox, oy, dx, dy } while pinching
-  const press = useRef(null);
-  const timers = useRef([]);
+  const rootRef = useRef(null);
   const stageRef = useRef(null);
+  const press = useRef(null);
+  const moodRef = useRef('idle');
+  const timers = useRef([]);
 
-  const later = (fn, ms) => timers.current.push(window.setTimeout(fn, ms));
-  useEffect(() => () => timers.current.forEach(window.clearTimeout), []);
-
-  const norm = ((angle % 360) + 360) % 360;
-  const view = pull ? 0 : Math.round(norm / 90) % 4;
-  const squash = Math.max(0.35, Math.abs(Math.cos(((norm - view * 90) * Math.PI) / 180)));
-
-  const say = (text, ms = 1600) => {
-    setBubble(text);
+  const setMoodBoth = (m) => {
+    moodRef.current = m;
+    setMood(m);
+  };
+  const clearTimers = () => {
     timers.current.forEach(window.clearTimeout);
     timers.current = [];
+  };
+  const later = (fn, ms) => timers.current.push(window.setTimeout(fn, ms));
+  const say = (text, ms) => {
+    setBubble(text);
     later(() => setBubble(''), ms);
   };
 
   const getAngry = () => {
-    setMood('angry');
+    clearTimers();
+    setMoodBoth('angry');
     say(pick(BUBBLES.angry), 2200);
     later(() => {
-      setMood('idle');
-      say(pick(BUBBLES.calm), 1800);
+      setMoodBoth('idle');
+      setBubble(pick(BUBBLES.calm));
+      later(() => setBubble(''), 1800);
     }, 2400);
   };
 
-  const onDown = (e) => {
-    const r = stageRef.current.getBoundingClientRect();
-    e.currentTarget.setPointerCapture?.(e.pointerId);
-    press.current = { x: e.clientX, y: e.clientY, t: performance.now(), travel: 0, w: r.width, h: r.height };
-    setAngle(0);
-    setPull({ ox: ((e.clientX - r.left) / r.width) * 100, oy: ((e.clientY - r.top) / r.height) * 100, dx: 0, dy: 0 });
-  };
-
-  const onMove = (e) => {
+  // End a pinch no matter where/how the button is released (outside the box,
+  // outside the window, lost capture, tab switch) — otherwise it stays "pinched".
+  const endPinch = () => {
     const p = press.current;
-    if (p) {
-      const dx = Math.max(-90, Math.min(90, e.clientX - p.x));
-      const dy = Math.max(-90, Math.min(90, e.clientY - p.y));
-      p.travel = Math.max(p.travel, Math.hypot(dx, dy));
-      setPull((v) => v && { ...v, dx, dy });
-      if (p.travel > 18 && mood === 'idle') {
-        setMood('pinched');
-        say(pick(BUBBLES.pinched), 1200);
-      }
-      // a hard pull, or holding the pinch for a while, makes him angry
-      if (mood !== 'angry' && (p.travel > 75 || (p.travel > 25 && performance.now() - p.t > 1100))) getAngry();
-      return;
-    }
-    if (e.pointerType === 'mouse') {
-      const r = e.currentTarget.getBoundingClientRect();
-      setAngle(((e.clientX - r.left) / r.width) * 360);
-    }
-  };
-
-  const onUp = () => {
-    const p = press.current;
+    if (!p) return;
     press.current = null;
     setPull(null);
-    if (!p) return;
-    if (p.travel < 6 && mood === 'idle') say(pick(BUBBLES.poke), 1200);
-    else if (mood === 'pinched') {
-      setMood('idle');
+    if (p.travel < 6 && moodRef.current === 'idle') {
+      clearTimers();
+      say(pick(BUBBLES.poke), 1200);
+    } else if (moodRef.current === 'pinched') {
+      clearTimers();
+      setMoodBoth('idle');
       say('fiuh…', 900);
     }
+  };
+
+  useEffect(() => {
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    let raf = 0;
+    const onWinMove = (e) => {
+      const p = press.current;
+      if (p) {
+        if (e.pointerType === 'mouse' && e.buttons === 0) {
+          endPinch(); // button already released somewhere we didn't hear about
+          return;
+        }
+        const dx = Math.max(-90, Math.min(90, e.clientX - p.x));
+        const dy = Math.max(-90, Math.min(90, e.clientY - p.y));
+        p.travel = Math.max(p.travel, Math.hypot(dx, dy));
+        setPull((v) => v && { ...v, dx, dy });
+        if (p.travel > 18 && moodRef.current === 'idle') {
+          clearTimers();
+          setMoodBoth('pinched');
+          say(pick(BUBBLES.pinched), 1200);
+        }
+        if (moodRef.current !== 'angry' && (p.travel > 75 || (p.travel > 25 && performance.now() - p.t > 1100))) getAngry();
+      }
+      if (reduced || !rootRef.current) return;
+      cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(() => {
+        // eyes look toward the cursor; distance only changes how far (capped)
+        const r = rootRef.current.getBoundingClientRect();
+        const cx = r.left + r.width / 2;
+        const cy = r.top + r.height * 0.32;
+        const ang = Math.atan2(e.clientY - cy, e.clientX - cx);
+        const reach = Math.min(1, Math.hypot(e.clientX - cx, e.clientY - cy) / 260);
+        rootRef.current.style.setProperty('--ex', (Math.cos(ang) * 9 * reach).toFixed(2));
+        rootRef.current.style.setProperty('--ey', (Math.sin(ang) * 5 * reach).toFixed(2));
+      });
+    };
+    const onWinUp = () => endPinch();
+    window.addEventListener('pointermove', onWinMove, { passive: true });
+    window.addEventListener('pointerup', onWinUp);
+    window.addEventListener('pointercancel', onWinUp);
+    window.addEventListener('blur', onWinUp);
+    return () => {
+      cancelAnimationFrame(raf);
+      window.removeEventListener('pointermove', onWinMove);
+      window.removeEventListener('pointerup', onWinUp);
+      window.removeEventListener('pointercancel', onWinUp);
+      window.removeEventListener('blur', onWinUp);
+      clearTimers();
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const onDown = (e) => {
+    if (e.button !== undefined && e.button !== 0) return;
+    const r = stageRef.current.getBoundingClientRect();
+    press.current = { x: e.clientX, y: e.clientY, t: performance.now(), travel: 0 };
+    setPull({ ox: ((e.clientX - r.left) / r.width) * 100, oy: ((e.clientY - r.top) / r.height) * 100, dx: 0, dy: 0 });
   };
 
   const stretch = pull
@@ -145,45 +195,25 @@ function AdminSpin() {
 
   return (
     <div
-      className={`ab-portrait__photo ab-spin is-${mood}${active ? ' is-active' : ''}${pull ? ' is-pulling' : ''}`}
+      ref={rootRef}
+      className={`ab-portrait__photo ab-spin is-${mood}${pull ? ' is-pulling' : ''}`}
       role="img"
       tabIndex={0}
-      aria-label={`Avatar admin Supernova, tampak ${SPIN_VIEWS[view].label}. Geser kursor buat muter, klik tahan lalu tarik buat nyubit.`}
-      onPointerEnter={() => setActive(true)}
+      aria-label="Avatar admin Supernova. Klik tahan lalu tarik buat nyubit, atau tekan Enter."
       onPointerDown={onDown}
-      onPointerMove={onMove}
-      onPointerUp={onUp}
-      onPointerCancel={onUp}
-      onPointerLeave={() => {
-        if (press.current) return;
-        setActive(false);
-        setAngle(norm > 180 ? 360 : 0);
-      }}
       onKeyDown={(e) => {
-        if (e.key === 'ArrowRight') setAngle((a) => a + 90);
-        if (e.key === 'ArrowLeft') setAngle((a) => a - 90);
-        if (e.key === 'Enter' || e.key === ' ') {
+        if ((e.key === 'Enter' || e.key === ' ') && moodRef.current !== 'angry') {
           e.preventDefault();
-          setAngle(0);
-          if (mood !== 'angry') getAngry();
+          getAngry();
         }
       }}
     >
       <div className="ab-spin__stage" ref={stageRef} style={stretch}>
         <div className="ab-spin__body">
-          {SPIN_VIEWS.map((v, i) => (
-            <img
-              key={v.src}
-              src={v.src}
-              alt=""
-              className={i === view ? 'is-current' : ''}
-              style={i === view && !pull ? { transform: `scaleX(${squash})` } : undefined}
-              width="720"
-              height="688"
-              draggable={false}
-            />
-          ))}
-          {/* anger overlays sit on the front-view face (percentages of the 720×688 frame) */}
+          <img src="/admin-spin/front.webp" alt="" className="is-current" width="720" height="688" draggable={false} />
+          {/* overlays are % of the 720×688 front frame */}
+          <AvatarEye side="l" />
+          <AvatarEye side="r" />
           <span className="ab-spin__blush ab-spin__blush--l" aria-hidden="true" />
           <span className="ab-spin__blush ab-spin__blush--r" aria-hidden="true" />
           <span className="ab-spin__vein" aria-hidden="true">💢</span>
@@ -196,11 +226,8 @@ function AdminSpin() {
           {bubble}
         </span>
       )}
-      <span className="ab-spin__deg" aria-hidden="true">
-        {Math.round(norm)}°
-      </span>
       <span className="ab-spin__hint" aria-hidden="true">
-        ↔ geser buat muter · tahan &amp; tarik buat nyubit
+        tahan &amp; tarik buat nyubit
       </span>
     </div>
   );
@@ -226,7 +253,7 @@ export default function AboutPage() {
                 <span>PORTRAIT_REF.01</span>
                 <span className="ab-portrait__iso">ISO 400</span>
               </div>
-              <AdminSpin />
+              <AdminAvatar />
               <figcaption className="ab-portrait__bottom">
                 <span>FOUNDER</span>
                 <span>JKT, ID</span>
