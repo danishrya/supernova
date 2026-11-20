@@ -3310,3 +3310,81 @@
 @media (max-width: 1024px) { .lx-ppt, .lx-web, .lx-fan { min-height: 420px; } }
 /* rail runs from the first badge centre to the last one (5 cols, 20px gaps) */
 .lx-order__rail { right: calc((100% - 80px) / 5 - 20px); }
+
+/* ==========================================================================
+   BERANDA — Contoh karya: Karhutla deck video, chapter-by-chapter
+   ========================================================================== */
+.ws-video__screen { min-height: 0; aspect-ratio: 16 / 9; flex: none; background: #0b0908; box-shadow: none; }
+.ws-video__el { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; cursor: pointer; }
+.ws-video .ws-stage__counter { z-index: 3; top: 12px; right: 14px; bottom: auto; padding: 3px 8px; border-radius: 99px; background: rgba(10, 8, 7, 0.7); color: #f3ede4; }
+.ws-video .ws-stage { justify-content: flex-start; }
+
+.ws-video__play {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  z-index: 3;
+  transform: translate(-50%, -50%);
+  padding: 12px 22px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--figma-orange);
+  color: #14110f;
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  box-shadow: 0 16px 40px -12px rgba(255, 107, 31, 0.7);
+}
+
+.ws-video__controls { position: absolute; right: 12px; bottom: 12px; z-index: 3; display: flex; gap: 6px; }
+.ws-video__btn {
+  height: 36px;
+  min-width: 36px;
+  padding: 0 14px;
+  border: 1px solid rgba(243, 237, 228, 0.25);
+  border-radius: 999px;
+  background: rgba(10, 8, 7, 0.72);
+  backdrop-filter: blur(6px);
+  color: #f3ede4;
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 13px;
+  cursor: pointer;
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease, opacity 0.2s ease, transform 0.2s ease;
+}
+.ws-video__btn:hover:not(:disabled) { border-color: var(--figma-orange); }
+.ws-video__btn:disabled { opacity: 0.35; cursor: default; }
+.ws-video__next.is-ready { background: var(--figma-orange); border-color: var(--figma-orange); color: #14110f; animation: ws-nudge 1.6s ease-in-out infinite; }
+@keyframes ws-nudge { 0% { box-shadow: 0 0 0 0 rgba(255, 107, 31, 0.6); } 70%, 100% { box-shadow: 0 0 0 10px rgba(255, 107, 31, 0); } }
+
+.ws-chapters { display: grid; grid-template-columns: repeat(10, minmax(0, 1fr)); gap: 4px; }
+.ws-chapter { position: relative; height: 6px; padding: 0; border: 0; border-radius: 99px; background: var(--figma-border); overflow: hidden; cursor: pointer; transition: transform 0.2s ease; }
+.ws-chapter:hover { transform: scaleY(1.6); }
+.ws-chapter__fill { position: absolute; left: 0; top: 0; bottom: 0; background: var(--figma-orange); }
+.ws-chapter.is-done .ws-chapter__fill { opacity: 0.55; }
+.ws-chapter__label { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.04em; color: var(--figma-text-primary); }
+.ws-chapter__label em { font-style: normal; color: var(--figma-orange); }
+
+.ws-video.is-waiting .ws-live__dot { animation: none; background: var(--figma-orange); }
+
+@media (max-width: 640px) {
+  .ws-video__btn { height: 32px; padding: 0 10px; font-size: 12px; }
+  .ws-chapters { gap: 3px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ws-video__next.is-ready { animation: none; }
+}
+/* Controls live under the video so they never cover the deck's own captions */
+.ws-video__bar { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.ws-video__bar .ws-video__controls { position: static; }
+.ws-video__bar .ws-video__btn { background: var(--figma-card-elevated); border-color: var(--figma-border); color: var(--figma-text-primary); backdrop-filter: none; }
+.ws-video__bar .ws-video__next.is-ready { background: var(--figma-orange); border-color: var(--figma-orange); color: #14110f; }
+@media (max-width: 640px) { .ws-video__bar { flex-direction: column; align-items: flex-start; } }
+/* Video card sizes to its content; the two stacked cards stretch to match */
+.ws-grid { align-items: stretch; }
+.ws-grid .figma-portfolio-big-card.ws-video { height: auto; min-height: 620px; gap: 16px; }
+.ws-grid .figma-portfolio-stack-col .figma-portfolio-small-card { height: auto; min-height: 298px; flex: 1; }
+.ws-video .ws-stage { gap: 12px; }
+@media (max-width: 1024px) { .ws-grid .figma-portfolio-big-card.ws-video { min-height: 0; } }
