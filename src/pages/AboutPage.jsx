@@ -41,6 +41,12 @@ const WA_URL = `https://wa.me/${STUDIO_CONFIG.whatsappNumber}?text=${encodeURICo
   'Halo Min Cham, gue cocok sama cara kerja Supernova. Yuk bikin sesuatu bareng!'
 )}`;
 
+const GREETINGS = [
+  'Halo! Selamat datang 👋 Ada yang bisa Min Cham bantu?',
+  'Eh, halo! Min Cham di sini. Mau bikin apa nih?',
+  'Selamat datang di Supernova! Butuh deck, web, atau template?',
+];
+
 const BUBBLES = {
   poke: ['eh? apa?', 'hm?', 'iya, kenapa?'],
   pinched: ['aduh…', 'eh eh eh', 'sakit woy'],
@@ -80,6 +86,7 @@ function AvatarEye({ side }) {
 function AdminAvatar() {
   const [mood, setMood] = useState('idle'); // idle | pinched | angry
   const [bubble, setBubble] = useState('');
+  const [waving, setWaving] = useState(true); // waves hello on arrival, then rests the arm
   const [pull, setPull] = useState(null); // { ox, oy, dx, dy } while pinching
   const rootRef = useRef(null);
   const stageRef = useRef(null);
@@ -128,6 +135,15 @@ function AdminAvatar() {
       say('fiuh…', 900);
     }
   };
+
+  // Greet once when the page opens, then lower the arm
+  useEffect(() => {
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const t1 = window.setTimeout(() => setBubble(pick(GREETINGS)), 450);
+    const t2 = window.setTimeout(() => setWaving(false), reduced ? 2200 : 3200);
+    const t3 = window.setTimeout(() => setBubble((b) => (GREETINGS.includes(b) ? '' : b)), 4800);
+    return () => [t1, t2, t3].forEach(window.clearTimeout);
+  }, []);
 
   useEffect(() => {
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -210,7 +226,8 @@ function AdminAvatar() {
     >
       <div className="ab-spin__stage" ref={stageRef} style={stretch}>
         <div className="ab-spin__body">
-          <img src="/admin-spin/front.webp" alt="" className="is-current" width="720" height="688" draggable={false} />
+          <img src={waving ? '/admin-spin/wavebase.webp' : '/admin-spin/down.webp'} alt="" className="is-current" width="720" height="688" draggable={false} />
+          {waving && <img src="/admin-spin/hand.webp" alt="" className="ab-hand" draggable={false} />}
           {/* overlays are % of the 720×688 front frame */}
           <AvatarEye side="l" />
           <AvatarEye side="r" />
