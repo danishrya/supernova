@@ -2836,3 +2836,22 @@
   .ab-spin__body, .ab-spin.is-angry .ab-spin__body, .ab-spin.is-angry .ab-spin__vein, .ab-spin.is-angry .ab-spin__steam { animation: none; }
   .ab-spin__stage { transition: none; }
 }
+
+/* ==========================================================================
+   TENTANG — avatar eyes (open eyes drawn over the closed-eye drawing)
+   Positions are % of the 900×860 source frame (head-aligned crop).
+   ========================================================================== */
+.ab-eye { position: absolute; top: 20.3%; width: 6.2%; height: auto; overflow: visible; pointer-events: none; }
+.ab-eye--l { left: 41.8%; }
+.ab-eye--r { left: 52.3%; }
+.ab-eye__lid { transform-box: fill-box; transform-origin: center; animation: ab-blink 5.2s infinite; transition: transform 0.25s ease; }
+.ab-eye--r .ab-eye__lid { animation-delay: 0.02s; }
+.ab-eye__look { transform: translate(calc(var(--ex, 0) * 1px), calc(var(--ey, 0) * 1px)); transition: transform 0.12s ease-out; }
+@keyframes ab-blink { 0%, 94%, 100% { transform: scaleY(1); } 96.5% { transform: scaleY(0.08); } }
+.ab-spin.is-pinched .ab-eye__lid { animation: none; transform: scaleY(0.4); }
+.ab-spin.is-angry .ab-eye__lid { animation: none; }
+.ab-spin.is-angry .ab-eye--l .ab-eye__lid { transform: rotate(14deg) scaleY(0.55); }
+.ab-spin.is-angry .ab-eye--r .ab-eye__lid { transform: rotate(-14deg) scaleY(0.55); }
+.ab-spin:hover .ab-spin__hint { opacity: 0; }
+.ab-spin { cursor: grab; }
+@media (prefers-reduced-motion: reduce) { .ab-eye__lid { animation: none; } }
