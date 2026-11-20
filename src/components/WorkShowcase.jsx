@@ -28,35 +28,59 @@ function DeckCard() {
   const rafRef = useRef(0);
   const [chapter, setChapter] = useState(0);
   const [playing, setPlaying] = useState(false);
-  const [progress, setProgress] = useState(0); // 0..1 within the current chapter
   const [started, setStarted] = useState(false);
+  const [load, setLoad] = useState(false); // attach the video src only when the card is near
+  // Progress fill is written straight to the DOM: updating React state every
+  // animation frame re-rendered the whole card ~60×/s while the video played.
+  const fillRefs = useRef([]);
+  const chapterRef = useRef(0);
+  const visibleRef = useRef(false);
+  const resumeRef = useRef(false);
 
   const stopWatch = () => cancelAnimationFrame(rafRef.current);
+  const setFill = (i, ratio) => {
+    const el = fillRefs.current[i];
+    if (el) el.style.width = `${Math.min(1, Math.max(0, ratio)) * 100}%`;
+  };
+
+  const watchChapter = (i) => {
+    const v = videoRef.current;
+    const c = CHAPTERS[i];
+    const tick = () => {
+      const t = v.currentTime;
+      setFill(i, (t - c.start) / (c.end - c.start));
+      if (t >= c.end - 0.04) {
+        v.pause();
+        setPlaying(false);
+        setFill(i, 1);
+        return;
+      }
+      rafRef.current = requestAnimationFrame(tick);
+    };
+    rafRef.current = requestAnimationFrame(tick);
+  };
 
   // Play chapter i from its start; pause exactly at its end.
   const playChapter = (i) => {
     const v = videoRef.current;
     if (!v) return;
+    if (!load) setLoad(true);
     const c = CHAPTERS[i];
     stopWatch();
+    chapterRef.current = i;
     setChapter(i);
     setStarted(true);
-    if (Math.abs(v.currentTime - c.start) > 0.15) v.currentTime = c.start;
-    const watch = () => {
-      const t = v.currentTime;
-      setProgress(Math.min(1, Math.max(0, (t - c.start) / (c.end - c.start))));
-      if (t >= c.end - 0.04) {
-        v.pause();
-        setPlaying(false);
-        setProgress(1);
-        return;
-      }
-      rafRef.current = requestAnimationFrame(watch);
+    setFill(i, 0);
+    const start = () => {
+      if (Math.abs(v.currentTime - c.start) > 0.15) v.currentTime = c.start;
+      const p = v.play();
+      setPlaying(true);
+      if (p && p.catch) p.catch(() => setPlaying(false));
+      watchChapter(i);
     };
-    const p = v.play();
-    setPlaying(true);
-    if (p && p.catch) p.catch(() => setPlaying(false));
-    rafRef.current = requestAnimationFrame(watch);
+    // src may have just been attached — wait for metadata before seeking
+    if (v.readyState >= 1) start();
+    else v.addEventListener('loadedmetadata', start, { once: true });
   };
 
   const next = () => {
@@ -69,23 +93,54 @@ function DeckCard() {
     playChapter(Math.max(0, chapter - 1));
   };
 
-  // Auto-play the first chapter once the card scrolls into view
   useEffect(() => {
     const el = cardRef.current;
-    if (!el || !('IntersectionObserver' in window)) return undefined;
+    if (!el || !('IntersectionObserver' in window)) {
+      setLoad(true);
+      return undefined;
+    }
     const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    const io = new IntersectionObserver(
+    // 1) start downloading only when the card is about to scroll in
+    const near = new IntersectionObserver(
       ([e]) => {
-        if (e.isIntersecting && !started && !reduce) {
-          playChapter(0);
-          io.disconnect();
+        if (e.isIntersecting) {
+          setLoad(true);
+          near.disconnect();
         }
       },
-      { threshold: 0.45 }
+      { rootMargin: '400px 0px' }
     );
-    io.observe(el);
+    // 2) autoplay chapter 1 on first view; pause when off-screen, resume on return
+    let autoplayed = false;
+    const seen = new IntersectionObserver(
+      ([e]) => {
+        const v = videoRef.current;
+        visibleRef.current = e.isIntersecting;
+        if (!v) return;
+        if (e.isIntersecting) {
+          if (!autoplayed && !reduce) {
+            autoplayed = true;
+            playChapter(0);
+          } else if (resumeRef.current) {
+            resumeRef.current = false;
+            v.play().catch(() => {});
+            setPlaying(true);
+            watchChapter(chapterRef.current);
+          }
+        } else if (!v.paused) {
+          resumeRef.current = true;
+          stopWatch();
+          v.pause();
+          setPlaying(false);
+        }
+      },
+      { threshold: 0.35 }
+    );
+    near.observe(el);
+    seen.observe(el);
     return () => {
-      io.disconnect();
+      near.disconnect();
+      seen.disconnect();
       stopWatch();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -118,11 +173,11 @@ function DeckCard() {
           <video
             ref={videoRef}
             className="ws-video__el"
-            src="/media/karhutla-720.mp4"
+            src={load ? '/media/karhutla-960.mp4' : undefined}
             poster="/media/karhutla-poster.jpg"
             muted
             playsInline
-            preload="metadata"
+            preload={load ? 'auto' : 'none'}
             aria-label="Rekaman presentasi Karhutla Indonesia"
             onClick={() => (playing ? null : next())}
           />
@@ -150,7 +205,10 @@ function DeckCard() {
             >
               <span
                 className="ws-chapter__fill"
-                style={{ width: i < chapter ? '100%' : i === chapter ? `${progress * 100}%` : '0%' }}
+                ref={(el) => {
+                  fillRefs.current[i] = el;
+                }}
+                style={i === chapter ? undefined : { width: i < chapter ? '100%' : '0%' }}
               />
             </button>
           ))}
