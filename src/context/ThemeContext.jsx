@@ -3,13 +3,16 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 const ThemeContext = createContext();
 
 export function ThemeProvider({ children }) {
+  // Dark by default. Only an explicit toggle is remembered (new key: the old one
+  // was written on every visit, so it can't tell a real choice from the old default).
   const [theme, setTheme] = useState(() => {
-    // Default to 'light' per user preference ("warnanya kan awalnya putih")
-    const saved = localStorage.getItem('supernova_theme');
-    if (saved === 'dark' || saved === 'light') {
-      return saved;
+    try {
+      const saved = localStorage.getItem('supernova_theme_choice');
+      if (saved === 'dark' || saved === 'light') return saved;
+    } catch {
+      /* storage blocked: fall through to the default */
     }
-    return 'light';
+    return 'dark';
   });
 
   useEffect(() => {
@@ -17,11 +20,18 @@ export function ThemeProvider({ children }) {
     root.setAttribute('data-theme', theme);
     root.classList.remove('theme-light', 'theme-dark');
     root.classList.add(theme === 'dark' ? 'theme-dark' : 'theme-light');
-    localStorage.setItem('supernova_theme', theme);
   }, [theme]);
 
   const toggleTheme = () => {
-    setTheme((prev) => (prev === 'light' ? 'dark' : 'light'));
+    setTheme((prev) => {
+      const next = prev === 'light' ? 'dark' : 'light';
+      try {
+        localStorage.setItem('supernova_theme_choice', next);
+      } catch {
+        /* not persisted; still switches for this visit */
+      }
+      return next;
+    });
   };
 
   return (
