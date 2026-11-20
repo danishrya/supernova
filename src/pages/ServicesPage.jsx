@@ -1,6 +1,13 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { playClick } from '../utils/sound';
+import {
+  ServiceJumpNav,
+  PptMorphVisual,
+  WebResizeVisual,
+  ProdukFanVisual,
+  OrderTimeline,
+} from '../components/LayananInteractive';
 
 export default function ServicesPage() {
   // FAQ accordion active item state
@@ -98,96 +105,13 @@ export default function ServicesPage() {
       {/* =========================================================================
           SECTION 2: 3 BLOK LAYANAN BESAR (Figma 2001:490)
           ========================================================================= */}
+      <ServiceJumpNav />
+
       <section className="figma-layanan-blocks-container" data-name="Section - 3 BLOK LAYANAN BESAR">
         {/* BLOK 1: DESAIN PRESENTASI (PPT) — Visual Kiri, Konten Kanan */}
-        <article className="figma-layanan-block" data-name="BLOK 1: DESAIN PRESENTASI (PPT)">
+        <article id="blok-ppt" className="figma-layanan-block" data-name="BLOK 1: DESAIN PRESENTASI (PPT)">
           {/* Visual Kiri: Wireframe Slide 16:9 Asimetris Stack */}
-          <div className="figma-layanan-block-visual">
-            {/* Background Accent Slide (-4 deg) */}
-            <div
-              style={{
-                position: 'absolute',
-                width: '85%',
-                height: '60%',
-                backgroundColor: 'var(--figma-card-elevated)',
-                border: '1px solid var(--figma-border)',
-                borderRadius: '2px',
-                transform: 'rotate(-4deg)',
-                opacity: 0.5,
-              }}
-            />
-
-            {/* Foreground Master Slide (+1.5 deg) */}
-            <div
-              style={{
-                position: 'relative',
-                width: '90%',
-                backgroundColor: 'var(--figma-bg)',
-                border: '1px solid var(--figma-border)',
-                borderRadius: '4px',
-                transform: 'rotate(1.5deg)',
-                padding: '16px',
-                display: 'flex',
-                flexDirection: 'column',
-                gap: '8px',
-                boxShadow: 'var(--figma-shadow-card)',
-              }}
-            >
-              {/* Slide Header Bar */}
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderBottom: '1px solid var(--figma-border)', paddingBottom: '8px' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                  <span style={{ width: '10px', height: '10px', borderRadius: '9999px', backgroundColor: 'var(--figma-orange)' }} />
-                  <span style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', color: 'var(--figma-text-secondary)', letterSpacing: '1px', textTransform: 'uppercase' }}>
-                    SUPERNOVA // DECK INVESTASI UMKM
-                  </span>
-                </div>
-                <span style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', color: 'var(--figma-text-muted)' }}>
-                  16:9 RATIO
-                </span>
-              </div>
-
-              {/* Slide Body Wireframe */}
-              <div style={{ display: 'grid', gridTemplateColumns: '7fr 5fr', gap: '12px', padding: '8px 0' }}>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                  <span style={{ fontFamily: 'var(--font-display)', fontWeight: 800, fontSize: '16px', color: 'var(--figma-text-primary)' }}>
-                    Pertumbuhan Penjualan Q3-Q4
-                  </span>
-                  <div style={{ width: '80%', height: '6px', backgroundColor: 'var(--figma-border)', borderRadius: '2px' }} />
-                  <div style={{ width: '50%', height: '6px', backgroundColor: 'var(--figma-border)', borderRadius: '2px' }} />
-                  <div style={{ marginTop: '4px' }}>
-                    <span style={{ backgroundColor: 'var(--figma-card-elevated)', border: '1px solid var(--figma-border)', padding: '2px 8px', borderRadius: '2px', fontFamily: 'var(--font-mono)', fontSize: '9px', color: 'var(--figma-yellow)' }}>
-                      +142% GROWTH
-                    </span>
-                  </div>
-                </div>
-
-                <div style={{ backgroundColor: 'var(--figma-card)', border: '1px solid var(--figma-border)', borderRadius: '4px', padding: '8px', display: 'flex', flexDirection: 'column', justifyContent: 'flex-end', height: '80px' }}>
-                  <div style={{ display: 'flex', alignItems: 'flex-end', gap: '8px', height: '50px', marginBottom: '4px' }}>
-                    <div style={{ flex: 1, height: '30%', backgroundColor: 'var(--figma-border)' }} />
-                    <div style={{ flex: 1, height: '60%', backgroundColor: 'var(--figma-border)' }} />
-                    <div style={{ flex: 1, height: '95%', backgroundColor: 'var(--figma-orange)' }} />
-                  </div>
-                  <span style={{ fontFamily: 'var(--font-mono)', fontSize: '8px', color: 'var(--figma-text-muted)', textAlign: 'center' }}>
-                    DATA VIZ // 2026
-                  </span>
-                </div>
-              </div>
-
-              {/* Slide Footer */}
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderTop: '1px solid var(--figma-border)', paddingTop: '6px' }}>
-                <span style={{ fontFamily: 'var(--font-mono)', fontSize: '9px', color: 'var(--figma-text-muted)' }}>
-                  SLIDE 16:9 // PITCH DECK
-                </span>
-                <span style={{ fontFamily: 'var(--font-mono)', fontSize: '9px', color: 'var(--figma-orange)' }}>
-                  PAGE 04 OF 18
-                </span>
-              </div>
-            </div>
-
-            <div className="figma-visual-sticky-badge">
-              FORMAT: PPTX &amp; PDF READY
-            </div>
-          </div>
+          <PptMorphVisual />
 
           {/* Konten Kanan: Penjelasan & CTA */}
           <div className="figma-layanan-block-content">
@@ -244,7 +168,7 @@ export default function ServicesPage() {
         </article>
 
         {/* BLOK 2: PEMBUATAN WEBSITE — Konten Kiri, Visual Kanan */}
-        <article className="figma-layanan-block" data-name="BLOK 2: PEMBUATAN WEBSITE">
+        <article id="blok-website" className="figma-layanan-block" data-name="BLOK 2: PEMBUATAN WEBSITE">
           {/* Konten Kiri: Penjelasan & CTA */}
           <div className="figma-layanan-block-content">
             <span className="figma-block-service-tag">02 / WEB &amp; DIGITAL PRESENCE</span>
@@ -299,225 +223,13 @@ export default function ServicesPage() {
           </div>
 
           {/* Visual Kanan: Flat Mockup Browser + Phone Flat Outline */}
-          <div className="figma-layanan-block-visual">
-            {/* Desktop Browser Mockup */}
-            <div
-              style={{
-                width: '85%',
-                height: '300px',
-                backgroundColor: 'var(--figma-bg)',
-                border: '1px solid var(--figma-border)',
-                borderRadius: '4px',
-                display: 'flex',
-                flexDirection: 'column',
-              }}
-            >
-              <div style={{ height: '32px', backgroundColor: 'var(--figma-card-elevated)', borderBottom: '1px solid var(--figma-border)', display: 'flex', alignItems: 'center', gap: '8px', padding: '0 12px' }}>
-                <div style={{ display: 'flex', gap: '6px' }}>
-                  <span style={{ width: '8px', height: '8px', borderRadius: '9999px', backgroundColor: 'var(--figma-border)' }} />
-                  <span style={{ width: '8px', height: '8px', borderRadius: '9999px', backgroundColor: 'var(--figma-border)' }} />
-                  <span style={{ width: '8px', height: '8px', borderRadius: '9999px', backgroundColor: 'var(--figma-border)' }} />
-                </div>
-                <div style={{ height: '18px', backgroundColor: 'var(--figma-bg)', border: '1px solid var(--figma-border)', borderRadius: '2px', padding: '0 8px', display: 'flex', alignItems: 'center', fontFamily: 'var(--font-mono)', fontSize: '8px', color: 'var(--figma-text-muted)' }}>
-                  https://brand-kamu.com
-                </div>
-              </div>
-
-              <div style={{ flex: 1, padding: '16px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid var(--figma-border)', paddingBottom: '8px' }}>
-                  <span style={{ fontFamily: 'var(--font-display)', fontWeight: 800, fontSize: '12px', color: 'var(--figma-text-primary)' }}>
-                    BRAND CO.
-                  </span>
-                  <div style={{ display: 'flex', gap: '8px' }}>
-                    <div style={{ width: '24px', height: '6px', backgroundColor: 'var(--figma-border)' }} />
-                    <div style={{ width: '24px', height: '6px', backgroundColor: 'var(--figma-border)' }} />
-                  </div>
-                </div>
-
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', padding: '16px 0' }}>
-                  <div style={{ width: '70%', height: '12px', backgroundColor: 'var(--figma-orange)' }} />
-                  <div style={{ width: '50%', height: '8px', backgroundColor: 'var(--figma-border)' }} />
-                  <div style={{ width: '35%', height: '8px', backgroundColor: 'var(--figma-border)' }} />
-                </div>
-
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderTop: '1px solid var(--figma-border)', paddingTop: '8px' }}>
-                  <span style={{ fontFamily: 'var(--font-mono)', fontSize: '8px', color: 'var(--figma-text-muted)' }}>
-                    [ganti: screenshot website responsif]
-                  </span>
-                  <div style={{ width: '48px', height: '14px', backgroundColor: 'var(--figma-orange)', borderRadius: '999px' }} />
-                </div>
-              </div>
-            </div>
-
-            {/* Overlapping Phone Mockup (Bottom Right) */}
-            <div
-              style={{
-                position: 'absolute',
-                bottom: '24px',
-                right: '32px',
-                width: '120px',
-                height: '220px',
-                backgroundColor: 'var(--figma-card-elevated)',
-                border: '2px solid var(--figma-border)',
-                borderRadius: '8px',
-                padding: '8px',
-                display: 'flex',
-                flexDirection: 'column',
-                boxShadow: 'var(--figma-shadow-card)',
-              }}
-            >
-              <div style={{ height: '8px', display: 'flex', justifyContent: 'center', marginBottom: '8px' }}>
-                <div style={{ width: '30px', height: '4px', backgroundColor: 'var(--figma-border)', borderRadius: '2px' }} />
-              </div>
-
-              <div style={{ flex: 1, backgroundColor: 'var(--figma-bg)', border: '1px solid var(--figma-border)', borderRadius: '4px', padding: '8px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
-                <div style={{ width: '24px', height: '6px', backgroundColor: 'var(--figma-orange)' }} />
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                  <div style={{ width: '100%', height: '5px', backgroundColor: 'var(--figma-border)' }} />
-                  <div style={{ width: '70%', height: '5px', backgroundColor: 'var(--figma-border)' }} />
-                </div>
-                <div style={{ backgroundColor: 'var(--figma-green)', borderRadius: '2px', padding: '4px', textAlign: 'center', fontFamily: 'var(--font-mono)', fontSize: '7px', fontWeight: 700, color: '#14110f' }}>
-                  WHATSAPP
-                </div>
-              </div>
-            </div>
-
-            <div className="figma-visual-sticky-badge" style={{ bottom: 'auto', top: '16px' }}>
-              SCREEN-ADAPTIVE // LIGHTNING SPEED
-            </div>
-          </div>
+          <WebResizeVisual />
         </article>
 
         {/* BLOK 3: PRODUK DIGITAL — Visual Kiri, Konten Kanan */}
-        <article className="figma-layanan-block" data-name="BLOK 3: PRODUK DIGITAL">
+        <article id="blok-produk" className="figma-layanan-block" data-name="BLOK 3: PRODUK DIGITAL">
           {/* Visual Kiri: Fanned Out Cards Flat Wireframe */}
-          <div className="figma-layanan-block-visual">
-            {/* Card 1 (Rotated -8deg) */}
-            <div
-              style={{
-                position: 'absolute',
-                width: '200px',
-                height: '280px',
-                left: '60px',
-                backgroundColor: 'var(--figma-card)',
-                border: '1px solid var(--figma-border)',
-                borderRadius: '6px',
-                transform: 'rotate(-8deg)',
-                padding: '16px',
-                display: 'flex',
-                flexDirection: 'column',
-                justifyContent: 'space-between',
-                boxSizing: 'border-box',
-              }}
-            >
-              <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid var(--figma-border)', paddingBottom: '8px' }}>
-                <span style={{ fontFamily: 'var(--font-mono)', fontSize: '9px', color: 'var(--figma-text-muted)', textTransform: 'uppercase' }}>
-                  SYSTEM TEMPLATE
-                </span>
-                <span style={{ width: '6px', height: '6px', borderRadius: '9999px', backgroundColor: 'var(--figma-border)' }} />
-              </div>
-              <div>
-                <span style={{ fontFamily: 'var(--font-display)', fontWeight: 800, fontSize: '16px', color: 'var(--figma-text-primary)' }}>
-                  NOTION OS
-                </span>
-                <p style={{ fontFamily: 'var(--font-body)', fontSize: '11px', color: 'var(--figma-text-muted)', margin: '4px 0 0 0' }}>
-                  Workspace manajemen proyek untuk freelancer tunggal.
-                </p>
-              </div>
-              <div style={{ display: 'flex', justifyContent: 'space-between', borderTop: '1px solid var(--figma-border)', paddingTop: '8px' }}>
-                <span style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', color: 'var(--figma-yellow)' }}>RP 69K</span>
-                <span style={{ fontFamily: 'var(--font-mono)', fontSize: '8px', color: 'var(--figma-text-muted)' }}>V 2.1</span>
-              </div>
-            </div>
-
-            {/* Card 2 (Rotated +8deg) */}
-            <div
-              style={{
-                position: 'absolute',
-                width: '200px',
-                height: '280px',
-                right: '60px',
-                backgroundColor: 'var(--figma-card-elevated)',
-                border: '1px solid var(--figma-border)',
-                borderRadius: '6px',
-                transform: 'rotate(8deg)',
-                padding: '16px',
-                display: 'flex',
-                flexDirection: 'column',
-                justifyContent: 'space-between',
-                boxSizing: 'border-box',
-              }}
-            >
-              <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid var(--figma-border)', paddingBottom: '8px' }}>
-                <span style={{ fontFamily: 'var(--font-mono)', fontSize: '9px', color: 'var(--figma-text-muted)', textTransform: 'uppercase' }}>
-                  DESIGN ASSETS
-                </span>
-                <span style={{ width: '6px', height: '6px', borderRadius: '9999px', backgroundColor: 'var(--figma-border)' }} />
-              </div>
-              <div>
-                <span style={{ fontFamily: 'var(--font-display)', fontWeight: 800, fontSize: '16px', color: 'var(--figma-text-primary)' }}>
-                  UI KIT // FIGMA
-                </span>
-                <p style={{ fontFamily: 'var(--font-body)', fontSize: '11px', color: 'var(--figma-text-muted)', margin: '4px 0 0 0' }}>
-                  120+ komponen siap rangkai untuk toko UMKM.
-                </p>
-              </div>
-              <div style={{ display: 'flex', justifyContent: 'space-between', borderTop: '1px solid var(--figma-border)', paddingTop: '8px' }}>
-                <span style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', color: 'var(--figma-yellow)' }}>RP 89K</span>
-                <span style={{ fontFamily: 'var(--font-mono)', fontSize: '8px', color: 'var(--figma-text-muted)' }}>COMMERCIAL</span>
-              </div>
-            </div>
-
-            {/* Card 3 (Center Foreground, 0 deg) */}
-            <div
-              style={{
-                position: 'relative',
-                zIndex: 3,
-                width: '220px',
-                height: '290px',
-                backgroundColor: 'var(--figma-card-elevated)',
-                border: '2px solid var(--figma-orange)',
-                borderRadius: '6px',
-                padding: '16px',
-                display: 'flex',
-                flexDirection: 'column',
-                justifyContent: 'space-between',
-                boxSizing: 'border-box',
-                boxShadow: 'var(--figma-shadow-card)',
-              }}
-            >
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid var(--figma-border)', paddingBottom: '8px' }}>
-                <span style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', fontWeight: 700, color: 'var(--figma-orange)', textTransform: 'uppercase' }}>
-                  ● BESTSELLER
-                </span>
-                <span style={{ fontFamily: 'var(--font-mono)', fontSize: '9px', color: 'var(--figma-text-secondary)' }}>
-                  E-BOOK
-                </span>
-              </div>
-
-              <div>
-                <h4 style={{ fontFamily: 'var(--font-display)', fontWeight: 800, fontSize: '18px', color: 'var(--figma-text-primary)', margin: '0 0 6px 0' }}>
-                  Pitch Deck Blueprint
-                </h4>
-                <p style={{ fontFamily: 'var(--font-body)', fontSize: '12px', color: 'var(--figma-text-secondary)', margin: 0, lineHeight: '18px' }}>
-                  Panduan praktis nulis teks pitch deck yang bikin investor penasaran dalam 10 menit.
-                </p>
-              </div>
-
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderTop: '1px solid var(--figma-border)', paddingTop: '10px' }}>
-                <span style={{ fontFamily: 'var(--font-mono)', fontWeight: 700, fontSize: '12px', color: 'var(--figma-text-primary)' }}>
-                  RP 49.000
-                </span>
-                <span style={{ backgroundColor: 'var(--figma-orange)', borderRadius: '2px', padding: '2px 8px', fontFamily: 'var(--font-mono)', fontSize: '9px', fontWeight: 700, color: '#14110f' }}>
-                  INSTANT
-                </span>
-              </div>
-            </div>
-
-            <div className="figma-visual-sticky-badge">
-              DIRECT ACCESS // NO SUBSCRIPTION
-            </div>
-          </div>
+          <ProdukFanVisual />
 
           {/* Konten Kanan: Penjelasan & CTA */}
           <div className="figma-layanan-block-content">
@@ -571,7 +283,7 @@ export default function ServicesPage() {
       {/* =========================================================================
           SECTION 3: SECTION ALUR ORDER (Tahapan Kerja 5 Titik) (Figma 2001:748)
           ========================================================================= */}
-      <section className="figma-layanan-timeline-section" data-name="Section - SECTION ALUR ORDER">
+      <section id="alur-order" className="figma-layanan-timeline-section" data-name="Section - SECTION ALUR ORDER">
         <div className="figma-layanan-timeline-container">
           <div className="figma-section-header">
             <div className="figma-mono-tag">
@@ -586,57 +298,7 @@ export default function ServicesPage() {
             </p>
           </div>
 
-          <div className="figma-layanan-steps-5-grid">
-            {/* Step 1 */}
-            <div className="figma-step-5-card">
-              <div className="figma-step-5-badge is-active">01</div>
-              <span className="figma-step-5-tag">TAHAP 01 // AKTIF</span>
-              <h3 className="figma-step-5-title">Ngobrol Santai</h3>
-              <p className="figma-step-5-desc">
-                Lo ceritain kebutuhan, target audiens, materi mentah, dan deadline lewat WhatsApp atau form brief singkat.
-              </p>
-            </div>
-
-            {/* Step 2 */}
-            <div className="figma-step-5-card">
-              <div className="figma-step-5-badge is-active">02</div>
-              <span className="figma-step-5-tag">TAHAP 02 // SEPAKAT</span>
-              <h3 className="figma-step-5-title">Penawaran Fix</h3>
-              <p className="figma-step-5-desc">
-                Gue kasih rincian harga pasti, cakupan kerja, dan estimasi tanggal jadi. Nggak ada biaya tersembunyi di belakang.
-              </p>
-            </div>
-
-            {/* Step 3 */}
-            <div className="figma-step-5-card">
-              <div className="figma-step-5-badge is-pending">03</div>
-              <span className="figma-step-5-tag is-pending">TAHAP 03</span>
-              <h3 className="figma-step-5-title">DP &amp; Kickoff</h3>
-              <p className="figma-step-5-desc is-pending">
-                Bayar DP 50% sebagai tanda jadi komitmen waktu pengerjaan, slot kalender kerja langsung dikunci buat lo.
-              </p>
-            </div>
-
-            {/* Step 4 */}
-            <div className="figma-step-5-card">
-              <div className="figma-step-5-badge is-pending">04</div>
-              <span className="figma-step-5-tag is-pending">TAHAP 04</span>
-              <h3 className="figma-step-5-title">Dikerjain Fokus</h3>
-              <p className="figma-step-5-desc is-pending">
-                Gue racik desainnya dengan teliti. Draft pertama bakal dikirim via link preview rapi sesuai tanggal yang disepakati.
-              </p>
-            </div>
-
-            {/* Step 5 */}
-            <div className="figma-step-5-card">
-              <div className="figma-step-5-badge is-pending">05</div>
-              <span className="figma-step-5-tag is-pending">TAHAP 05</span>
-              <h3 className="figma-step-5-title">Revisi &amp; Serah Terima</h3>
-              <p className="figma-step-5-desc is-pending">
-                Penyesuaian minor jika ada. Pelunasan sisa 50%, lalu seluruh file master dikirim ke Google Drive lo. Selesai!
-              </p>
-            </div>
-          </div>
+          <OrderTimeline />
         </div>
       </section>
 
