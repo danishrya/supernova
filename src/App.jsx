@@ -16,8 +16,6 @@ import HomePage from './pages/HomePage';
 import ServicesPage from './pages/ServicesPage';
 import PPTServiceDetailPage from './pages/PPTServiceDetailPage';
 import WebServiceDetailPage from './pages/WebServiceDetailPage';
-import PortfolioPage from './pages/PortfolioPage';
-import CaseStudyDetailPage from './pages/CaseStudyDetailPage';
 import DigitalProductsPage from './pages/DigitalProductsPage';
 import ProductDetailPage from './pages/ProductDetailPage';
 import PricingPage from './pages/PricingPage';
@@ -108,16 +106,10 @@ function AppContent() {
           <Route path="/layanan/desain-ppt" element={<PPTServiceDetailPage />} />
           <Route path="/layanan/website" element={<WebServiceDetailPage />} />
 
-          {/* 3. Portofolio & Studi Kasus */}
-          <Route
-            path="/portofolio"
-            element={<PortfolioPage onOpenProjectModal={setSelectedProject} />}
-          />
-          <Route path="/portofolio/:slug" element={<CaseStudyDetailPage />} />
-          {/* Backward compatibility route */}
-          <Route
-            path="/catalog"
-            element={<Navigate to="/portofolio" replace />}
+          {/* 3. Portofolio dihapus — semua link lama diarahkan ke "Contoh karya" di Beranda */}
+          <Route path="/portofolio" element={<Navigate to={{ pathname: '/', hash: '#portofolio' }} replace />} />
+          <Route path="/portofolio/*" element={<Navigate to={{ pathname: '/', hash: '#portofolio' }} replace />} />
+          <Route path="/catalog" element={<Navigate to={{ pathname: '/', hash: '#portofolio' }} replace />} />
           />
 
           {/* 4. Produk Digital & Detail Produk */}

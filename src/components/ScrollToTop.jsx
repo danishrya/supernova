@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 
 export default function ScrollToTop() {
-  const { pathname } = useLocation();
+  const { pathname, hash } = useLocation();
 
   useEffect(() => {
     if ('scrollRestoration' in window.history) {
@@ -11,14 +11,31 @@ export default function ScrollToTop() {
   }, []);
 
   useEffect(() => {
-    // Disable smooth scroll temporarily so route navigation snaps instantly to top without jitter/glitch
     const html = document.documentElement;
-    const body = document.body;
     const prevBehavior = html.style.scrollBehavior;
-    html.style.scrollBehavior = 'auto';
 
+    // Links like "/#portofolio": scroll to that section once it has rendered
+    if (hash) {
+      const id = decodeURIComponent(hash.slice(1));
+      let tries = 0;
+      let timer;
+      const seek = () => {
+        const el = document.getElementById(id);
+        if (el) {
+          const y = el.getBoundingClientRect().top + window.scrollY - 88;
+          window.scrollTo({ top: y, behavior: 'smooth' });
+        } else if (tries++ < 20) {
+          timer = setTimeout(seek, 50);
+        }
+      };
+      timer = setTimeout(seek, 30);
+      return () => clearTimeout(timer);
+    }
+
+    // Disable smooth scroll temporarily so route navigation snaps instantly to top without jitter/glitch
+    html.style.scrollBehavior = 'auto';
     html.scrollTop = 0;
-    body.scrollTop = 0;
+    document.body.scrollTop = 0;
     window.scrollTo(0, 0);
 
     const timer = setTimeout(() => {
@@ -26,7 +43,7 @@ export default function ScrollToTop() {
     }, 60);
 
     return () => clearTimeout(timer);
-  }, [pathname]);
+  }, [pathname, hash]);
 
   return null;
 }

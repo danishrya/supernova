@@ -37,11 +37,6 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
-                <Link to="/portofolio" className="figma-footer-link" onClick={() => playClick()}>
-                  Portofolio
-                </Link>
-              </li>
-              <li>
                 <Link to="/produk-digital" className="figma-footer-link" onClick={() => playClick()}>
                   Produk
                 </Link>
