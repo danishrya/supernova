@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { playClick } from '../utils/sound';
 import WorkShowcase from '../components/WorkShowcase';
@@ -48,26 +48,54 @@ const SERVICE_ROWS = [
   },
 ];
 
+// Fulan Pitch Deck — real slides from the PPTX (public/decks/fulan), auto-cycling
+const FULAN = ['Cover', 'Masalah', 'Solusi', 'Layanan', 'Peluang pasar', 'Model bisnis', 'Traksi', 'Keunggulan', 'Tim', 'Kolaborasi'];
+const fulanSrc = (i, thumb) => `/decks/fulan/${String(i + 1).padStart(2, '0')}${thumb ? '-thumb' : ''}.webp`;
+
+function PitchDeckPreview() {
+  const [i, setI] = useState(0);
+  const [hold, setHold] = useState(false);
+
+  useEffect(() => {
+    if (hold || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return undefined;
+    const t = window.setTimeout(() => setI((v) => (v + 1) % FULAN.length), 2600);
+    return () => window.clearTimeout(t);
+  }, [i, hold]);
+
+  return (
+    <div className="svc-deck" onMouseEnter={() => setHold(true)} onMouseLeave={() => setHold(false)}>
+      <div className="svc-deck__screen">
+        <img key={i} src={fulanSrc(i)} alt={`Fulan Pitch Deck — slide ${i + 1}: ${FULAN[i]}`} width="1280" height="720" loading="lazy" decoding="async" />
+        <span className="svc-deck__label">
+          {String(i + 1).padStart(2, '0')} · {FULAN[i]}
+        </span>
+      </div>
+      <div className="svc-deck__thumbs" role="tablist" aria-label="Slide pitch deck">
+        {FULAN.map((label, k) => (
+          <button
+            key={label}
+            type="button"
+            role="tab"
+            aria-selected={k === i}
+            aria-label={label}
+            className={k === i ? 'is-active' : ''}
+            onClick={() => {
+              playClick();
+              setHold(true);
+              setI(k);
+            }}
+          >
+            <img src={fulanSrc(k, true)} alt="" width="320" height="180" loading="lazy" decoding="async" />
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 function ServicePreview({ kind }) {
   if (kind === 'deck') {
-    return (
-      <div className="svc-preview svc-preview--deck">
-        <div className="svc-preview__bar">
-          <span className="svc-preview__label">PPT // SLIDE 16:9</span>
-          <span className="svc-preview__dot" />
-        </div>
-        <div className="svc-preview__slides">
-          <span className="is-on">01</span>
-          <span>02</span>
-          <span>03</span>
-          <span>04</span>
-        </div>
-        <div className="svc-preview__foot">
-          <span>PITCH DECK</span>
-          <span>16:9 FULL-HD</span>
-        </div>
-      </div>
-    );
+    return <PitchDeckPreview />;
   }
   if (kind === 'product') {
     return (

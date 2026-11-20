@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import { PRODUCTS, rupiah, waLink } from '../data/products';
+import { PRODUCTS, rupiah, waLink, deckSlide } from '../data/products';
 import Mock from '../components/ProductMock';
 import { ArrowLeft, ArrowRight, ArrowUpRight, CheckGlyph } from '../components/sn/Glyphs';
 import { playClick } from '../utils/sound';
@@ -15,6 +15,7 @@ export default function ProductDetailPage() {
   const { slug } = useParams();
   const product = PRODUCTS.find((p) => p.id === slug);
   const [zoom, setZoom] = useState(false);
+  const [slide, setSlide] = useState(0);
 
   if (!product) {
     return (
@@ -38,6 +39,50 @@ export default function ProductDetailPage() {
   return (
     <div className="sn-page pd-page" data-name={`Produk — ${product.title}`}>
       <section className="sn-container pd-hero">
+        {product.deck ? (
+          <div className="pd-hero__visual pd-gallery" data-reveal="left">
+            <button
+              type="button"
+              className="pd-gallery__main"
+              onClick={() => {
+                playClick();
+                setSlide((v) => (v + 1) % product.slideLabels.length);
+              }}
+              aria-label="Slide berikutnya"
+            >
+              <img
+                key={slide}
+                src={deckSlide(product.deck, slide)}
+                alt={`${product.title} — slide ${slide + 1}: ${product.slideLabels[slide]}`}
+                width="1280"
+                height="720"
+                decoding="async"
+              />
+              <span className="pd-gallery__label">
+                {String(slide + 1).padStart(2, '0')} / {product.slideLabels.length} · {product.slideLabels[slide]}
+              </span>
+            </button>
+            <div className="pd-gallery__thumbs" role="tablist" aria-label="Pilih slide">
+              {product.slideLabels.map((label, i) => (
+                <button
+                  key={label}
+                  type="button"
+                  role="tab"
+                  aria-selected={i === slide}
+                  aria-label={label}
+                  className={i === slide ? 'is-active' : ''}
+                  onClick={() => {
+                    playClick();
+                    setSlide(i);
+                  }}
+                >
+                  <img src={deckSlide(product.deck, i, true)} alt="" width="320" height="180" loading="lazy" decoding="async" />
+                </button>
+              ))}
+            </div>
+            <span className="pd-hero__hint sn-caveat">klik slide-nya buat lanjut</span>
+          </div>
+        ) : (
         <div className="pd-hero__visual" data-reveal="left">
           <button
             type="button"
@@ -56,6 +101,7 @@ export default function ProductDetailPage() {
           </button>
           <span className="pd-hero__hint sn-caveat">{zoom ? 'klik lagi buat kecilin' : 'klik buat zoom pratinjau'}</span>
         </div>
+        )}
 
         <div className="pd-hero__info">
           <nav className="cs-crumb" aria-label="Breadcrumb" data-reveal>

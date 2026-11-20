@@ -5,154 +5,46 @@ import { playClick } from '../utils/sound';
 // Beranda "Contoh karya" — three live cards that demo the kind of work instead
 // of static placeholders.
 
-// Karhutla deck recording (public/media/karhutla-720.mp4). One file, split into
-// chapters by time: each chapter plays once and pauses on its last frame until
-// the visitor presses Next. Boundaries come from the frame-difference analysis
-// of the source video (where each slide's transition starts).
-const CHAPTERS = [
-  { label: 'Langit biru', start: 0, end: 5.4 },
-  { label: 'Menu', start: 5.4, end: 10.4 },
-  { label: 'Karhutla', start: 10.4, end: 16.4 },
-  { label: 'Penyebab', start: 16.4, end: 23.4 },
-  { label: 'Masih menyala', start: 23.4, end: 29.3 },
-  { label: 'Kesehatan', start: 29.3, end: 35.9 },
-  { label: 'Dampak meluas', start: 35.9, end: 42.4 },
-  { label: 'Bukan cerita lama', start: 42.4, end: 47.9 },
-  { label: 'Solusi', start: 47.9, end: 55.0 },
-  { label: 'Mulai dari kamu', start: 55.0, end: 59.95 },
+// Karhutla Vintage deck — real slides rendered from the PPTX (public/decks/karhutla).
+// Each slide waits for the visitor to press Next.
+const SLIDES = [
+  'Napasmu hari ini',
+  'Apa itu karhutla',
+  'Seberapa besar',
+  'Penyebab',
+  'Lahan gambut',
+  'Kesehatan',
+  'Dampak',
+  'Penanganan',
+  'Ajakan',
+  'Penutup',
 ];
+const slideSrc = (i, thumb = false) => `/decks/karhutla/${String(i + 1).padStart(2, '0')}${thumb ? '-thumb' : ''}.webp`;
 
 function DeckCard() {
-  const videoRef = useRef(null);
-  const cardRef = useRef(null);
-  const rafRef = useRef(0);
-  const [chapter, setChapter] = useState(0);
-  const [playing, setPlaying] = useState(false);
-  const [started, setStarted] = useState(false);
-  const [load, setLoad] = useState(false); // attach the video src only when the card is near
-  // Progress fill is written straight to the DOM: updating React state every
-  // animation frame re-rendered the whole card ~60×/s while the video played.
-  const fillRefs = useRef([]);
-  const chapterRef = useRef(0);
-  const visibleRef = useRef(false);
-  const resumeRef = useRef(false);
+  const [index, setIndex] = useState(0);
+  const [dir, setDir] = useState(1);
+  const last = index === SLIDES.length - 1;
 
-  const stopWatch = () => cancelAnimationFrame(rafRef.current);
-  const setFill = (i, ratio) => {
-    const el = fillRefs.current[i];
-    if (el) el.style.width = `${Math.min(1, Math.max(0, ratio)) * 100}%`;
-  };
-
-  const watchChapter = (i) => {
-    const v = videoRef.current;
-    const c = CHAPTERS[i];
-    const tick = () => {
-      const t = v.currentTime;
-      setFill(i, (t - c.start) / (c.end - c.start));
-      if (t >= c.end - 0.04) {
-        v.pause();
-        setPlaying(false);
-        setFill(i, 1);
-        return;
-      }
-      rafRef.current = requestAnimationFrame(tick);
-    };
-    rafRef.current = requestAnimationFrame(tick);
-  };
-
-  // Play chapter i from its start; pause exactly at its end.
-  const playChapter = (i) => {
-    const v = videoRef.current;
-    if (!v) return;
-    if (!load) setLoad(true);
-    const c = CHAPTERS[i];
-    stopWatch();
-    chapterRef.current = i;
-    setChapter(i);
-    setStarted(true);
-    setFill(i, 0);
-    const start = () => {
-      if (Math.abs(v.currentTime - c.start) > 0.15) v.currentTime = c.start;
-      const p = v.play();
-      setPlaying(true);
-      if (p && p.catch) p.catch(() => setPlaying(false));
-      watchChapter(i);
-    };
-    // src may have just been attached — wait for metadata before seeking
-    if (v.readyState >= 1) start();
-    else v.addEventListener('loadedmetadata', start, { once: true });
-  };
-
-  const next = () => {
-    playClick();
-    playChapter(chapter + 1 < CHAPTERS.length ? chapter + 1 : 0);
-  };
-
-  const prev = () => {
-    playClick();
-    playChapter(Math.max(0, chapter - 1));
-  };
-
+  // Warm the cache for the next slide so Next feels instant
   useEffect(() => {
-    const el = cardRef.current;
-    if (!el || !('IntersectionObserver' in window)) {
-      setLoad(true);
-      return undefined;
+    if (index + 1 < SLIDES.length) {
+      const img = new Image();
+      img.src = slideSrc(index + 1);
     }
-    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    // 1) start downloading only when the card is about to scroll in
-    const near = new IntersectionObserver(
-      ([e]) => {
-        if (e.isIntersecting) {
-          setLoad(true);
-          near.disconnect();
-        }
-      },
-      { rootMargin: '400px 0px' }
-    );
-    // 2) autoplay chapter 1 on first view; pause when off-screen, resume on return
-    let autoplayed = false;
-    const seen = new IntersectionObserver(
-      ([e]) => {
-        const v = videoRef.current;
-        visibleRef.current = e.isIntersecting;
-        if (!v) return;
-        if (e.isIntersecting) {
-          if (!autoplayed && !reduce) {
-            autoplayed = true;
-            playChapter(0);
-          } else if (resumeRef.current) {
-            resumeRef.current = false;
-            v.play().catch(() => {});
-            setPlaying(true);
-            watchChapter(chapterRef.current);
-          }
-        } else if (!v.paused) {
-          resumeRef.current = true;
-          stopWatch();
-          v.pause();
-          setPlaying(false);
-        }
-      },
-      { threshold: 0.35 }
-    );
-    near.observe(el);
-    seen.observe(el);
-    return () => {
-      near.disconnect();
-      seen.disconnect();
-      stopWatch();
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [index]);
 
-  const last = chapter === CHAPTERS.length - 1;
-  const waiting = started && !playing;
+  const go = (i) => {
+    playClick();
+    setDir(i >= index ? 1 : -1);
+    setIndex((i + SLIDES.length) % SLIDES.length);
+  };
+  const next = () => go(last ? 0 : index + 1);
+  const prev = () => go(Math.max(0, index - 1));
 
   return (
     <article
-      ref={cardRef}
-      className={`figma-portfolio-big-card ws-card ws-deck ws-video${waiting ? ' is-waiting' : ''}`}
+      className="figma-portfolio-big-card ws-card ws-deck ws-slides"
       data-spotlight
       data-reveal
       onKeyDown={(e) => {
@@ -163,73 +55,60 @@ function DeckCard() {
       <div className="figma-card-tags-row">
         <span className="figma-mono-tag-chip">PPT</span>
         <span className="ws-live">
-          <i className="ws-live__dot" /> {playing ? 'SEDANG DIPUTAR' : started ? 'MENUNGGU NEXT' : 'SIAP DIPUTAR'}
+          <i className="ws-live__dot" /> SLIDE {String(index + 1).padStart(2, '0')} / {SLIDES.length}
         </span>
         <span className="figma-status-badge">Proyek asli</span>
       </div>
 
       <div className="ws-stage">
-        <div className="ws-stage__screen ws-video__screen">
-          <video
-            ref={videoRef}
-            className="ws-video__el"
-            src={load ? '/media/karhutla-960.mp4' : undefined}
-            poster="/media/karhutla-poster.jpg"
-            muted
-            playsInline
-            preload={load ? 'auto' : 'none'}
-            aria-label="Rekaman presentasi Karhutla Indonesia"
-            onClick={() => (playing ? null : next())}
+        <button
+          type="button"
+          className="ws-stage__screen ws-slides__screen"
+          onClick={next}
+          aria-label={last ? 'Ulang dari slide pertama' : 'Slide berikutnya'}
+        >
+          <img
+            key={index}
+            src={slideSrc(index)}
+            alt={`Slide ${index + 1}: ${SLIDES[index]} — presentasi Karhutla Vintage`}
+            className={`ws-slides__img ${dir > 0 ? 'from-right' : 'from-left'}`}
+            width="1280"
+            height="720"
+            loading="lazy"
+            decoding="async"
           />
           <span className="ws-stage__counter">
-            {String(chapter + 1).padStart(2, '0')} / {String(CHAPTERS.length).padStart(2, '0')}
+            {String(index + 1).padStart(2, '0')} / {String(SLIDES.length).padStart(2, '0')}
           </span>
-          {!started && (
-            <button type="button" className="ws-video__play" onClick={() => { playClick(); playChapter(0); }}>
-              ▶ Putar presentasi
-            </button>
-          )}
-
-        </div>
+        </button>
 
         <div className="ws-chapters" role="tablist" aria-label="Pilih slide">
-          {CHAPTERS.map((c, i) => (
+          {SLIDES.map((label, i) => (
             <button
-              key={c.label}
+              key={label}
               type="button"
               role="tab"
-              aria-selected={i === chapter}
-              title={c.label}
-              className={`ws-chapter${i === chapter ? ' is-active' : ''}${i < chapter ? ' is-done' : ''}`}
-              onClick={() => { playClick(); playChapter(i); }}
+              aria-selected={i === index}
+              title={label}
+              className={`ws-chapter${i === index ? ' is-active' : ''}${i < index ? ' is-done' : ''}`}
+              onClick={() => go(i)}
             >
-              <span
-                className="ws-chapter__fill"
-                ref={(el) => {
-                  fillRefs.current[i] = el;
-                }}
-                style={i === chapter ? undefined : { width: i < chapter ? '100%' : '0%' }}
-              />
+              <span className="ws-chapter__fill" style={{ width: i <= index ? '100%' : '0%' }} />
             </button>
           ))}
         </div>
+
         <div className="ws-video__bar">
           <span className="ws-chapter__label">
-            {String(chapter + 1).padStart(2, '0')} — {CHAPTERS[chapter].label}
-            {waiting && !last && <em> · pencet Next buat lanjut</em>}
+            {String(index + 1).padStart(2, '0')} — {SLIDES[index]}
+            {!last && <em> · pencet Next buat lanjut</em>}
           </span>
           <div className="ws-video__controls">
-            <button type="button" className="ws-video__btn" onClick={prev} disabled={chapter === 0 || !started} aria-label="Slide sebelumnya">
+            <button type="button" className="ws-video__btn" onClick={prev} disabled={index === 0} aria-label="Slide sebelumnya">
               ←
             </button>
-            <button
-              type="button"
-              className={`ws-video__btn ws-video__next${waiting ? ' is-ready' : ''}`}
-              onClick={next}
-              disabled={playing}
-              aria-label={last ? 'Ulang dari awal' : 'Slide berikutnya'}
-            >
-              {last && waiting ? '↺ Ulang' : 'Next →'}
+            <button type="button" className="ws-video__btn ws-video__next is-ready" onClick={next} aria-label={last ? 'Ulang dari awal' : 'Slide berikutnya'}>
+              {last ? '↺ Ulang' : 'Next →'}
             </button>
           </div>
         </div>
@@ -237,8 +116,8 @@ function DeckCard() {
 
       <div className="figma-card-footer-info">
         <div>
-          <h4 className="figma-card-title">Presentasi Edukasi Karhutla</h4>
-          <span className="figma-card-meta">10 SLIDE // MOTION DECK 16:9</span>
+          <h4 className="figma-card-title">Karhutla — Edisi Vintage</h4>
+          <span className="figma-card-meta">10 SLIDE // PRESENTASI EDUKASI 16:9</span>
         </div>
         <Link to="/layanan/desain-ppt" className="ws-cta" onClick={() => playClick()}>
           Bikin yang kayak gini <span aria-hidden="true">↗</span>
