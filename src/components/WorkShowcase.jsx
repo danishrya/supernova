@@ -5,159 +5,185 @@ import { playClick } from '../utils/sound';
 // Beranda "Contoh karya" — three live cards that demo the kind of work instead
 // of static placeholders. Slugs match src/data/caseStudies.js.
 
-const SLIDES = [
-  { key: 'cover', label: 'COVER' },
-  { key: 'problem', label: 'MASALAH' },
-  { key: 'traction', label: 'TRAKSI' },
-  { key: 'ask', label: 'PENDANAAN' },
+// Karhutla deck recording (public/media/karhutla-720.mp4). One file, split into
+// chapters by time: each chapter plays once and pauses on its last frame until
+// the visitor presses Next. Boundaries come from the frame-difference analysis
+// of the source video (where each slide's transition starts).
+const CHAPTERS = [
+  { label: 'Langit biru', start: 0, end: 5.4 },
+  { label: 'Menu', start: 5.4, end: 10.4 },
+  { label: 'Karhutla', start: 10.4, end: 16.4 },
+  { label: 'Penyebab', start: 16.4, end: 23.4 },
+  { label: 'Masih menyala', start: 23.4, end: 29.3 },
+  { label: 'Kesehatan', start: 29.3, end: 35.9 },
+  { label: 'Dampak meluas', start: 35.9, end: 42.4 },
+  { label: 'Bukan cerita lama', start: 42.4, end: 47.9 },
+  { label: 'Solusi', start: 47.9, end: 55.0 },
+  { label: 'Mulai dari kamu', start: 55.0, end: 59.95 },
 ];
 
-const SLIDE_MS = 2800;
-
-function DeckSlide({ kind }) {
-  if (kind === 'cover') {
-    return (
-      <div className="ws-slide ws-slide--cover">
-        <span className="ws-slide__kicker">
-          <i className="ws-dot" /> SERIES SEED ROUND 2026
-        </span>
-        <h5 className="ws-slide__title">
-          Agrotech: Modernizing Rural <em>Harvest Logistics</em>
-        </h5>
-        <span className="ws-slide__foot">STUDIO × AGROTECH FOUNDER DECK</span>
-        <span className="ws-slide__orb" aria-hidden="true" />
-      </div>
-    );
-  }
-  if (kind === 'problem') {
-    return (
-      <div className="ws-slide ws-slide--problem">
-        <span className="ws-slide__kicker ws-red"># INEFEKTIFITAS LOGISTIK GABAH</span>
-        <div className="ws-slide__big">
-          <span className="ws-big-num">42%</span>
-          <span className="ws-big-copy">nilai panen tergerus rantai pengepul berlapis</span>
-        </div>
-        <div className="ws-chain" aria-hidden="true">
-          {['PETANI', 'PENGEPUL', 'PENGEPUL', 'KILANG'].map((n, i) => (
-            <React.Fragment key={i}>
-              <span className={i === 0 || i === 3 ? 'is-end' : ''}>{n}</span>
-              {i < 3 && <i />}
-            </React.Fragment>
-          ))}
-        </div>
-      </div>
-    );
-  }
-  if (kind === 'traction') {
-    const bars = [22, 30, 38, 47, 61, 74, 88];
-    return (
-      <div className="ws-slide ws-slide--traction">
-        <span className="ws-slide__kicker ws-peach"># PERTUMBUHAN MoM 2025</span>
-        <div className="ws-chart" aria-hidden="true">
-          {bars.map((h, i) => (
-            <span key={i} style={{ '--h': `${h}%`, '--i': i }} />
-          ))}
-        </div>
-        <span className="ws-slide__caption">
-          <b>18.400 ton</b> gabah terkirim · retention 91,2%
-        </span>
-      </div>
-    );
-  }
-  return (
-    <div className="ws-slide ws-slide--ask">
-      <span className="ws-slide__kicker ws-gold"># TARGET PENDANAAN</span>
-      <span className="ws-ask">Rp 4,2 M</span>
-      <span className="ws-slide__caption">Seed round cap tertutup · dipitch ke 4 VC partners</span>
-      <span className="ws-stamp">CLOSED</span>
-    </div>
-  );
-}
-
 function DeckCard() {
-  const [active, setActive] = useState(0);
-  const [paused, setPaused] = useState(false);
-  const [inView, setInView] = useState(false);
-  const ref = useRef(null);
+  const videoRef = useRef(null);
+  const cardRef = useRef(null);
+  const rafRef = useRef(0);
+  const [chapter, setChapter] = useState(0);
+  const [playing, setPlaying] = useState(false);
+  const [progress, setProgress] = useState(0); // 0..1 within the current chapter
+  const [started, setStarted] = useState(false);
 
+  const stopWatch = () => cancelAnimationFrame(rafRef.current);
+
+  // Play chapter i from its start; pause exactly at its end.
+  const playChapter = (i) => {
+    const v = videoRef.current;
+    if (!v) return;
+    const c = CHAPTERS[i];
+    stopWatch();
+    setChapter(i);
+    setStarted(true);
+    if (Math.abs(v.currentTime - c.start) > 0.15) v.currentTime = c.start;
+    const watch = () => {
+      const t = v.currentTime;
+      setProgress(Math.min(1, Math.max(0, (t - c.start) / (c.end - c.start))));
+      if (t >= c.end - 0.04) {
+        v.pause();
+        setPlaying(false);
+        setProgress(1);
+        return;
+      }
+      rafRef.current = requestAnimationFrame(watch);
+    };
+    const p = v.play();
+    setPlaying(true);
+    if (p && p.catch) p.catch(() => setPlaying(false));
+    rafRef.current = requestAnimationFrame(watch);
+  };
+
+  const next = () => {
+    playClick();
+    playChapter(chapter + 1 < CHAPTERS.length ? chapter + 1 : 0);
+  };
+
+  const prev = () => {
+    playClick();
+    playChapter(Math.max(0, chapter - 1));
+  };
+
+  // Auto-play the first chapter once the card scrolls into view
   useEffect(() => {
-    const el = ref.current;
-    if (!el || !('IntersectionObserver' in window)) {
-      setInView(true);
-      return undefined;
-    }
-    const io = new IntersectionObserver(([e]) => setInView(e.isIntersecting), { threshold: 0.35 });
+    const el = cardRef.current;
+    if (!el || !('IntersectionObserver' in window)) return undefined;
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const io = new IntersectionObserver(
+      ([e]) => {
+        if (e.isIntersecting && !started && !reduce) {
+          playChapter(0);
+          io.disconnect();
+        }
+      },
+      { threshold: 0.45 }
+    );
     io.observe(el);
-    return () => io.disconnect();
+    return () => {
+      io.disconnect();
+      stopWatch();
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  useEffect(() => {
-    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (paused || !inView || reduce) return undefined;
-    const t = window.setTimeout(() => setActive((a) => (a + 1) % SLIDES.length), SLIDE_MS);
-    return () => window.clearTimeout(t);
-  }, [active, paused, inView]);
+  const last = chapter === CHAPTERS.length - 1;
+  const waiting = started && !playing;
 
   return (
     <article
-      ref={ref}
-      className={`figma-portfolio-big-card ws-card ws-deck${paused ? ' is-paused' : ''}`}
-      onMouseEnter={() => setPaused(true)}
-      onMouseLeave={() => setPaused(false)}
+      ref={cardRef}
+      className={`figma-portfolio-big-card ws-card ws-deck ws-video${waiting ? ' is-waiting' : ''}`}
       data-spotlight
       data-reveal
+      onKeyDown={(e) => {
+        if (e.key === 'ArrowRight') next();
+        if (e.key === 'ArrowLeft') prev();
+      }}
     >
       <div className="figma-card-tags-row">
         <span className="figma-mono-tag-chip">PPT</span>
         <span className="ws-live">
-          <i className="ws-live__dot" /> {paused ? 'DIJEDA' : 'SEDANG DIPUTAR'}
+          <i className="ws-live__dot" /> {playing ? 'SEDANG DIPUTAR' : started ? 'MENUNGGU NEXT' : 'SIAP DIPUTAR'}
         </span>
         <span className="figma-status-badge">Proyek asli</span>
       </div>
 
       <div className="ws-stage">
-        <div className="ws-stage__screen" aria-live="polite">
-          {SLIDES.map((s, i) => (
-            <div key={s.key} className={`ws-stage__slide${i === active ? ' is-active' : ''}`} aria-hidden={i !== active}>
-              <DeckSlide kind={s.key} />
-            </div>
-          ))}
+        <div className="ws-stage__screen ws-video__screen">
+          <video
+            ref={videoRef}
+            className="ws-video__el"
+            src="/media/karhutla-720.mp4"
+            poster="/media/karhutla-poster.jpg"
+            muted
+            playsInline
+            preload="metadata"
+            aria-label="Rekaman presentasi Karhutla Indonesia"
+            onClick={() => (playing ? null : next())}
+          />
           <span className="ws-stage__counter">
-            {String(active + 1).padStart(2, '0')} / {String(SLIDES.length).padStart(2, '0')}
+            {String(chapter + 1).padStart(2, '0')} / {String(CHAPTERS.length).padStart(2, '0')}
           </span>
+          {!started && (
+            <button type="button" className="ws-video__play" onClick={() => { playClick(); playChapter(0); }}>
+              ▶ Putar presentasi
+            </button>
+          )}
+
         </div>
-        <div className="ws-thumbs" role="tablist" aria-label="Pilih slide">
-          {SLIDES.map((s, i) => (
+
+        <div className="ws-chapters" role="tablist" aria-label="Pilih slide">
+          {CHAPTERS.map((c, i) => (
             <button
-              key={s.key}
+              key={c.label}
               type="button"
               role="tab"
-              aria-selected={i === active}
-              className={`ws-thumb${i === active ? ' is-active' : ''}`}
-              onClick={() => {
-                playClick();
-                setActive(i);
-              }}
+              aria-selected={i === chapter}
+              title={c.label}
+              className={`ws-chapter${i === chapter ? ' is-active' : ''}${i < chapter ? ' is-done' : ''}`}
+              onClick={() => { playClick(); playChapter(i); }}
             >
-              <span className="ws-thumb__num">{String(i + 1).padStart(2, '0')}</span>
-              <span className="ws-thumb__label">{s.label}</span>
               <span
-                className="ws-thumb__progress"
-                style={{ animationDuration: `${SLIDE_MS}ms` }}
-                key={`${i}-${active}-${paused}`}
+                className="ws-chapter__fill"
+                style={{ width: i < chapter ? '100%' : i === chapter ? `${progress * 100}%` : '0%' }}
               />
             </button>
           ))}
+        </div>
+        <div className="ws-video__bar">
+          <span className="ws-chapter__label">
+            {String(chapter + 1).padStart(2, '0')} — {CHAPTERS[chapter].label}
+            {waiting && !last && <em> · pencet Next buat lanjut</em>}
+          </span>
+          <div className="ws-video__controls">
+            <button type="button" className="ws-video__btn" onClick={prev} disabled={chapter === 0 || !started} aria-label="Slide sebelumnya">
+              ←
+            </button>
+            <button
+              type="button"
+              className={`ws-video__btn ws-video__next${waiting ? ' is-ready' : ''}`}
+              onClick={next}
+              disabled={playing}
+              aria-label={last ? 'Ulang dari awal' : 'Slide berikutnya'}
+            >
+              {last && waiting ? '↺ Ulang' : 'Next →'}
+            </button>
+          </div>
         </div>
       </div>
 
       <div className="figma-card-footer-info">
         <div>
-          <h4 className="figma-card-title">Pitch Deck Seed Round — Agrotech</h4>
-          <span className="figma-card-meta">45 → 14 SLIDE // SELESAI DALAM 5 HARI</span>
+          <h4 className="figma-card-title">Presentasi Edukasi Karhutla</h4>
+          <span className="figma-card-meta">10 SLIDE // MOTION DECK 16:9</span>
         </div>
-        <Link to="/portofolio/deck-investasi-agrotech" className="ws-cta" onClick={() => playClick()}>
-          Studi kasus <span aria-hidden="true">↗</span>
+        <Link to="/layanan/desain-ppt" className="ws-cta" onClick={() => playClick()}>
+          Bikin yang kayak gini <span aria-hidden="true">↗</span>
         </Link>
       </div>
     </article>
