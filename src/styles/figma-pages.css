@@ -2764,3 +2764,14 @@
 .pd-gallery .pd-hero__hint { align-self: center; }
 /* Deck slide images: no drag-out or text-selection copy (watermarked previews) */
 .ws-slides__img, .svc-deck img, .pd-gallery img, .dp-art-slides__stack img { -webkit-user-drag: none; user-select: none; -webkit-touch-callout: none; }
+
+/* ==========================================================================
+   TENTANG — admin character 360° turnaround in the portrait frame
+   ========================================================================== */
+.ab-spin { padding: 0; align-items: center; background: #faf7f0; cursor: ew-resize; touch-action: pan-y; outline-offset: 3px; }
+.ab-spin img { position: absolute; left: 0; right: 0; bottom: 0; width: 100%; height: auto; max-height: 100%; object-fit: contain; object-position: bottom; opacity: 0; pointer-events: none; user-select: none; -webkit-user-drag: none; transition: transform 0.12s linear; }
+.ab-spin img.is-current { opacity: 1; }
+.ab-spin__deg { position: absolute; top: 10px; right: 10px; padding: 2px 8px; border-radius: 99px; background: rgba(23, 21, 47, 0.75); font-family: var(--font-space); font-size: 11px; color: #f7eedf; opacity: 0; transition: opacity 0.2s ease; }
+.ab-spin__hint { position: absolute; top: 10px; left: 10px; padding: 2px 8px; border-radius: 99px; background: rgba(23, 21, 47, 0.75); font-family: var(--font-space); font-size: 11px; color: #f7eedf; transition: opacity 0.2s ease; }
+.ab-spin.is-active .ab-spin__deg, .ab-spin:focus-visible .ab-spin__deg { opacity: 1; }
+.ab-spin.is-active .ab-spin__hint { opacity: 0; }
